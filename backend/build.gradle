@@ -36,7 +36,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	//mysql 추가
 	runtimeOnly 'com.mysql:mysql-connector-j'
-
 }
 
 tasks.named('test') {
