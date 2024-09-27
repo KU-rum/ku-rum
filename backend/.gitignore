@@ -1,5 +1,6 @@
 .env
 HELP.md
+./src/main/resources/application.yml
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
