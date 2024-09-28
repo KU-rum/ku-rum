@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static ku_rum.backend.domain.category.domain.CategoryType.*;
+import static org.assertj.core.api.Assertions.*;
 
 class CategoryTest {
 
@@ -16,7 +17,7 @@ class CategoryTest {
         //when
         Category category = Category.of(categoryName);
         //then
-        Assertions.assertThat(category.getName()).isEqualTo(categoryName);
+        assertThat(category.getName()).isEqualTo(categoryName);
     }
 
 }
