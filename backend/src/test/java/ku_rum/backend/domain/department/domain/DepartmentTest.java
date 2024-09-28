@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DepartmentTest {
@@ -21,7 +22,7 @@ class DepartmentTest {
         Department department = Department.of("컴퓨터공학부", building);
 
         //then
-        Assertions.assertThat(department.getBuilding()).isEqualTo(building);
+        assertThat(department.getBuilding()).isEqualTo(building);
     }
 
     @DisplayName("학과 생성 시 학과 이름을 넣어준다.")
@@ -35,7 +36,7 @@ class DepartmentTest {
         Department department = Department.of(Deptname, building);
 
         //then
-        Assertions.assertThat(department.getName()).isEqualTo(Deptname);
+        assertThat(department.getName()).isEqualTo(Deptname);
     }
 
     private Building createBuilding() {
