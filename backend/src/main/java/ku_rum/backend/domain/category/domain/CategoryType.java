@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-enum CategoryType {
+public enum CategoryType {
     STUDENT_CAFETERIA("학생 식당");
 
     private final String text;
