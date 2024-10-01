@@ -2,20 +2,34 @@ spring:
   profiles:
     default: local
   jpa:
-    hibernate:
-      dialect: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
       ddl-auto: update
     show-sql: true
+
   datasource:
-    url: jdbc:mysql://my-db:3306/mydb
+    url: jdbc:mysql://localhost:3306/mydb #my-db
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-      host: my-cache-server #redis #localhost #${EC2_public_IPv4_address}
+      host: localhost #my-cache-server #redis #localhost #${EC2_public_IPv4_address}
       port: 6379
 
+springdoc:
+  swagger-ui:
+    path: /api-test  # swagger-ui 접근 경로에 대한 별칭, 해당 주소로 접속해도 http://localhost:8080/swagger-ui/index.html로 리다이렉션 됨.
+
+    groups-order: DESC # path, query, body, response 순으로 출력
+
+    tags-sorter: alpha # 태그를 알파벳 순으로 정렬
+
+    operations-sorter: method  # delete - get - patch - post - put 순으로 정렬, alpha를 사용하면 알파벳 순으로 정렬 가능
+
+  paths-to-match:
+    - / # swagger-ui에 표시할 api의 엔드포인트 패턴
 
 server:
   port: 8080

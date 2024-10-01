@@ -1,4 +1,4 @@
-package ku_rum.backend.global.config;
+package ku_rum.backend.global.config.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

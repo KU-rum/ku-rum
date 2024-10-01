@@ -2,21 +2,20 @@ package ku_rum.backend.domain.building.domain;
 
 import jakarta.persistence.*;
 import ku_rum.backend.global.type.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @Entity
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Building extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id = null;
 
     @Column(nullable = false)
     private String name;
@@ -30,13 +29,13 @@ public class Building extends BaseEntity {
     @Column(nullable = false, precision = 16, scale = 13)
     private BigDecimal longitude;
 
-    @Builder
-    private Building(String name, String abbreviation, BigDecimal latitude, BigDecimal longitude) {
-        this.name = name;
-        this.abbreviation = abbreviation;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
+//    @Builder
+//    private Building(String name, String abbreviation, BigDecimal latitude, BigDecimal longitude) {
+//        this.name = name;
+//        this.abbreviation = abbreviation;
+//        this.latitude = latitude;
+//        this.longitude = longitude;
+//    }
 
     public static Building of(String name, String abbreviation, BigDecimal latitude, BigDecimal longitude) {
         return Building.builder()
