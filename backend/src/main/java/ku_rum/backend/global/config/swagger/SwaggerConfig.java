@@ -15,7 +15,8 @@ public class SwaggerConfig {
   @Bean
   public GroupedOpenApi group1() {
     List<Tag> tags = List.of(
-            new Tag().name("user registration").description("<b>[회원 등록]</b>회원 등록 API")
+            new Tag().name("RegisterController").description("<b>[회원 등록]</b>회원 등록 API"),
+            new Tag().name("LoginController").description("<b>[회원 로그인]</b>회원 로그인 API")
     );
 
     return GroupedOpenApi.builder()
