@@ -1,6 +1,7 @@
 package ku_rum.backend.domain.building.domain;
 
 import jakarta.persistence.*;
+import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.global.type.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,7 +22,8 @@ public class Building extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    private Long number;
+
     private String abbreviation;
 
     @Column(nullable = false, precision = 16, scale = 13)
