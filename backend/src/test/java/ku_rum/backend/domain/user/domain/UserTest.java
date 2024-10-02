@@ -16,8 +16,7 @@ class UserTest {
     void registeredUserWithDepartment() {
         //given
         Building building = createBuilding();
-        String Deptname = "컴퓨터공학부";
-        Department department = Department.of(Deptname, building);
+        Department department = getDepartment(building);
 
         //when
         User user = User.of("사용자1", "202112322", department);
@@ -26,6 +25,12 @@ class UserTest {
         assertThat(user.getName()).isEqualTo("사용자1");
         assertThat(user.getStudentId()).isEqualTo("202112322");
         assertThat(user.getDepartment()).isEqualTo(department);
+    }
+
+    private Department getDepartment(Building building) {
+        String Deptname = "컴퓨터공학부";
+        Department department = Department.of(Deptname, building);
+        return department;
     }
 
     private Building createBuilding() {
