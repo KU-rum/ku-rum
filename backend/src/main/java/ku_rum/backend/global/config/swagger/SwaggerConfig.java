@@ -13,95 +13,67 @@ import java.util.List;
 public class SwaggerConfig {
 
   @Bean
-  public GroupedOpenApi group1() {
+  public GroupedOpenApi loginRegister() {
     List<Tag> tags = List.of(
             new Tag().name("RegisterController").description("<b>[회원 등록]</b>회원 등록 API"),
             new Tag().name("LoginController").description("<b>[회원 로그인]</b>회원 로그인 API")
     );
 
-    return GroupedOpenApi.builder()
-            .group("user")
-            .pathsToMatch("/user/**")
-            .addOpenApiCustomizer(openApi -> {
-              openApi.setTags(tags);
-              openApi.info(apiInfo());
-            })
-            .build();
+    return createGroupedOpenApi("loginRegister", "/api/v1/loginRegister/**", tags);
   }
 
   @Bean
-  public GroupedOpenApi group2() {
+  public GroupedOpenApi map() {
     List<Tag> tags = List.of(
-            new Tag().name("map controller").description("<b>[지도]</b> 지도 관련 API")
+            new Tag().name("mapController").description("<b>[지도]</b> 지도 관련 API")
     );
 
-    return GroupedOpenApi.builder()
-            .group("map")
-            .pathsToMatch("/map/**")
-            .addOpenApiCustomizer(openApi -> {
-              openApi.setTags(tags);
-              openApi.info(apiInfo());
-            })
-            .build();
+    return createGroupedOpenApi("map", "/api/v1/map/**", tags);
   }
 
   @Bean
-  public GroupedOpenApi group3() {
+  public GroupedOpenApi notice() {
     List<Tag> tags = List.of(
-            new Tag().name("notice controller").description("<b>[공지]</b> 공지 관련 API")
+            new Tag().name("noticeController").description("<b>[공지]</b> 공지 관련 API")
     );
 
-    return GroupedOpenApi.builder()
-            .group("notice")
-            .pathsToMatch("/notice/**")
-            .addOpenApiCustomizer(openApi -> {
-              openApi.setTags(tags);
-              openApi.info(apiInfo());
-            })
-            .build();
+    return createGroupedOpenApi("notice", "/api/v1/notice/**", tags);
+
   }
 
   @Bean
-  public GroupedOpenApi group4() {
+  public GroupedOpenApi kcube() {
     List<Tag> tags = List.of(
-            new Tag().name("kcube controller").description("<b>[K-CUBE/K-HUB]</b> 예약 API")
+            new Tag().name("kcubController").description("<b>[K-CUBE/K-HUB]</b> 예약 API")
     );
 
-    return GroupedOpenApi.builder()
-            .group("kcube")
-            .pathsToMatch("/kcube/**")
-            .addOpenApiCustomizer(openApi -> {
-              openApi.setTags(tags);
-              openApi.info(apiInfo());
-            })
-            .build();
+    return createGroupedOpenApi("kcube", "/api/v1/kcube/**", tags);
   }
 
   @Bean
-  public GroupedOpenApi group5() {
+  public GroupedOpenApi mypage() {
     List<Tag> tags = List.of(
-            new Tag().name("mypage controller").description("<b>[내 정보]</b> 내 정보 관련 API")
+            new Tag().name("mypageController").description("<b>[내 정보]</b> 내 정보 관련 API")
     );
 
-    return GroupedOpenApi.builder()
-            .group("mypage")
-            .pathsToMatch("/mypage/**")
-            .addOpenApiCustomizer(openApi -> {
-              openApi.setTags(tags);
-              openApi.info(apiInfo());
-            })
-            .build();
+    return createGroupedOpenApi("mypage", "/api/v1/mypage/**", tags);
+
   }
 
   @Bean
-  public GroupedOpenApi group6() {
+  public GroupedOpenApi chatbot() {
     List<Tag> tags = List.of(
-            new Tag().name("chatbot controller").description("<b>[챗봇]</b> 챗봇 API")
+            new Tag().name("chatbotController").description("<b>[챗봇]</b> 챗봇 API")
     );
 
+    return createGroupedOpenApi("chatbot", "/api/v1/chatbot/**", tags);
+
+  }
+
+  private GroupedOpenApi createGroupedOpenApi(String group, String pathsToMatch, List<Tag> tags) {
     return GroupedOpenApi.builder()
-            .group("chatbot")
-            .pathsToMatch("/chatbot/**")
+            .group(group)
+            .pathsToMatch(pathsToMatch)
             .addOpenApiCustomizer(openApi -> {
               openApi.setTags(tags);
               openApi.info(apiInfo());
