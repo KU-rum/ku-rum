@@ -1,4 +1,4 @@
-package ku_rum.backend.config;
+package ku_rum.backend.global.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
