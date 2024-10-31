@@ -2,7 +2,6 @@ package ku_rum.backend.domain.building.controller;
 
 import ku_rum.backend.domain.building.dto.BuildingClassResponseDto;
 import ku_rum.backend.domain.building.dto.response.BuildingsResponse;
-import ku_rum.backend.domain.building.repository.BuildingClassRepository;
 import ku_rum.backend.domain.building.service.BuildingClassSearchService;
 import ku_rum.backend.global.exception.building.BuildingsNotFoundException;
 import ku_rum.backend.global.response.BaseResponse;
@@ -24,7 +23,6 @@ import java.util.List;
 public class BuildingClassSearchController {
 
   private final BuildingClassSearchService buildingClassSearchService;
-  private final BuildingClassRepository buildingClassRepository;
 
   /*
     전체 강의실의 핀포인트 조회
@@ -62,9 +60,9 @@ public class BuildingClassSearchController {
     특정 강의실의 핀포인트 조회 (건물번호로)
   */
   @GetMapping("/search")
-  public ResponseEntity<BaseResponse> viewBuildingByNumber(@RequestParam("number") int number){
+  public ResponseEntity<BaseResponse> viewBuildingByNumber(@RequestParam("number") String number){
     try{
-      BuildingClassResponseDto result = buildingClassSearchService.findBuilding(number);
+      BuildingClassResponseDto result = buildingClassSearchService.findBuildingAbbrev(number);
       if (result == null){
         BuildingsResponse.ofSingle(
                 BaseExceptionResponseStatus.NO_BUILDING_REGISTERED,
@@ -119,7 +117,30 @@ public class BuildingClassSearchController {
    /*
     특정 강의실의 핀포인트 조회 (건물줄임말로)
   */
-//  @GetMapping("/v1/building/class/view/search?abbreviation={abbreviation}")
-//  public
+   @GetMapping("/search")
+   public ResponseEntity<BaseResponse> viewBuildingByAbbrev(@RequestParam("abbreviation") String abbrev){
+     try{
+       BuildingClassResponseDto result = buildingClassSearchService.findBuilding(abbrev);
+       if (result == null){
+         BuildingsResponse.ofSingle(
+                 BaseExceptionResponseStatus.NO_BUILDING_REGISTERED,
+                 result,
+                 BaseExceptionResponseStatus.NO_BUILDING_REGISTERED.getMessage()
+         );
+       }
+       return ResponseEntity.ok(
+               BuildingsResponse.ofSingle(
+                       BaseExceptionResponseStatus.SUCCESS,
+                       result,
+                       BaseExceptionResponseStatus.SUCCESS.getMessage()
+               )
+       );
+     }catch(BuildingsNotFoundException e){//등록된 건물을 조회하지 못했을 때
+       throw new BuildingsNotFoundException(
+               BaseExceptionResponseStatus.Building_NOT_FOUND,
+               BaseExceptionResponseStatus.Building_NOT_FOUND.getMessage()
+       );
+     }
+   }
 
 }

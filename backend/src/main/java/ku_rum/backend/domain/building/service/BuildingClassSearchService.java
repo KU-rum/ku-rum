@@ -25,6 +25,10 @@ public class BuildingClassSearchService {
 
   }
 
+  public BuildingClassResponseDto findBuildingAbbrev(String number) {//공학관A -> 공A (공a, 공
+
+  }
+
 //  public List<BuildingClassResponseDto> findBuildingClassesByNumber(String number) {
 //    return buildingClassRepository.findBuildingClassesByNumber(number);
 //  }
