@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
     @DisplayName("유저 생성 시 학과 정보를 넣어준다.")
@@ -19,10 +18,10 @@ class UserTest {
         Department department = getDepartment(building);
 
         //when
-        User user = User.of("사용자1", "202112322", department);
+        User user = User.of("사용자1", "미미미누", "password123", "202112322", department);
 
         //then
-        assertThat(user.getName()).isEqualTo("사용자1");
+        assertThat(user.getNickname()).isEqualTo("미미미누");
         assertThat(user.getStudentId()).isEqualTo("202112322");
         assertThat(user.getDepartment()).isEqualTo(department);
     }
