@@ -1,4 +1,4 @@
-package ku_rum.backend.global.config.redis;
+package ku_rum.backend.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

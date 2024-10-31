@@ -8,7 +8,6 @@ import ku_rum.backend.domain.building.dto.BuildingClassResponseDto;
 import ku_rum.backend.domain.category.domain.QCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package ku_rum.backend.domain.building.dto;
 
-import ku_rum.backend.global.type.ApiResponse;
 import lombok.Getter;
 
 @Getter
