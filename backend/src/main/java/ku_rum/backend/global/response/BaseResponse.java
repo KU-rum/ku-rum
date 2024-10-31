@@ -13,6 +13,8 @@ public class BaseResponse<T> implements ResponseStatus {
     private final int code;
     private final HttpStatus status;
     private final String message;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final T data;
 
     public BaseResponse(HttpStatus status, String message, T data) {
@@ -20,11 +22,6 @@ public class BaseResponse<T> implements ResponseStatus {
         this.message = message;
         this.status = status;
         this.data = data;
-    }
-
-    @Override
-    public int getCode() {
-        return code;
     }
 
     public static <T> BaseResponse<T> of(HttpStatus status, String message, T data) {
@@ -37,6 +34,11 @@ public class BaseResponse<T> implements ResponseStatus {
 
     public static <T> BaseResponse<T> ok(T data) {
         return of(HttpStatus.OK, data);
+    }
+
+    @Override
+    public int getCode() {
+        return code;
     }
 
     @Override
