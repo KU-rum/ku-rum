@@ -11,14 +11,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "users")
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String name;
+    @Column(nullable = false, length = 20, unique = true)
+    private String email;
+
+    @Column(nullable = false, length = 50, unique = true)
+    private String nickname;
+
+    @Column(length = 128)
+    private String password;
 
     @Column(nullable = false, length = 15)
     private String studentId;
@@ -28,15 +35,19 @@ public class User extends BaseEntity {
     private Department department;
 
     @Builder
-    private User(String name, String studentId, Department department) {
-        this.name = name;
+    private User(String email, String nickname, String password, String studentId, Department department) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
         this.studentId = studentId;
         this.department = department;
     }
 
-    public static User of(String name, String studentId, Department department) {
+    public static User of(String email, String nickname, String password, String studentId, Department department) {
         return User.builder()
-                .name(name)
+                .email(email)
+                .nickname(nickname)
+                .password(password)
                 .studentId(studentId)
                 .department(department)
                 .build();

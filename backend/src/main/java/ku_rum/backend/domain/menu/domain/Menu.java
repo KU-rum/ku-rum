@@ -17,12 +17,12 @@ public class Menu extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String name;
 
     private Long price;
 
-    @Column(nullable = false, length = 300)
+    @Column(length = 300)
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

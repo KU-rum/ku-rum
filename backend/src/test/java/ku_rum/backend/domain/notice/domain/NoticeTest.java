@@ -21,7 +21,7 @@ class NoticeTest {
         //given
         Building building = createBuilding();
         Department department = getDepartment(building);
-        User user = User.of("사용자1", "202112322", department);
+        User user = User.of("사용자1", "미미미누", "password123", "202112322", department);
 
         //when
         Notice notice = Notice.of("가나다라", "naver.com/abc123", user);
@@ -38,7 +38,7 @@ class NoticeTest {
         //given
         Building building = createBuilding();
         Department department = getDepartment(building);
-        User user = User.of("사용자1", "202112322", department);
+        User user = User.of("사용자1", "미미미누", "password123", "202112322", department);
 
         //when
         Notice notice = Notice.of("가나다라", "naver.com/abc123", user);
