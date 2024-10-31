@@ -1,14 +1,13 @@
 package ku_rum.backend.domain.department.domain;
 
 import ku_rum.backend.domain.building.domain.Building;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class DepartmentTest {
 
