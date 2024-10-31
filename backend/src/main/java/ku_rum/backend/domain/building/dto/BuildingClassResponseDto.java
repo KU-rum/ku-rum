@@ -1,5 +1,6 @@
 package ku_rum.backend.domain.building.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -13,6 +14,7 @@ public class BuildingClassResponseDto {
   private double latitude;
   private double longtitude;
 
+  @Builder
   public BuildingClassResponseDto(int buildingId, int categoryId, String buildingName, int buildingNumber, String bulidingAbbreviation, double latitude, double longtitude) {
     this.buildingId = buildingId;
     this.categoryId = categoryId;

@@ -33,7 +33,7 @@ public class Building extends BaseEntity {
     private BigDecimal longitude;
 
     @Builder
-    private Building(String name, String abbreviation, BigDecimal latitude, BigDecimal longitude) {
+    public Building(String name, String abbreviation, BigDecimal latitude, BigDecimal longitude) {
         this.name = name;
         this.abbreviation = abbreviation;
         this.latitude = latitude;

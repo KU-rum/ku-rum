@@ -12,8 +12,17 @@ import java.util.List;
 public class BuildingClassSearchService {
   private final BuildingClassRepository buildingClassRepository;
 
-  public List<BuildingClassResponseDto> findAllBuildingClasses() {
-    return buildingClassRepository.findAllBuildingClasses();
+  public List<BuildingClassResponseDto> findAllBuildings() {
+    return buildingClassRepository.findAllBuildings();
+  }
+
+  public BuildingClassResponseDto findBuilding(int number) {
+    return buildingClassRepository.findBuilding(number);
+  }
+
+  public BuildingClassResponseDto findBuilding(String name) {
+    return buildingClassRepository.findBuilding(name);
+
   }
 
 //  public List<BuildingClassResponseDto> findBuildingClassesByNumber(String number) {
