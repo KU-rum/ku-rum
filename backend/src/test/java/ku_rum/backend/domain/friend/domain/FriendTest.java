@@ -32,7 +32,7 @@ class FriendTest {
     private User createUser(String username, String studentID) {
         Building building = createBuilding();
         Department department = Department.of("컴퓨터공학부", building);
-        return User.of(username, studentID, department);
+        return User.of(username, studentID, "password123", "202112322", department);
     }
 
     private Building createBuilding() {
