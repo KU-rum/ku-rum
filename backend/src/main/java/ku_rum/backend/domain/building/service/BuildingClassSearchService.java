@@ -5,6 +5,7 @@ import ku_rum.backend.domain.building.repository.BuildingClassRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -12,38 +13,50 @@ import java.util.List;
 public class BuildingClassSearchService {
   private final BuildingClassRepository buildingClassRepository;
 
+  private static final List<String> BUILDING_ABBREV_LIST = Arrays.asList(
+          "경영", "상허관", "사", "예", "언어원", "종강", "의",
+          "생", "동", "산학", "수", "새", "건", "부", "문",
+          "공", "신공", "이", "창"
+  );
+
   public List<BuildingResponseDto> findAllBuildings() {
     return buildingClassRepository.findAllBuildings();
   }
 
-  public BuildingResponseDto findBuilding(int number) {
+  public BuildingResponseDto viewBuildingByNumber(int number) {
     return buildingClassRepository.findBuilding(number);
   }
 
   public BuildingResponseDto findBuilding(String name) {
-    return buildingClassRepository.findBuilding(name);
+    String abbrevWithoutNumber = getAbbrevWithoutNumber(name);
 
+    //추출된 약어가 유효한 건물 줄임말 목록에 있는지 확인
+    if (isValidBuildingAbbrev(abbrevWithoutNumber)) {
+      return buildingClassRepository.findBuildingWithAbbrev(abbrevWithoutNumber); //줄임말로 조회
+    }else {
+      return buildingClassRepository.findBuilding(abbrevWithoutNumber); //정식명칭으로 조회
+    }
   }
 
-  public BuildingResponseDto findBuildingAbbrev(String abbrev) {//공A101 -> 공A
-    String abbrevWithoutNumber = getAbbrevWithoutNumber(abbrev);
-    return buildingClassRepository.findBuildingWithAbbrev(abbrevWithoutNumber);
-    
-  }
+  private String getAbbrevWithoutNumber(String name) {
+    if (name == null || name.isEmpty()) {
+      return "";
+    }
 
-  private String getAbbrevWithoutNumber(String abbrev) {
-    String[] abbrevList = {"경영","상허관","사","예","언어원","종강","의","생","동","산학","수","새","건","부","문","공","신공","이","창" };
-    //abbrev에 abbrevList 의 원소가 있는지 판별 -> 단순 while문보다 다른 방법
-    char[] abbrevArray = abbrev.toCharArray();
-    int index = 0;
-    while(index < abbrevArray.length){
-      if (Character.isDigit(abbrevArray[index])){
-        abbrevArray[index] = ' ';
+    StringBuilder result = new StringBuilder();
+
+    //문자열을 순회하면서 숫자가 아닌 문자만 추가
+    for (char c : name.toCharArray()) {
+      if (!Character.isDigit(c)) {
+        result.append(c);
       }
     }
-    String abbrevWithoutNumber = abbrevArray.toString();
-    return abbrevWithoutNumber;
+
+    return result.toString().trim();
   }
 
-
+  private boolean isValidBuildingAbbrev(String abbrev) {
+    return BUILDING_ABBREV_LIST.stream()
+            .anyMatch(validAbbrev -> abbrev.startsWith(validAbbrev));
+  }
 }

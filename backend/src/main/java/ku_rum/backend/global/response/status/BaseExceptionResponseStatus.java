@@ -31,9 +31,9 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
     /**
      * 500: Building 오류
      */
-    Building_NOT_FOUND(500, HttpStatus.NOT_FOUND, "건물 정보를 찾을 수 없습니다."),
-    NO_BUILDING_REGISTERED(501, HttpStatus.OK, "등록된 건물이 없습니다.");
-
+    BUILDING_DATA_NOT_FOUND_BY_NAME(500, HttpStatus.NOT_FOUND, "등록되지 않은 건물 명칭입니다."),
+    BUILDING_DATA_NOT_FOUND_BY_NUMBER(501, HttpStatus.NOT_FOUND, "등록되지 않은 건물 번호입니다."),
+    NO_BUILDING_REGISTERED(502, HttpStatus.NO_CONTENT, "등록된 건물이 없습니다.");
 
     private final int code;
     private final HttpStatus status;

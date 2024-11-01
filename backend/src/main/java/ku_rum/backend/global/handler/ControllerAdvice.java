@@ -1,5 +1,7 @@
 package ku_rum.backend.global.handler;
 
+import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
+import ku_rum.backend.global.exception.building.BuildingsNotFoundException;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
@@ -34,6 +36,20 @@ public class ControllerAdvice {
     public BaseErrorResponse handleNoSuchDepartmentException(final NoSuchDepartmentException e) {
         log.error(e.getMessage());
         return new BaseErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(BuildingsNotFoundException.class)
+    public BaseErrorResponse handleBuildingsNotFoundException(final BuildingsNotFoundException e) {
+        log.error(e.getMessage());
+        return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ExceptionHandler(BuildingNotRegisteredException.class)
+    public BaseErrorResponse handleNoBuildingRegisteredException(final BuildingNotRegisteredException e) {
+        log.error(e.getMessage());
+        return new BaseErrorResponse(HttpStatus.NO_CONTENT, e.getMessage());
     }
 
 }
