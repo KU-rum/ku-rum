@@ -2,11 +2,9 @@ package ku_rum.backend.domain.building.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.domain.QBuilding;
 import ku_rum.backend.domain.building.domain.QBuildingCategory;
-import ku_rum.backend.domain.building.dto.BuildingClassResponseDto;
+import ku_rum.backend.domain.building.dto.BuildingResponseDto;
 import ku_rum.backend.domain.category.domain.QCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,9 +20,9 @@ public class BuildingClassRepository {
   private final QBuildingCategory buildingCategory = QBuildingCategory.buildingCategory;
   private final QCategory category = QCategory.category;
 
-  public List<BuildingClassResponseDto> findAllBuildings() {
+  public List<BuildingResponseDto> findAllBuildings() {
     return queryFactory
-            .select(Projections.constructor(BuildingClassResponseDto.class,
+            .select(Projections.constructor(BuildingResponseDto.class,
                     building.id.intValue(),
                     category.id.intValue(),
                     building.name,
@@ -38,9 +36,9 @@ public class BuildingClassRepository {
             .fetch();//결과 list 로 반환
   }
 
-  public BuildingClassResponseDto findBuilding(int number) {
+  public BuildingResponseDto findBuilding(int number) {
     return queryFactory
-            .select(Projections.constructor(BuildingClassResponseDto.class,
+            .select(Projections.constructor(BuildingResponseDto.class,
                     building.id.intValue(),
                     category.id.intValue(),
                     building.name,
@@ -56,9 +54,9 @@ public class BuildingClassRepository {
   }
 
 
-  public BuildingClassResponseDto findBuilding(String name) {
+  public BuildingResponseDto findBuilding(String name) {
     return queryFactory
-            .select(Projections.constructor(BuildingClassResponseDto.class,
+            .select(Projections.constructor(BuildingResponseDto.class,
                     building.id.intValue(),
                     category.id.intValue(),
                     building.name,
@@ -68,6 +66,23 @@ public class BuildingClassRepository {
                     building.longitude.doubleValue()))
             .from(building)
             .where(building.name.eq(name))
+            .innerJoin(buildingCategory).on(buildingCategory.building.eq(building))
+            .innerJoin(category).on(buildingCategory.category.eq(category))
+            .fetchOne();
+  }
+
+  public BuildingResponseDto findBuildingWithAbbrev(String abbrevWithoutNumber) {
+    return queryFactory
+            .select(Projections.constructor(BuildingResponseDto.class,
+                    building.id.intValue(),
+                    category.id.intValue(),
+                    building.name,
+                    building.number.intValue(),
+                    building.abbreviation,
+                    building.latitude.doubleValue(),
+                    building.longitude.doubleValue()))
+            .from(building)
+            .where(building.abbreviation.eq(abbrevWithoutNumber))
             .innerJoin(buildingCategory).on(buildingCategory.building.eq(building))
             .innerJoin(category).on(buildingCategory.category.eq(category))
             .fetchOne();

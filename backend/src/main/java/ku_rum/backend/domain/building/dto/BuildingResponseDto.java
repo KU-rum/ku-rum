@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class BuildingClassResponseDto {
+public class BuildingResponseDto {
 
   private int buildingId;
   private int categoryId;
@@ -15,7 +15,7 @@ public class BuildingClassResponseDto {
   private double longtitude;
 
   @Builder
-  public BuildingClassResponseDto(int buildingId, int categoryId, String buildingName, int buildingNumber, String bulidingAbbreviation, double latitude, double longtitude) {
+  public BuildingResponseDto(int buildingId, int categoryId, String buildingName, int buildingNumber, String bulidingAbbreviation, double latitude, double longtitude) {
     this.buildingId = buildingId;
     this.categoryId = categoryId;
     this.buildingName = buildingName;

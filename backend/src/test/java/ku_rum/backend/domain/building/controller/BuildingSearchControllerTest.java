@@ -1,11 +1,9 @@
 package ku_rum.backend.domain.building.controller;
 
 import ku_rum.backend.common.BaseControllerTest;
-import ku_rum.backend.domain.building.dto.BuildingClassResponseDto;
+import ku_rum.backend.domain.building.dto.BuildingResponseDto;
 import ku_rum.backend.domain.building.repository.BuildingClassRepository;
-import ku_rum.backend.domain.building.repository.BuildingRepository;
 import ku_rum.backend.domain.building.service.BuildingClassSearchService;
-import ku_rum.backend.global.exception.building.BuildingsNotFoundException;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,15 +14,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BuildingClassSearchController.class)
-class BuildingClassSearchControllerTest extends BaseControllerTest {
+@WebMvcTest(BuildingSearchController.class)
+class BuildingSearchControllerTest extends BaseControllerTest {
 
   @MockBean
   private BuildingClassSearchService buildingClassSearchService;
@@ -36,8 +33,8 @@ class BuildingClassSearchControllerTest extends BaseControllerTest {
   @DisplayName("전체 건물들의 핀포인트 정상 조회-건물 존재o")
   public void getAllBuildings_success() throws Exception {
     //given
-    List<BuildingClassResponseDto> mockResponse = Arrays.asList(
-            new BuildingClassResponseDto(
+    List<BuildingResponseDto> mockResponse = Arrays.asList(
+            new BuildingResponseDto(
                     1,
                     1,
                     "공학관A",
@@ -46,7 +43,7 @@ class BuildingClassSearchControllerTest extends BaseControllerTest {
                     37.83838,
                     127.04567
             ),
-            new BuildingClassResponseDto(
+            new BuildingResponseDto(
                     2,
                     1,
                     "상허기념도서관",

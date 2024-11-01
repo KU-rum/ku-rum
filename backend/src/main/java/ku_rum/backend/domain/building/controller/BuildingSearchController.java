@@ -1,6 +1,6 @@
 package ku_rum.backend.domain.building.controller;
 
-import ku_rum.backend.domain.building.dto.BuildingClassResponseDto;
+import ku_rum.backend.domain.building.dto.BuildingResponseDto;
 import ku_rum.backend.domain.building.dto.response.BuildingsResponse;
 import ku_rum.backend.domain.building.service.BuildingClassSearchService;
 import ku_rum.backend.global.exception.building.BuildingsNotFoundException;
@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/building/class/view")
-public class BuildingClassSearchController {
+public class BuildingSearchController {
 
   private final BuildingClassSearchService buildingClassSearchService;
 
@@ -30,7 +30,7 @@ public class BuildingClassSearchController {
   @GetMapping("/all")
   public ResponseEntity<BaseResponse> viewAll() {
     try{
-      List<BuildingClassResponseDto> buildings = buildingClassSearchService.findAllBuildings();
+      List<BuildingResponseDto> buildings = buildingClassSearchService.findAllBuildings();
       if (buildings == null){//등록된 건물들 없을 때
         return ResponseEntity.ok(
                 BuildingsResponse.ofList(
@@ -62,7 +62,7 @@ public class BuildingClassSearchController {
   @GetMapping("/search")
   public ResponseEntity<BaseResponse> viewBuildingByNumber(@RequestParam("number") String number){
     try{
-      BuildingClassResponseDto result = buildingClassSearchService.findBuildingAbbrev(number);
+      BuildingResponseDto result = buildingClassSearchService.findBuildingAbbrev(number);
       if (result == null){
         BuildingsResponse.ofSingle(
                 BaseExceptionResponseStatus.NO_BUILDING_REGISTERED,
@@ -91,7 +91,7 @@ public class BuildingClassSearchController {
   @GetMapping("/search")
   public ResponseEntity<BaseResponse> viewBuildingByName(@RequestParam("name") String name){
     try{
-      BuildingClassResponseDto result = buildingClassSearchService.findBuilding(name);
+      BuildingResponseDto result = buildingClassSearchService.findBuilding(name);
       if (result == null){
         BuildingsResponse.ofSingle(
                 BaseExceptionResponseStatus.NO_BUILDING_REGISTERED,
@@ -117,10 +117,10 @@ public class BuildingClassSearchController {
    /*
     특정 강의실의 핀포인트 조회 (건물줄임말로)
   */
-   @GetMapping("/search")
+   @GetMapping("/search/")
    public ResponseEntity<BaseResponse> viewBuildingByAbbrev(@RequestParam("abbreviation") String abbrev){
      try{
-       BuildingClassResponseDto result = buildingClassSearchService.findBuilding(abbrev);
+       BuildingResponseDto result = buildingClassSearchService.findBuilding(abbrev);
        if (result == null){
          BuildingsResponse.ofSingle(
                  BaseExceptionResponseStatus.NO_BUILDING_REGISTERED,
