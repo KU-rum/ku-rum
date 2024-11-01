@@ -10,13 +10,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BuildingClassSearchService {
+public class BuildingSearchService {
   private final BuildingClassRepository buildingClassRepository;
 
   private static final List<String> BUILDING_ABBREV_LIST = Arrays.asList(
           "경영", "상허관", "사", "예", "언어원", "종강", "의",
           "생", "동", "산학", "수", "새", "건", "부", "문",
-          "공", "신공", "이", "창","본관"
+          "공", "신공", "이", "창"
   );
 
   public List<BuildingResponseDto> findAllBuildings() {
@@ -41,7 +41,7 @@ public class BuildingClassSearchService {
     }
   }
 
-  private String getAbbrevWithoutNumber(String name) {
+  public String getAbbrevWithoutNumber(String name) {
     if (name == null || name.isEmpty()) {
       return "";
     }
@@ -58,7 +58,7 @@ public class BuildingClassSearchService {
     return result.toString().trim();
   }
 
-  private boolean isValidBuildingAbbrev(String abbrev) {
+  public boolean isValidBuildingAbbrev(String abbrev) {
     return BUILDING_ABBREV_LIST.stream()
             .anyMatch(validAbbrev -> abbrev.startsWith(validAbbrev));
   }

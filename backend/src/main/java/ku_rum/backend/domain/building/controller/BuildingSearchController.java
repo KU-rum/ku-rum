@@ -2,10 +2,8 @@ package ku_rum.backend.domain.building.controller;
 
 import ku_rum.backend.domain.building.dto.BuildingResponseDto;
 import ku_rum.backend.domain.building.dto.response.BuildingsResponse;
-import ku_rum.backend.domain.building.service.BuildingClassSearchService;
-import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
+import ku_rum.backend.domain.building.service.BuildingSearchService;
 import ku_rum.backend.global.exception.building.BuildingsNotFoundException;
-import ku_rum.backend.global.response.BaseErrorResponse;
 import ku_rum.backend.global.response.BaseResponse;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +23,7 @@ import java.util.List;
 @RequestMapping("/v1/building/view")
 public class BuildingSearchController {
 
-  private final BuildingClassSearchService buildingClassSearchService;
+  private final BuildingSearchService buildingSearchService;
 
   /*
     전체 강의실의 핀포인트 조회
@@ -33,26 +31,28 @@ public class BuildingSearchController {
   @GetMapping("/all")
   public ResponseEntity<BaseResponse> viewAll() {
     try{
-      List<BuildingResponseDto> buildings = buildingClassSearchService.findAllBuildings();
-      if (buildings == null){//등록된 건물들 없을 때
-        throw new BuildingNotRegisteredException(
-                BaseExceptionResponseStatus.NO_BUILDING_REGISTERED.getMessage(),
-                BaseExceptionResponseStatus.NO_BUILDING_REGISTERED
-        );
+      List<BuildingResponseDto> buildings = buildingSearchService.findAllBuildings();
+      if (buildings == null || buildings.isEmpty()){//등록된 건물들 없을 때
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(new BaseResponse(
+                        HttpStatus.NO_CONTENT,
+                        BaseExceptionResponseStatus.NO_BUILDING_REGISTERED.getMessage(), null
+
+                ));
       }
       return ResponseEntity.ok(//등록된 건물들 정상 출력
               BuildingsResponse.ofList(
                       BaseExceptionResponseStatus.SUCCESS,
                       buildings,
                       BaseExceptionResponseStatus.SUCCESS.getMessage()
-        )
+              )
       );
-    }catch(BuildingsNotFoundException e){//등록된 건물들 조회하지 못했을 때
-      throw new BuildingsNotFoundException(
-              BaseExceptionResponseStatus.NO_BUILDING_REGISTERED.getMessage(),
-              BaseExceptionResponseStatus.NO_BUILDING_REGISTERED
-
-              );
+    }catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body(new BaseResponse(
+                      HttpStatus.INTERNAL_SERVER_ERROR,
+                      BaseExceptionResponseStatus.INTERNAL_SERVER_ERROR.getMessage(), null // 메시지 설정
+              ));
     }
 
   }
@@ -63,7 +63,7 @@ public class BuildingSearchController {
   @GetMapping("/search/number")
   public ResponseEntity<BaseResponse> viewBuildingByNumber(@RequestParam("number") int number){
     try{
-      BuildingResponseDto result = buildingClassSearchService.viewBuildingByNumber(number);
+      BuildingResponseDto result = buildingSearchService.viewBuildingByNumber(number);
       if (result == null){
         throw new BuildingsNotFoundException(
                 BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER.getMessage(),
@@ -75,7 +75,7 @@ public class BuildingSearchController {
                       BaseExceptionResponseStatus.SUCCESS,
                       result,
                       BaseExceptionResponseStatus.SUCCESS.getMessage()
-        )
+              )
       );
     }catch(BuildingsNotFoundException e){//등록된 건물을 조회하지 못했을 때
       throw new BuildingsNotFoundException(
@@ -83,6 +83,12 @@ public class BuildingSearchController {
               BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER
 
       );
+    }catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body(new BaseResponse(
+                      HttpStatus.INTERNAL_SERVER_ERROR,
+                      BaseExceptionResponseStatus.INTERNAL_SERVER_ERROR.getMessage(), null // 메시지 설정
+              ));
     }
   }
 
@@ -92,7 +98,7 @@ public class BuildingSearchController {
   @GetMapping("/search/name")
   public ResponseEntity<BaseResponse> viewBuildingByName(@RequestParam("name") String name){
     try{
-      BuildingResponseDto result = buildingClassSearchService.findBuilding(name);
+      BuildingResponseDto result = buildingSearchService.findBuilding(name);
       if (result == null){
         throw new BuildingsNotFoundException(
                 BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME.getMessage(),
@@ -112,6 +118,12 @@ public class BuildingSearchController {
               BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME
 
       );
+    }catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body(new BaseResponse(
+                      HttpStatus.INTERNAL_SERVER_ERROR,
+                      BaseExceptionResponseStatus.INTERNAL_SERVER_ERROR.getMessage(), null // 메시지 설정
+              ));
     }
   }
 

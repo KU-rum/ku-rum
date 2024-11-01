@@ -1,13 +1,11 @@
 package ku_rum.backend.global.exception.building;
 
-import ku_rum.backend.global.response.status.ResponseStatus;
-import lombok.Getter;
+import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 
-@Getter
-public class BuildingBaseException extends RuntimeException{
-  private final ResponseStatus status;
+public class BuildingBaseException extends RuntimeException {
+  private final BaseExceptionResponseStatus status;
 
-  public BuildingBaseException(String message, ResponseStatus status) {
+  public BuildingBaseException(String message, BaseExceptionResponseStatus status) {
     super(message);
     this.status = status;
   }

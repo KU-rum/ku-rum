@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@Slf4j  // 로깅을 위해 추가
+@Slf4j
 public class BuildingClassRepository {
   private final JPAQueryFactory queryFactory;
 

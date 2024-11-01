@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 public enum BaseExceptionResponseStatus implements ResponseStatus{
 
     /**
+     * 000: 서버 내부 오류
+     */
+    INTERNAL_SERVER_ERROR(000, HttpStatus.INTERNAL_SERVER_ERROR, "서버내부 오류입니다."),
+    /**
      * 100: 요청 성공 (OK)
      */
     SUCCESS(100, HttpStatus.OK, "요청에 성공하였습니다."),

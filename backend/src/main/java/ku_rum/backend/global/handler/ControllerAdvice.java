@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ControllerAdvice {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public BaseErrorResponse handleServerException(final Exception e) {
+        log.error(e.getMessage());
+        return new BaseErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DuplicateEmailException.class)
