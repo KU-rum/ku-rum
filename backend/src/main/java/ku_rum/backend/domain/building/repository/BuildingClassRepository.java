@@ -7,12 +7,14 @@ import ku_rum.backend.domain.building.domain.QBuildingCategory;
 import ku_rum.backend.domain.building.dto.BuildingResponseDto;
 import ku_rum.backend.domain.category.domain.QCategory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j  // 로깅을 위해 추가
 public class BuildingClassRepository {
   private final JPAQueryFactory queryFactory;
 
@@ -55,7 +57,7 @@ public class BuildingClassRepository {
 
 
   public BuildingResponseDto findBuilding(String name) {
-    return queryFactory
+    BuildingResponseDto result =  queryFactory
             .select(Projections.constructor(BuildingResponseDto.class,
                     building.id.intValue(),
                     category.id.intValue(),
@@ -69,10 +71,14 @@ public class BuildingClassRepository {
             .innerJoin(buildingCategory).on(buildingCategory.building.eq(building))
             .innerJoin(category).on(buildingCategory.category.eq(category))
             .fetchOne();
+    return result;
+
   }
 
   public BuildingResponseDto findBuildingWithAbbrev(String abbrevWithoutNumber) {
-    return queryFactory
+    log.debug("찾으려하는 줄임말 건물: {}", abbrevWithoutNumber);
+
+    BuildingResponseDto result = queryFactory
             .select(Projections.constructor(BuildingResponseDto.class,
                     building.id.intValue(),
                     category.id.intValue(),
@@ -86,5 +92,7 @@ public class BuildingClassRepository {
             .innerJoin(buildingCategory).on(buildingCategory.building.eq(building))
             .innerJoin(category).on(buildingCategory.category.eq(category))
             .fetchOne();
+    log.debug("찾은거 : {}", result);
+    return result;
   }
 }
