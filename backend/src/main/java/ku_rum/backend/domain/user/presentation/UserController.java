@@ -3,7 +3,9 @@ package ku_rum.backend.domain.user.presentation;
 import jakarta.validation.Valid;
 import ku_rum.backend.domain.user.application.UserService;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
+import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
+import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
 import ku_rum.backend.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +22,11 @@ public class UserController {
     @PostMapping
     public BaseResponse<UserSaveResponse> join(@RequestBody @Valid final UserSaveRequest userSaveRequest) {
         return BaseResponse.ok(userService.saveUser(userSaveRequest));
+    }
+
+    @PostMapping("/weinlogin")
+    public BaseResponse<WeinLoginResponse> loginToWein(@RequestBody @Valid WeinLoginRequest weinLoginRequest) {
+        return userService.loginToWein(weinLoginRequest);
     }
 
 }
