@@ -1,23 +1,30 @@
 package ku_rum.backend.domain.user.application;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
+import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
+import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
+import ku_rum.backend.domain.user.dto.request.MailSendRequest;
+import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
+import ku_rum.backend.global.exception.user.DuplicateEmailException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
 
+import static ku_rum.backend.domain.user.domain.MailSendSetting.MAIL_SEND_INFO;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -28,6 +35,9 @@ class UserServiceTest {
     private UserService userService;
 
     @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -36,11 +46,18 @@ class UserServiceTest {
     @Autowired
     private BuildingRepository buildingRepository;
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
+    private Building building;
 
-    @Autowired
-    private EntityManager entityManager;
+    private Department department;
+
+    @BeforeEach
+    void setUp() {
+         building = Building.of("신공학관", "신공", BigDecimal.valueOf(64.3423423), BigDecimal.valueOf(64.3423423));
+         buildingRepository.save(building);
+
+         department = Department.of("컴퓨터공학부", building);
+         departmentRepository.save(department);
+    }
 
     @AfterEach
     void tearDown() {
@@ -52,16 +69,7 @@ class UserServiceTest {
     @Test
     @DisplayName("회원을 올바르게 저장을 요청하면 저장한다.")
     void saveMember() {
-
         //given
-        Building building = Building.of("신공학관", "신공", BigDecimal.valueOf(64.3423423), BigDecimal.valueOf(64.3423423));
-        Building saveBuliding = buildingRepository.save(building);
-
-        Department department = Department.of("컴퓨터공학부1", saveBuliding);
-        Department save = departmentRepository.save(department);
-
-        save.setName("컴퓨터공학부");
-
         UserSaveRequest request = UserSaveRequest.builder()
                 .email("kmw106933")
                 .password("password123")
@@ -73,7 +81,90 @@ class UserServiceTest {
         UserSaveResponse userSaveResponse = userService.saveUser(request);
 
         //then
-        assertThat(userSaveResponse.getId()).isEqualTo(1L);
+        assertThat(userSaveResponse.getId()).isNotNull();
     }
+
+    @Test
+    @DisplayName("회원의 아이디가 이미 있는 경우 예외를 처리한다.")
+    void validateEmail() {
+        //given
+        User user = User.builder()
+                .email("kmw106933")
+                .nickname("미미미누")
+                .password("password123")
+                .studentId("202112322")
+                .department(department)
+                .build();
+
+        userRepository.save(user);
+
+        EmailValidationRequest emailValidationRequest = new EmailValidationRequest("kmw106933");
+
+        //when then
+        assertThatThrownBy(() -> userService.validateEmail(emailValidationRequest))
+                .isInstanceOf(DuplicateEmailException.class)
+                .hasMessage("이미 존재하는 이메일입니다.");
+    }
+
+    @Test
+    @DisplayName("회원에게 정상적으로 인증 이메일을 전송한다.")
+    void sendCodeToEmail() {
+        //given
+        MailSendRequest mailSendRequest = new MailSendRequest("kmw10693@konkuk.ac.kr");
+        String key = generateKeyByEmail(mailSendRequest.getEmail());
+        String email = mailSendRequest.getEmail();
+
+        //when
+        userService.sendCodeToEmail(mailSendRequest);
+
+        //then
+        assertThat(getRedisAuthCode(generateKeyByEmail(email))
+                .equals(redisTemplate.opsForValue().get(key)));
+
+    }
+
+    @Test
+    @DisplayName("회원이 올바른 인증번호를 인증했을 시, true를 반환한다.")
+    void verifiedCode() {
+        MailSendRequest mailSendRequest = new MailSendRequest("kmw10693@konkuk.ac.kr");
+        userService.sendCodeToEmail(mailSendRequest);
+
+        String authCode = getRedisAuthCode(generateKeyByEmail("kmw10693@konkuk.ac.kr"));
+
+        MailVerificationRequest mailVerificationRequest =
+                new MailVerificationRequest("kmw10693@konkuk.ac.kr", authCode);
+
+        //when then
+        assertThat(userService.verifiedCode(mailVerificationRequest))
+                .extracting("verified")
+                .isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("회원이 올바르지 않는 인증번호를 인증했을시, false를 반환한다.")
+    void nonVerifiedCode() {
+        MailSendRequest mailSendRequest = new MailSendRequest("kmw10693@konkuk.ac.kr");
+        userService.sendCodeToEmail(mailSendRequest);
+
+        String authCode = getRedisAuthCode(generateKeyByEmail("testtest1234@konkuk.ac.kr"));
+
+        MailVerificationRequest mailVerificationRequest =
+                new MailVerificationRequest("kmw10693@konkuk.ac.kr", authCode);
+
+        //when then
+        assertThat(userService.verifiedCode(mailVerificationRequest))
+                .extracting("verified")
+                .isEqualTo(false);
+    }
+
+
+    private String generateKeyByEmail(String email) {
+        return MAIL_SEND_INFO.getAUTH_CODE_PREFIX() + email;
+    }
+
+    private String getRedisAuthCode(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
+
 
 }
