@@ -113,20 +113,6 @@ public class UserService {
                     String.class
             );
 
-//            // 만약 리다이렉션이 발생한다면 index.do로 자동 리다이렉트
-//            if (response.getStatusCode() == HttpStatus.FOUND) {
-//                log.info("Login successful with status code: {}, response body: {}", response.getStatusCode(), response.getBody());
-//                String redirectUrl = response.getHeaders().getLocation().toString();
-////                response = restTemplate.exchange(redirectUrl, HttpMethod.GET, new HttpEntity<>(headers), String.class);
-//                if (redirectUrl.contains("index.do")) {
-//                    log.info("Login successful with userId: {}, redirecting to: {}", weinLoginRequest.getUserId(), redirectUrl);
-//                    return BaseResponse.ok(new WeinLoginResponse(true, "Wein login successful"));
-//                } else if (redirectUrl.contains("login.do")) {
-//                    log.warn("Login failed for userId: {}, redirecting to: {}", weinLoginRequest.getUserId(), redirectUrl);
-//                    return BaseResponse.of(HttpStatus.UNAUTHORIZED, new WeinLoginResponse(false, "Invalid Wein credentials"));
-//                }
-//            }
-
             String responseBody = response.getBody();
             if (responseBody != null) {
                 if (responseBody.contains("index.do")) {
@@ -138,14 +124,6 @@ public class UserService {
                 }
             }
 
-//
-//            // 최종 응답 확인 및 처리
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                return BaseResponse.ok(new WeinLoginResponse(true, "Wein login successful"));
-//            } else {
-//                log.error("Login failed with status code: {}, response body: {}", response.getStatusCode(), response.getBody());
-//                return BaseResponse.of(HttpStatus.UNAUTHORIZED, new WeinLoginResponse(false, "Invalid Wein credentials"));
-//            }
             // 예상하지 못한 응답 처리
             log.error("Unexpected response for userId: {}, status code: {}, response body: {}", weinLoginRequest.getUserId(), response.getStatusCode(), response.getBody());
             return BaseResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, new WeinLoginResponse(false, "Unexpected login response"));
