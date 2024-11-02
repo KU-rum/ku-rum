@@ -38,6 +38,12 @@ dependencies {
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// Selenium Java
+	implementation 'org.seleniumhq.selenium:selenium-java:4.12.1'
+
+	// WebDriver Manager (드라이버 자동 관리)
+	implementation 'io.github.bonigarcia:webdrivermanager:5.7.0'
 }
 
 tasks.named('test') {
