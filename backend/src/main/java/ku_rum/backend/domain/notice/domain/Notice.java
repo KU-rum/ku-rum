@@ -26,10 +26,10 @@ public class Notice extends BaseEntity {
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = true, length = 500)
     private String category;
 
     @Enumerated(EnumType.STRING)
@@ -39,10 +39,11 @@ public class Notice extends BaseEntity {
     private NoticeStatus noticeStatus;
 
     @Builder
-    private Notice(String title, String url, User user, NoticeStatus noticeStatus) {
+    private Notice(String title, String url, User user, NoticeCategory noticeCategory, NoticeStatus noticeStatus) {
         this.title = title;
         this.url = url;
         this.user = user;
+        this.noticeCategory = noticeCategory;
         this.noticeStatus = noticeStatus;
     }
 
