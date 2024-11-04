@@ -12,7 +12,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,8 +38,8 @@ public class NoticeService {
 
                 // 공지사항의 날짜가 2023년이나 2024년인지 확인
                 if (date.startsWith("2023") || date.startsWith("2024")) {
-                    NoticeCategory category = NoticeCategory.AFFAIR; // 카테고리 예시, 필요에 따라 지정 가능
-                    NoticeStatus status = NoticeStatus.GENERAL; // 상태 예시, 필요에 따라 지정 가능
+                    NoticeCategory category = NoticeCategory.AFFAIR;
+                    NoticeStatus status = NoticeStatus.GENERAL;
 
                     // Notice 객체 생성 및 저장
                     Notice notice = Notice.builder()
@@ -61,13 +60,13 @@ public class NoticeService {
 
             // 다음 페이지로 이동
             if (continueCrawling) {
-                WebElement nextPageButton = driver.findElement(By.cssSelector("#menu2238_obj1168 > div._fnctWrap > form:nth-child(3) > div > div > a._listNext"));
-                if (nextPageButton != null) {
-                    nextPageButton.click();
-                } else {
-                    // 다음 페이지 버튼 없으면 크롤링 종료
-                    continueCrawling = false;
-                }
+                continueCrawling = driver.findElements(By.cssSelector("#menu2238_obj1168 > div._fnctWrap > form:nth-child(3) > div > div > a._listNext"))
+                        .stream()
+                        .findFirst()
+                        .map(nextButton -> {
+                            nextButton.click();
+                            return true;})
+                        .orElse(false);
             }
         }
 
