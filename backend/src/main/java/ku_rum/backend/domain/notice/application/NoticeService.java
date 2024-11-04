@@ -48,9 +48,7 @@ public class NoticeService {
                             .noticeCategory(category)
                             .noticeStatus(status)
                             .build();
-                    System.out.println(date);
                     noticeRepository.save(notice);
-                    System.out.println(date);
                 } else {
                     // 2023년 이전 공지사항이 나오면 크롤링 종료
                     continueCrawling = false;
