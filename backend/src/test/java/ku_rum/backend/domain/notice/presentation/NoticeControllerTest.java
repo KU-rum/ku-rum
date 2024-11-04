@@ -62,7 +62,6 @@ class NoticeControllerTest {
         Notice notice = Notice.builder()
                 .title("Sample Notice")
                 .url("https://example.com")
-                .user(mockUser)
                 .noticeCategory(NoticeCategory.AFFAIR)
                 .noticeStatus(NoticeStatus.GENERAL)
                 .build();

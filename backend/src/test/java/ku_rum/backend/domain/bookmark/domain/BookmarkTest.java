@@ -20,7 +20,7 @@ class BookmarkTest {
     void saveBookmarkWithUserAndNotice() {
         //given
         User user = createUser("사용자1", "202112322");
-        Notice notice = Notice.of("가나다라", "naver.com/abc123", user);
+        Notice notice = Notice.of("가나다라", "naver.com/abc123");
 
         //when
         Bookmark bookmark = Bookmark.of(user, notice);

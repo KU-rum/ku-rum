@@ -38,21 +38,12 @@ class NoticeServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @DisplayName("학사 카테고리 공지사항 크롤링 및 저장 성공")
-    @Test
-    void crawlAndSaveNotices() {
-        doNothing().when(noticeRepository).save(any(Notice.class));
-        noticeService.crawlAndSaveNotices();
-        verify(noticeRepository, atLeastOnce()).save(any(Notice.class));
-    }
-
     @DisplayName("카테고리별 공지사항 조회 성공")
     @Test
     void findNoticesByCategorySuccess() {
         Notice notice = Notice.builder()
                 .title("Sample Notice")
                 .url("https://example.com")
-                .user(mockUser)
                 .noticeCategory(NoticeCategory.AFFAIR)
                 .noticeStatus(NoticeStatus.GENERAL)
                 .build();

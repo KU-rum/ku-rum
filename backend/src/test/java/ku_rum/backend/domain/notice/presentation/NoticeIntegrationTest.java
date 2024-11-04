@@ -27,8 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Commit
-@Transactional
 class NoticeIntegrationTest {
 
     @Autowired
@@ -76,7 +74,5 @@ class NoticeIntegrationTest {
                 .andExpect(jsonPath("$.data[0].title").value(firstNotice.getTitle()))
                 .andExpect(jsonPath("$.data[0].url").value(firstNotice.getUrl()));
 
-        entityManager.flush();
-        entityManager.clear();
     }
 }
