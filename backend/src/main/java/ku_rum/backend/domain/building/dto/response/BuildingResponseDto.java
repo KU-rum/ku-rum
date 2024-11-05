@@ -1,23 +1,23 @@
-package ku_rum.backend.domain.building.dto;
+package ku_rum.backend.domain.building.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 public class BuildingResponseDto {
 
-  private int buildingId;
-  private int categoryId;
+  private Long buildingId;
   private String buildingName;
-  private int buildingNumber;
+  private Long buildingNumber;
   private String bulidingAbbreviation;
-  private double latitude;
-  private double longtitude;
+  private BigDecimal latitude;
+  private BigDecimal longtitude;
 
   @Builder
-  public BuildingResponseDto(int buildingId, int categoryId, String buildingName, int buildingNumber, String bulidingAbbreviation, double latitude, double longtitude) {
+  public BuildingResponseDto(Long buildingId, String buildingName, Long buildingNumber, String bulidingAbbreviation, BigDecimal latitude, BigDecimal longtitude) {
     this.buildingId = buildingId;
-    this.categoryId = categoryId;
     this.buildingName = buildingName;
     this.buildingNumber = buildingNumber;
     this.bulidingAbbreviation = bulidingAbbreviation;

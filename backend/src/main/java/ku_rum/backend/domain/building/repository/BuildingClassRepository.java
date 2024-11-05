@@ -2,9 +2,12 @@ package ku_rum.backend.domain.building.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.domain.QBuilding;
 import ku_rum.backend.domain.building.domain.QBuildingCategory;
-import ku_rum.backend.domain.building.dto.BuildingResponseDto;
+import ku_rum.backend.domain.building.dto.response.BuildingResponseDto;
 import ku_rum.backend.domain.category.domain.QCategory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,57 +25,39 @@ public class BuildingClassRepository {
   private final QBuildingCategory buildingCategory = QBuildingCategory.buildingCategory;
   private final QCategory category = QCategory.category;
 
+  @PersistenceContext
+  EntityManager entityManager;
+
   public List<BuildingResponseDto> findAllBuildings() {
-    return queryFactory
-            .select(Projections.constructor(BuildingResponseDto.class,
-                    building.id.intValue(),
-                    category.id.intValue(),
-                    building.name,
-                    building.number.intValue(),
-                    building.abbreviation,
-                    building.latitude.doubleValue(),
-                    building.longitude.doubleValue()))
-            .from(building)
-            .innerJoin(buildingCategory).on(buildingCategory.building.eq(building))
-            .innerJoin(category).on(buildingCategory.category.eq(category))
-            .fetch();//결과 list 로 반환
+    String query = "SELECT new ku_rum.backend.domain.building.dto.response.BuildingResponseDto(" +
+            "m.id, m.name, m.number, m.abbreviation, m.latitude, m.longitude" +
+            ") " +
+            "FROM Building m";
+
+    return entityManager.createQuery(query, BuildingResponseDto.class)
+            .getResultList();
   }
 
-  public BuildingResponseDto findBuilding(int number) {
-    return queryFactory
-            .select(Projections.constructor(BuildingResponseDto.class,
-                    building.id.intValue(),
-                    category.id.intValue(),
-                    building.name,
-                    building.number.intValue(),
-                    building.abbreviation,
-                    building.latitude.doubleValue(),
-                    building.longitude.doubleValue()))
-            .from(building)
-            .where(building.number.eq((long) number))
-            .innerJoin(buildingCategory).on(buildingCategory.building.eq(building))
-            .innerJoin(category).on(buildingCategory.category.eq(category))
-            .fetchOne();
+  public BuildingResponseDto findBuildingByNumber(int number) {
+    String query = "SELECT new ku_rum.backend.domain.building.dto.response.BuildingResponseDto(" +
+            "m.id, m.name, m.number, m.abbreviation, m.latitude, m.longitude" +
+            ") " +
+            "FROM Building m " +
+            "where m.number =: number";
+    return entityManager.createQuery(query, BuildingResponseDto.class)
+            .setParameter("number", number)
+            .getSingleResult();
   }
 
-
-  public BuildingResponseDto findBuilding(String name) {
-    BuildingResponseDto result =  queryFactory
-            .select(Projections.constructor(BuildingResponseDto.class,
-                    building.id.intValue(),
-                    category.id.intValue(),
-                    building.name,
-                    building.number.intValue(),
-                    building.abbreviation,
-                    building.latitude.doubleValue(),
-                    building.longitude.doubleValue()))
-            .from(building)
-            .where(building.name.eq(name))
-            .innerJoin(buildingCategory).on(buildingCategory.building.eq(building))
-            .innerJoin(category).on(buildingCategory.category.eq(category))
-            .fetchOne();
-    return result;
-
+  public BuildingResponseDto findBuildingByName(int name) {
+    String query = "SELECT new ku_rum.backend.domain.building.dto.response.BuildingResponseDto(" +
+            "m.id, m.name, m.number, m.abbreviation, m.latitude, m.longitude" +
+            ") " +
+            "FROM Building m " +
+            "where m.name =: name";
+    return entityManager.createQuery(query, BuildingResponseDto.class)
+            .setParameter("name", name)
+            .getSingleResult();
   }
 
   public BuildingResponseDto findBuildingWithAbbrev(String abbrevWithoutNumber) {

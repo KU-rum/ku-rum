@@ -1,30 +1,32 @@
 package ku_rum.backend.domain.building.service;
 
-import ku_rum.backend.domain.building.dto.BuildingResponseDto;
+import ku_rum.backend.domain.building.dto.response.BuildingResponseDto;
 import ku_rum.backend.domain.building.repository.BuildingClassRepository;
+import ku_rum.backend.global.exception.building.BuildingNotFoundException;
+import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
+import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BuildingSearchService {
   private final BuildingClassRepository buildingClassRepository;
 
-  private static final List<String> BUILDING_ABBREV_LIST = Arrays.asList(
-          "경영", "상허관", "사", "예", "언어원", "종강", "의",
-          "생", "동", "산학", "수", "새", "건", "부", "문",
-          "공", "신공", "이", "창"
-  );
 
-  public List<BuildingResponseDto> findAllBuildings() {
-    return buildingClassRepository.findAllBuildings();
+  public List<BuildingResponseDto> findAllBuildings(){
+    return Optional.ofNullable(buildingClassRepository.findAllBuildings())
+            .filter(buildings -> !buildings.isEmpty())
+            .orElseThrow(() -> new BuildingNotRegisteredException(BaseExceptionResponseStatus.NO_BUILDING_REGISTERED_CURRENTLY));//리스트가 비어있는 경우 예외처리
   }
 
   public BuildingResponseDto viewBuildingByNumber(int number) {
-    return buildingClassRepository.findBuilding(number);
+    return Optional.ofNullable(buildingClassRepository.findBuildingByNumber(number))
+            .filter(building -> (building != null) )
+            .orElseThrow(()-> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER));
   }
 
   public BuildingResponseDto findBuilding(String name) {
@@ -41,14 +43,14 @@ public class BuildingSearchService {
     }
   }
 
-  public String getAbbrevWithoutNumber(String name) {
+  public String getAbbrevWithoutNumber(String name) {//optional 로 처리!
     if (name == null || name.isEmpty()) {
       return "";
     }
 
     StringBuilder result = new StringBuilder();
 
-    //한글만 추출
+    //한글만 추출 -> 람다로 처리!
     for (char c : name.toCharArray()) {
       if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_SYLLABLES) {
         result.append(c);
@@ -61,5 +63,28 @@ public class BuildingSearchService {
   public boolean isValidBuildingAbbrev(String abbrev) {
     return BUILDING_ABBREV_LIST.stream()
             .anyMatch(validAbbrev -> abbrev.startsWith(validAbbrev));
+  }
+
+  public BuildingResponseDto viewBuildingByName(String name) {
+    int checkOriginal = checkMatchWithOriginalName(name);
+    int checkAbbrev = checkMatchWithAbbreviationName(name);
+  }
+
+  /**
+   * 유효한 줄임말 명칭인지 체크
+   *
+   * @param name
+   */
+  private int checkMatchWithAbbreviationName(String name) {
+  }
+
+  /**
+   * 유효한 정식명칭인지 체크
+   *
+   * @param name
+   */
+  private int checkMatchWithOriginalName(String name) {
+    BuildingAbbrev.valueOf(name);
+
   }
 }

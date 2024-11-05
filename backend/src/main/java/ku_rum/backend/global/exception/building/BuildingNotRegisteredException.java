@@ -5,10 +5,13 @@ import ku_rum.backend.global.response.status.ResponseStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-public class BuildingNotRegisteredException extends BuildingBaseException{
+import java.util.function.Supplier;
 
-  public BuildingNotRegisteredException(String message, BaseExceptionResponseStatus status) {
-    super(message, status);
+@Getter
+public class BuildingNotRegisteredException extends RuntimeException{
+
+  private BaseExceptionResponseStatus status;
+  public BuildingNotRegisteredException(BaseExceptionResponseStatus status) {
+    this.status = status;
   }
 }
