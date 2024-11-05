@@ -1,5 +1,9 @@
 package ku_rum.backend.domain.building.service;
 
+import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
+
+import java.util.Optional;
+
 public enum BuildingAbbrev {
 
   경영("경영관"),
@@ -21,12 +25,33 @@ public enum BuildingAbbrev {
   신공("신공학관"),
   이("과학관"),
   창("창의관");
-  
+
   final private String originalName;
+
   public String getOriginalName(){
     return originalName;
   }
   private BuildingAbbrev(String originalName){
     this.originalName = originalName;
+  }
+
+  // originalName 값으로찾는 메서드
+  public static Optional<BuildingAbbrev> fromOriginalName(String originalName) {
+    for (BuildingAbbrev abbrev : BuildingAbbrev.values()) {
+      if (abbrev.originalName.equals(originalName)) {
+        return Optional.of(abbrev);
+      }
+    }
+    return Optional.empty();
+  }
+
+  // 줄임말로 값으로찾는 메서드
+  public static Optional<BuildingAbbrev> fromAbbrevName(String abbrevName) {
+    for (BuildingAbbrev abbrev : BuildingAbbrev.values()) {
+      if (abbrev.name().equals(abbrevName)) {
+        return Optional.of(abbrev);
+      }
+    }
+    return Optional.empty();
   }
 }

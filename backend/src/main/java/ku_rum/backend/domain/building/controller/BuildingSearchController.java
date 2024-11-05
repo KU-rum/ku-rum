@@ -1,19 +1,12 @@
 package ku_rum.backend.domain.building.controller;
 
 import ku_rum.backend.domain.building.dto.response.BuildingResponseDto;
-import ku_rum.backend.domain.building.dto.response.BuildingsResponse;
 import ku_rum.backend.domain.building.service.BuildingSearchService;
-import ku_rum.backend.global.exception.building.BuildingsNotFoundException;
 import ku_rum.backend.global.response.BaseResponse;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,7 +35,7 @@ public class BuildingSearchController {
    * @param number
    * @return
    */
-  @GetMapping("/search/{number}")
+  @GetMapping("/searchNumber")
   public BaseResponse<BuildingResponseDto> viewBuildingByNumber(@RequestParam("number") int number) {
     BuildingResponseDto result = buildingSearchService.viewBuildingByNumber(number);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
@@ -54,7 +47,7 @@ public class BuildingSearchController {
    * @param name
    * @return
    */
-  @GetMapping("/search/{name}")
+  @GetMapping("/searchName")
   public BaseResponse<BuildingResponseDto> viewBuildingByName(@RequestParam("name") String name){
     BuildingResponseDto result = buildingSearchService.viewBuildingByName(name);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);

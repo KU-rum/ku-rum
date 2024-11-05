@@ -1,25 +1,10 @@
 package ku_rum.backend.domain.building.controller;
 
 import ku_rum.backend.common.BaseControllerTest;
-import ku_rum.backend.domain.building.dto.response.BuildingResponseDto;
 import ku_rum.backend.domain.building.repository.BuildingClassRepository;
 import ku_rum.backend.domain.building.service.BuildingSearchService;
-import ku_rum.backend.global.exception.building.BuildingsNotFoundException;
-import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BuildingSearchController.class)
 class BuildingSearchControllerTest extends BaseControllerTest {

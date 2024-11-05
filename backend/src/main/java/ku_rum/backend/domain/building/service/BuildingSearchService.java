@@ -25,49 +25,17 @@ public class BuildingSearchService {
 
   public BuildingResponseDto viewBuildingByNumber(int number) {
     return Optional.ofNullable(buildingClassRepository.findBuildingByNumber(number))
-            .filter(building -> (building != null) )
-            .orElseThrow(()-> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER));
-  }
-
-  public BuildingResponseDto findBuilding(String name) {
-    String abbrevWithoutNumber = getAbbrevWithoutNumber(name);
-
-    if (abbrevWithoutNumber.isEmpty()){
-      return null;
-    }
-    //추출된 약어가 유효한 건물 줄임말 목록에 있는지 확인
-    if (isValidBuildingAbbrev(abbrevWithoutNumber)) {
-      return buildingClassRepository.findBuildingWithAbbrev(abbrevWithoutNumber); //줄임말로 조회
-    }else {
-      return buildingClassRepository.findBuilding(abbrevWithoutNumber); //정식명칭으로 조회
-    }
-  }
-
-  public String getAbbrevWithoutNumber(String name) {//optional 로 처리!
-    if (name == null || name.isEmpty()) {
-      return "";
-    }
-
-    StringBuilder result = new StringBuilder();
-
-    //한글만 추출 -> 람다로 처리!
-    for (char c : name.toCharArray()) {
-      if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HANGUL_SYLLABLES) {
-        result.append(c);
-      }
-    }
-
-    return result.toString().trim();
-  }
-
-  public boolean isValidBuildingAbbrev(String abbrev) {
-    return BUILDING_ABBREV_LIST.stream()
-            .anyMatch(validAbbrev -> abbrev.startsWith(validAbbrev));
+            .filter(c -> (c != null))
+            .orElseThrow(() -> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER));
   }
 
   public BuildingResponseDto viewBuildingByName(String name) {
-    int checkOriginal = checkMatchWithOriginalName(name);
-    int checkAbbrev = checkMatchWithAbbreviationName(name);
+    BuildingAbbrev foundBuildingAbbrev = Optional.ofNullable(checkMatchWithOriginalName(name))
+            .orElseGet(() -> checkMatchWithAbbreviationName(name))
+            .filter(c -> (c!= null))
+            .orElseThrow(()-> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME));
+
+    return buildingClassRepository.findBuildingByName(foundBuildingAbbrev.getOriginalName());
   }
 
   /**
@@ -75,7 +43,8 @@ public class BuildingSearchService {
    *
    * @param name
    */
-  private int checkMatchWithAbbreviationName(String name) {
+  private Optional<BuildingAbbrev> checkMatchWithAbbreviationName(String name) {
+    return BuildingAbbrev.fromAbbrevName(name);
   }
 
   /**
@@ -83,8 +52,7 @@ public class BuildingSearchService {
    *
    * @param name
    */
-  private int checkMatchWithOriginalName(String name) {
-    BuildingAbbrev.valueOf(name);
-
+  private Optional<BuildingAbbrev> checkMatchWithOriginalName(String name) {
+    return BuildingAbbrev.fromOriginalName(name);
   }
 }
