@@ -36,22 +36,22 @@ public enum BuildingAbbrev {
   }
 
   // originalName 값으로찾는 메서드
-  public static Optional<BuildingAbbrev> fromOriginalName(String originalName) {
+  public static BuildingAbbrev fromOriginalName(String originalName) {
     for (BuildingAbbrev abbrev : BuildingAbbrev.values()) {
       if (abbrev.originalName.equals(originalName)) {
-        return Optional.of(abbrev);
+        return abbrev;
       }
     }
-    return Optional.empty();
+    return null;
   }
 
   // 줄임말로 값으로찾는 메서드
-  public static Optional<BuildingAbbrev> fromAbbrevName(String abbrevName) {
+  public static BuildingAbbrev fromAbbrevName(String abbrevName) {
     for (BuildingAbbrev abbrev : BuildingAbbrev.values()) {
       if (abbrev.name().equals(abbrevName)) {
-        return Optional.of(abbrev);
+        return abbrev;
       }
     }
-    return Optional.empty();
+    return null;
   }
 }

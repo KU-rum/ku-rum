@@ -30,14 +30,25 @@ public class BuildingSearchService {
   }
 
   public BuildingResponseDto viewBuildingByName(String name) {
+    BuildingAbbrev result = null;
     name = removeNumbersInName(name);
     String finalName = name;
-    BuildingAbbrev foundBuildingAbbrev = Optional.ofNullable(checkMatchWithOriginalName(finalName))
-            .orElseGet(() -> checkMatchWithAbbreviationName(finalName))
-            .filter(c -> (c!= null))
-            .orElseThrow(()-> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME));
 
-    return buildingClassRepository.findBuildingByName(foundBuildingAbbrev.getOriginalName());
+    Optional<BuildingAbbrev> foundBuildingAbbrev1 = Optional.ofNullable(checkMatchWithOriginalName(finalName));
+    Optional<BuildingAbbrev> foundBuildingAbbrev2 = Optional.ofNullable(checkMatchWithAbbreviationName(finalName));
+
+    if (foundBuildingAbbrev1.isEmpty() && foundBuildingAbbrev2.isEmpty())
+            throw new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME);
+    else {
+      if (foundBuildingAbbrev1.isEmpty())
+        result = foundBuildingAbbrev2.get();
+      else
+        result = foundBuildingAbbrev1.get();
+
+    }
+
+
+    return buildingClassRepository.findBuildingByName(result.getOriginalName());
   }
 
   /**
@@ -62,7 +73,7 @@ public class BuildingSearchService {
    *
    * @param name
    */
-  private Optional<BuildingAbbrev> checkMatchWithAbbreviationName(String name) {
+  private BuildingAbbrev checkMatchWithAbbreviationName(String name) {
     return BuildingAbbrev.fromAbbrevName(name);
   }
 
@@ -71,7 +82,7 @@ public class BuildingSearchService {
    *
    * @param name
    */
-  private Optional<BuildingAbbrev> checkMatchWithOriginalName(String name) {
+  private BuildingAbbrev checkMatchWithOriginalName(String name) {
     return BuildingAbbrev.fromOriginalName(name);
   }
 }
