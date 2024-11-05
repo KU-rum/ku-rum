@@ -1,6 +1,6 @@
 package ku_rum.backend.domain.building.controller;
 
-import ku_rum.backend.domain.building.dto.response.BuildingResponseDto;
+import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.building.service.BuildingSearchService;
 import ku_rum.backend.global.response.BaseResponse;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
@@ -24,8 +24,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping
-  public BaseResponse<List<BuildingResponseDto>> viewAll() {
-    List<BuildingResponseDto> results = buildingSearchService.findAllBuildings();
+  public BaseResponse<List<BuildingResponse>> viewAll() {
+    List<BuildingResponse> results = buildingSearchService.findAllBuildings();
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(),results);
   }
 
@@ -36,8 +36,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/searchNumber")
-  public BaseResponse<BuildingResponseDto> viewBuildingByNumber(@RequestParam("number") int number) {
-    BuildingResponseDto result = buildingSearchService.viewBuildingByNumber(number);
+  public BaseResponse<BuildingResponse> viewBuildingByNumber(@RequestParam("number") int number) {
+    BuildingResponse result = buildingSearchService.viewBuildingByNumber(number);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
 
@@ -48,8 +48,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/searchName")
-  public BaseResponse<BuildingResponseDto> viewBuildingByName(@RequestParam("name") String name){
-    BuildingResponseDto result = buildingSearchService.viewBuildingByName(name.trim());
+  public BaseResponse<BuildingResponse> viewBuildingByName(@RequestParam("name") String name){
+    BuildingResponse result = buildingSearchService.viewBuildingByName(name.trim());
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
 }

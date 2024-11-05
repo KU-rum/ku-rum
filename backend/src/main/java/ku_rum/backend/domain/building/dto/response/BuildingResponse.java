@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.math.BigDecimal;
 
 @Getter
-public class BuildingResponseDto {
+public class BuildingResponse {
 
   private Long buildingId;
   private String buildingName;
@@ -16,7 +16,7 @@ public class BuildingResponseDto {
   private BigDecimal longtitude;
 
   @Builder
-  public BuildingResponseDto(Long buildingId, String buildingName, Long buildingNumber, String bulidingAbbreviation, BigDecimal latitude, BigDecimal longtitude) {
+  public BuildingResponse(Long buildingId, String buildingName, Long buildingNumber, String bulidingAbbreviation, BigDecimal latitude, BigDecimal longtitude) {
     this.buildingId = buildingId;
     this.buildingName = buildingName;
     this.buildingNumber = buildingNumber;
