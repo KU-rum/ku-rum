@@ -6,7 +6,6 @@ import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
 import ku_rum.backend.global.response.BaseErrorResponse;
-import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,10 +52,8 @@ public class ControllerAdvice {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(BuildingNotFoundException.class)
-    public BaseErrorResponse handleNoBuildingFoundException(final BaseExceptionResponseStatus e){
-        return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    public BaseErrorResponse handleNoBuildingFoundException(final BuildingNotFoundException e){
+        return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getStatus().getMessage());
     }
-
-
 
 }

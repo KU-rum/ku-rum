@@ -30,12 +30,31 @@ public class BuildingSearchService {
   }
 
   public BuildingResponseDto viewBuildingByName(String name) {
-    BuildingAbbrev foundBuildingAbbrev = Optional.ofNullable(checkMatchWithOriginalName(name))
-            .orElseGet(() -> checkMatchWithAbbreviationName(name))
+    name = removeNumbersInName(name);
+    String finalName = name;
+    BuildingAbbrev foundBuildingAbbrev = Optional.ofNullable(checkMatchWithOriginalName(finalName))
+            .orElseGet(() -> checkMatchWithAbbreviationName(finalName))
             .filter(c -> (c!= null))
             .orElseThrow(()-> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME));
 
     return buildingClassRepository.findBuildingByName(foundBuildingAbbrev.getOriginalName());
+  }
+
+  /**
+   * 줄임말 이름인 경우, 숫자 제거 (ex. 공A101 -> 공A)
+   *
+   * @param name
+   * @return
+   */
+  private String removeNumbersInName(String name) {
+    char[] array = name.toCharArray();
+    StringBuilder sb = new StringBuilder();
+    for (char a : array) {
+      if (!Character.isDigit(a)) {  // 숫자가 아닐 경우 추가
+        sb.append(a);
+      }
+    }
+    return sb.toString();
   }
 
   /**

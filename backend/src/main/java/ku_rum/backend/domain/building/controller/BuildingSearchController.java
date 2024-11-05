@@ -49,7 +49,7 @@ public class BuildingSearchController {
    */
   @GetMapping("/searchName")
   public BaseResponse<BuildingResponseDto> viewBuildingByName(@RequestParam("name") String name){
-    BuildingResponseDto result = buildingSearchService.viewBuildingByName(name);
+    BuildingResponseDto result = buildingSearchService.viewBuildingByName(name.trim());
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
 }
