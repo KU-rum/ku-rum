@@ -32,14 +32,4 @@ public class UserController {
         return BaseResponse.ok(null);
     }
 
-    @PostMapping("me/mails")
-    public BaseResponse<Void> sendMail(@RequestBody @Valid final MailSendRequest mailSendRequest) {
-        userService.sendCodeToEmail(mailSendRequest);
-        return BaseResponse.ok(null);
-    }
-
-    @GetMapping("me/mail_verifications")
-    public BaseResponse<MailVerificationResponse> verificationEmail(@RequestBody @Valid final MailVerificationRequest mailVerificationRequest) {
-        return BaseResponse.ok(userService.verifiedCode(mailVerificationRequest));
-    }
 }
