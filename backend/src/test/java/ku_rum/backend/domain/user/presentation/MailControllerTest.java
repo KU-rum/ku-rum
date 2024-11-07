@@ -1,11 +1,9 @@
 package ku_rum.backend.domain.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ku_rum.backend.domain.user.application.UserService;
-import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
+import ku_rum.backend.domain.user.application.MailService;
 import ku_rum.backend.domain.user.dto.request.MailSendRequest;
 import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
-import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
-class UserControllerTest {
+@WebMvcTest(MailController.class)
+class MailControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -30,41 +28,17 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private UserService userService;
+    private MailService mailService;
 
-    @DisplayName("신규 유저를 생성한다.")
+    @DisplayName("이메일 인증 요청을 보낸다.")
     @Test
-    void createUser() throws Exception {
+    void sendMail() throws Exception {
         //given
-        UserSaveRequest request = UserSaveRequest.builder()
-                .email("kmw106933")
-                .password("password123")
-                .department("컴퓨터공학부")
-                .nickname("미미미누")
-                .studentId("202112322")
-                .build();
-
-        // when then
-        mockMvc.perform(post("/api/v1/users")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.status").value("OK"))
-                .andExpect(jsonPath("$.message").value("OK"));
-    }
-
-    @DisplayName("이메일 중복을 확인한다.")
-    @Test
-    void validateEmail() throws Exception {
-        //given
-        EmailValidationRequest emailValidationRequest = new EmailValidationRequest("kmw106933@naver.com");
+        MailSendRequest mailSendRequest = new MailSendRequest("kmw10693@konkuk.ac.kr");
 
         //when then
-        mockMvc.perform(post("/api/v1/users/validations/email")
-                        .content(objectMapper.writeValueAsString(emailValidationRequest))
+        mockMvc.perform(post("/api/v1/mails")
+                        .content(objectMapper.writeValueAsString(mailSendRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -74,4 +48,21 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("OK"));
     }
 
+    @DisplayName("이메일 인증 코드를 검증한다.")
+    @Test
+    void verificationEmail() throws Exception {
+        //given
+        MailVerificationRequest mailVerificationRequest = new MailVerificationRequest("kmw10693@konkuk.ac.kr", "1234");
+
+        //when then
+        mockMvc.perform(get("/api/v1/mails/mail_verifications")
+                        .content(objectMapper.writeValueAsString(mailVerificationRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.message").value("OK"));
+    }
 }

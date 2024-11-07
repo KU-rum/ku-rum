@@ -5,6 +5,7 @@ import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
+import ku_rum.backend.global.exception.user.MailSendException;
 import ku_rum.backend.global.response.BaseErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class ControllerAdvice {
         log.error(e.getMessage());
         return new BaseErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
-
+  
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ExceptionHandler(BuildingNotRegisteredException.class)
     public BaseErrorResponse handleNoBuildingRegisteredException(final BuildingNotRegisteredException e) {
@@ -56,4 +57,10 @@ public class ControllerAdvice {
         return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getStatus().getMessage());
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(MailSendException.class)
+    public BaseErrorResponse handleMailSendException(final MailSendException e) {
+        log.error(e.getMessage());
+        return new BaseErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
 }

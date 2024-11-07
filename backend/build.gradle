@@ -38,6 +38,9 @@ dependencies {
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	//Mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {
