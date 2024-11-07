@@ -4,32 +4,28 @@ import jakarta.validation.Valid;
 import ku_rum.backend.domain.user.application.MailService;
 import ku_rum.backend.domain.user.application.UserService;
 import ku_rum.backend.domain.user.dto.request.MailSendRequest;
-import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
 import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
-import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.user.dto.response.MailVerificationResponse;
-import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
 import ku_rum.backend.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/mails")
 @RequiredArgsConstructor
 @Validated
-public class UserController {
-    private final UserService userService;
+public class MailController {
+    private final MailService mailService;
 
     @PostMapping
-    public BaseResponse<UserSaveResponse> join(@RequestBody @Valid final UserSaveRequest userSaveRequest) {
-        return BaseResponse.ok(userService.saveUser(userSaveRequest));
-    }
-
-    @PostMapping("/validations/email")
-    public BaseResponse<Void> validateEmail(@RequestBody @Valid final EmailValidationRequest emailValidationRequest) {
-        userService.validateEmail(emailValidationRequest);
+    public BaseResponse<Void> sendMail(@RequestBody @Valid final MailSendRequest mailSendRequest) {
+        mailService.sendCodeToEmail(mailSendRequest);
         return BaseResponse.ok(null);
     }
 
+    @GetMapping("/mail_verifications")
+    public BaseResponse<MailVerificationResponse> verificationEmail(@RequestBody @Valid final MailVerificationRequest mailVerificationRequest) {
+        return BaseResponse.ok(mailService.verifiedCode(mailVerificationRequest));
+    }
 }
