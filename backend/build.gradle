@@ -39,8 +39,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
-	//Mail
+	// Mail Service
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 }
 
 tasks.named('test') {
