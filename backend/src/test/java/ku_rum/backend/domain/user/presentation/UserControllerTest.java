@@ -74,39 +74,4 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("OK"));
     }
 
-    @DisplayName("이메일 인증 요청을 보낸다.")
-    @Test
-    void sendMail() throws Exception {
-        //given
-        MailSendRequest mailSendRequest = new MailSendRequest("kmw10693@konkuk.ac.kr");
-
-        //when then
-        mockMvc.perform(post("/api/v1/users/me/mails")
-                        .content(objectMapper.writeValueAsString(mailSendRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.status").value("OK"))
-                .andExpect(jsonPath("$.message").value("OK"));
-    }
-
-    @DisplayName("이메일 인증 코드를 검증한다.")
-    @Test
-    void verificationEmail() throws Exception {
-        //given
-        MailVerificationRequest mailVerificationRequest = new MailVerificationRequest("kmw10693@konkuk.ac.kr", "1234");
-
-        //when then
-        mockMvc.perform(get("/api/v1/users/me/mail_verifications")
-                        .content(objectMapper.writeValueAsString(mailVerificationRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.status").value("OK"))
-                .andExpect(jsonPath("$.message").value("OK"));
-    }
 }

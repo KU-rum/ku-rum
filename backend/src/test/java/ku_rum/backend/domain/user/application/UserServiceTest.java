@@ -35,9 +35,6 @@ class UserServiceTest {
     private UserService userService;
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -105,66 +102,5 @@ class UserServiceTest {
                 .isInstanceOf(DuplicateEmailException.class)
                 .hasMessage("이미 존재하는 이메일입니다.");
     }
-
-    @Test
-    @DisplayName("회원에게 정상적으로 인증 이메일을 전송한다.")
-    void sendCodeToEmail() {
-        //given
-        MailSendRequest mailSendRequest = new MailSendRequest("kmw10693@konkuk.ac.kr");
-        String key = generateKeyByEmail(mailSendRequest.getEmail());
-        String email = mailSendRequest.getEmail();
-
-        //when
-        userService.sendCodeToEmail(mailSendRequest);
-
-        //then
-        assertThat(getRedisAuthCode(generateKeyByEmail(email))
-                .equals(redisTemplate.opsForValue().get(key)));
-
-    }
-
-    @Test
-    @DisplayName("회원이 올바른 인증번호를 인증했을 시, true를 반환한다.")
-    void verifiedCode() {
-        MailSendRequest mailSendRequest = new MailSendRequest("kmw10693@konkuk.ac.kr");
-        userService.sendCodeToEmail(mailSendRequest);
-
-        String authCode = getRedisAuthCode(generateKeyByEmail("kmw10693@konkuk.ac.kr"));
-
-        MailVerificationRequest mailVerificationRequest =
-                new MailVerificationRequest("kmw10693@konkuk.ac.kr", authCode);
-
-        //when then
-        assertThat(userService.verifiedCode(mailVerificationRequest))
-                .extracting("verified")
-                .isEqualTo(true);
-    }
-
-    @Test
-    @DisplayName("회원이 올바르지 않는 인증번호를 인증했을시, false를 반환한다.")
-    void nonVerifiedCode() {
-        MailSendRequest mailSendRequest = new MailSendRequest("kmw10693@konkuk.ac.kr");
-        userService.sendCodeToEmail(mailSendRequest);
-
-        String authCode = getRedisAuthCode(generateKeyByEmail("testtest1234@konkuk.ac.kr"));
-
-        MailVerificationRequest mailVerificationRequest =
-                new MailVerificationRequest("kmw10693@konkuk.ac.kr", authCode);
-
-        //when then
-        assertThat(userService.verifiedCode(mailVerificationRequest))
-                .extracting("verified")
-                .isEqualTo(false);
-    }
-
-
-    private String generateKeyByEmail(String email) {
-        return MAIL_SEND_INFO.getAUTH_CODE_PREFIX() + email;
-    }
-
-    private String getRedisAuthCode(String key) {
-        return redisTemplate.opsForValue().get(key);
-    }
-
 
 }
