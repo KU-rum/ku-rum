@@ -19,6 +19,7 @@ import ku_rum.backend.global.exception.user.MailSendException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.
 public class UserService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserSaveResponse saveUser(final UserSaveRequest userSaveRequest) {
@@ -45,8 +47,7 @@ public class UserService {
         validateDuplicateStudentId(userSaveRequest.getStudentId());
         validateDepartmentName(userSaveRequest.getDepartment());
 
-        // TODO Password Encoder 적용
-        String password = userSaveRequest.getPassword();
+        String password = passwordEncoder.encode(userSaveRequest.getPassword());
         Department department = departmentRepository.findByName(userSaveRequest.getDepartment())
                 .orElseThrow(() -> new NoSuchDepartmentException(NO_SUCH_DEPARTMENT));
 
