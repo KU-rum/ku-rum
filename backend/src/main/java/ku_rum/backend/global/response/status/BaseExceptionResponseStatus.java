@@ -43,7 +43,8 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
     /**
      * 600: Category 오류
      */
-    CATEGROYNAME_NOT_EXIST(600, HttpStatus.NOT_FOUND, "존재하지 않는 카테고리명 입니다.");
+    CATEGROYNAME_NOT_EXIST(600, HttpStatus.NOT_FOUND, "존재하지 않는 카테고리명 입니다."),
+    CATEGORYNAME_NOT_PROVIDING_DETAIL(601, HttpStatus.NO_CONTENT, "디테일을 제공하는 카테고리명이 아닙니다.");
 
     private final int code;
     private final HttpStatus status;

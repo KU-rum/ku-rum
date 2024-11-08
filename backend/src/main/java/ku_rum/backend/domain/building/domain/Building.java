@@ -26,6 +26,8 @@ public class Building extends BaseEntity {
 
     private String abbreviation;
 
+    private Long floor;
+
     @Column(nullable = false, precision = 16, scale = 13)
     private BigDecimal latitude;
 

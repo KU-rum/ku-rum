@@ -3,6 +3,7 @@ package ku_rum.backend.global.handler;
 import ku_rum.backend.global.exception.building.BuildingNotFoundException;
 import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
 import ku_rum.backend.global.exception.category.CategoryNotExist;
+import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
@@ -69,5 +70,11 @@ public class ControllerAdvice {
     @ExceptionHandler(CategoryNotExist.class)
     public BaseErrorResponse handleCategoryNotExistException(final CategoryNotExist e){
         return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getStatus().getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ExceptionHandler(CategoryNotProvidingDetail.class)
+    public BaseErrorResponse handleCategoryNotProvidingDetail(final CategoryNotProvidingDetail e){
+        return new BaseErrorResponse(HttpStatus.NO_CONTENT, e.getStatus().getMessage());
     }
 }

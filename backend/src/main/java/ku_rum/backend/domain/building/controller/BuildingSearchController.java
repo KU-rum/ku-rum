@@ -2,6 +2,7 @@ package ku_rum.backend.domain.building.controller;
 
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.building.service.BuildingSearchService;
+import ku_rum.backend.domain.category.response.CategoryDetailResponse;
 import ku_rum.backend.global.response.BaseResponse;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -63,5 +64,21 @@ public class BuildingSearchController {
   public BaseResponse<Object> viewBuildingByCategory(@PathVariable("category") String category){
     List<BuildingResponse> categoryList = buildingSearchService.viewBuildingByCategory(category.trim());
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), categoryList);
+  }
+
+  /**
+   * 카테고리에 해당하는 특정 핀포인트 디테일 정보 확인 (학생식당, K-CUBE/K-HUB)
+   * 
+   * @param category
+   * @param buildingId
+   * @return
+   */
+  @GetMapping("/category/{category}/{buildingId}")
+  public BaseResponse<Object> viewBuildingByCategory(
+          @PathVariable("category") String category,
+          @PathVariable("buildingId") String categorId
+          ){
+    CategoryDetailResponse categoryDetailResponse = buildingSearchService.viewBuildingDetailByCategory(category,categorId);
+    return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), categoryDetailResponse);
   }
 }
