@@ -52,4 +52,16 @@ public class BuildingSearchController {
     BuildingResponse result = buildingSearchService.viewBuildingByName(name.trim());
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
+
+  /**
+   * 특정 카테고리의 핀포인트들 조회 (카테고리명으로)
+   *
+   * @param category
+   * @return
+   */
+  @GetMapping("/category/{category}")
+  public BaseResponse<Object> viewBuildingByCategory(@PathVariable("category") String category){
+    List<BuildingResponse> categoryList = buildingSearchService.viewBuildingByCategory(category.trim());
+    return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), categoryList);
+  }
 }

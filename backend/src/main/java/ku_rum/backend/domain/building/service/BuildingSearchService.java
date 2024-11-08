@@ -1,7 +1,12 @@
 package ku_rum.backend.domain.building.service;
 
+import ku_rum.backend.domain.building.domain.Building;
+import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
+import ku_rum.backend.domain.building.repository.BuildingCategoryQueryRepository;
 import ku_rum.backend.domain.building.repository.BuildingClassRepository;
+import ku_rum.backend.domain.building.repository.BuildingRepository;
+import ku_rum.backend.domain.category.service.CategoryService;
 import ku_rum.backend.global.exception.building.BuildingNotFoundException;
 import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
@@ -10,14 +15,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static ku_rum.backend.domain.building.domain.QBuilding.building;
 
 @Service
 @RequiredArgsConstructor
 public class BuildingSearchService {
   private final BuildingClassRepository buildingClassRepository;
+  private final BuildingRepository buildingRepository;
+  private final CategoryService categoryService;
+  private final BuildingCategoryQueryRepository buildingCategoryQueryRepository;
 
 
-  public List<BuildingResponse> findAllBuildings(){
+  public List<BuildingResponse> findAllBuildings() {
     return Optional.ofNullable(buildingClassRepository.findAllBuildings())
             .filter(buildings -> !buildings.isEmpty())
             .orElseThrow(() -> new BuildingNotRegisteredException(BaseExceptionResponseStatus.NO_BUILDING_REGISTERED_CURRENTLY));//리스트가 비어있는 경우 예외처리
@@ -38,7 +49,7 @@ public class BuildingSearchService {
     Optional<BuildingAbbrev> foundBuildingAbbrev2 = Optional.ofNullable(checkMatchWithAbbreviationName(finalName));
 
     if (foundBuildingAbbrev1.isEmpty() && foundBuildingAbbrev2.isEmpty())
-            throw new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME);
+      throw new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME);
     else {
       if (foundBuildingAbbrev1.isEmpty())
         result = foundBuildingAbbrev2.get();
@@ -84,5 +95,14 @@ public class BuildingSearchService {
    */
   private BuildingAbbrev checkMatchWithOriginalName(String name) {
     return BuildingAbbrev.fromOriginalName(name);
+  }
+
+  public List<BuildingResponse> viewBuildingByCategory(String category) {
+    List<Long> buildingIds = categoryService.findByCategoryReturnBuildingIds(category);//해당하는 기본키 리스트로 가져오기
+    List<Long> buildingIdsFr = buildingCategoryQueryRepository.findByBuildingIds(buildingIds);
+    List<Building> buildingsFound = buildingClassRepository.findAllByIdIn(buildingIdsFr);
+    return buildingsFound.stream()
+            .map(building -> BuildingResponse.of(building))
+            .collect(Collectors.toList());
   }
 }

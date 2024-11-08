@@ -1,0 +1,30 @@
+package ku_rum.backend.domain.category.service;
+
+import ku_rum.backend.domain.building.domain.BuildingCategory;
+import ku_rum.backend.domain.building.repository.BuildingCategoryQueryRepository;
+import ku_rum.backend.domain.building.repository.BuildingCategoryRepository;
+import ku_rum.backend.domain.category.repository.CategoryQueryRepository;
+import ku_rum.backend.domain.category.repository.CategoryRepository;
+import ku_rum.backend.global.exception.category.CategoryNotExist;
+import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class CategoryService {
+  private final CategoryRepository categoryRepository;
+  private final BuildingCategoryQueryRepository buildingCategoryQueryRepository;
+  private final CategoryQueryRepository categoryQueryRepository;
+
+  public List<Long> findByCategoryReturnBuildingIds(String category){
+    List<Long> categoryIds = categoryQueryRepository.findAllByName(category)
+            .orElseThrow(() -> new CategoryNotExist(BaseExceptionResponseStatus.CATEGROYNAME_NOT_EXIST));
+    List<Long> buildingCategoryIds = buildingCategoryQueryRepository.findBuildingIds(categoryIds);
+    return buildingCategoryQueryRepository.findBuildingsByCategoryIds(buildingCategoryIds);
+  }
+}

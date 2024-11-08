@@ -3,6 +3,8 @@ package ku_rum.backend.domain.building.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import ku_rum.backend.domain.building.domain.Building;
+import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,4 +53,12 @@ public class BuildingClassRepository {
             .getSingleResult();
   }
 
+  public List<Building> findAllByIdIn(List<Long> buildingIdsFr) {
+    String query = "SELECT m FROM Building m WHERE m.id IN :buildingIds";
+
+    // buildingIdsFr에 해당하는 모든 Building 엔티티를 조회
+    return entityManager.createQuery(query, Building.class)
+            .setParameter("buildingIds", buildingIdsFr)
+            .getResultList();
+  }
 }
