@@ -113,6 +113,7 @@ public class BuildingSearchService {
             .collect(Collectors.toList());
   }
 
+
   public CategoryDetailResponse viewBuildingDetailByCategory(String category, Long buildingId) {
     boolean check = validateDetailProvidingCategory(category); //디테일을 제공하는 카테고리인지 판별
     if (!check)

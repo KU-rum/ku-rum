@@ -4,21 +4,22 @@ import jakarta.persistence.EntityManager;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
-import ku_rum.backend.domain.building.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.category.response.CategoryCafeteriaDetailResponse;
 import ku_rum.backend.domain.menu.domain.Menu;
 import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @SpringBootTest
+@Transactional
 public class BuildingSearchServiceTest {
 
   @Autowired
@@ -85,10 +86,13 @@ public class BuildingSearchServiceTest {
 
   }
 
-  @Test(expected = CategoryNotProvidingDetail.class)
+  @Test
   public void 디테일_제공안하는_카테고리입력시_실패() throws Exception {
       // given
-      buildingSearchService.viewBuildingDetailByCategory("공학관", 1L);
+      Assertions.assertThrows(CategoryNotProvidingDetail.class, () -> {
+        buildingSearchService.viewBuildingDetailByCategory("공학관", 1L);
+
+      });
   }
 
   @Test
@@ -96,6 +100,9 @@ public class BuildingSearchServiceTest {
       // given
     List<BuildingResponse> responses = buildingSearchService.viewBuildingByCategory("학생회관");
       // when
+    for (BuildingResponse e : responses){
+      System.out.println("Response : " + e.getBulidingAbbreviation());
+    }
       // then
     Assertions.assertEquals(2, responses.size());
   }
