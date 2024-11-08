@@ -4,7 +4,6 @@ import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.building.repository.BuildingCategoryQueryRepository;
-import ku_rum.backend.domain.building.repository.BuildingCategoryRepository;
 import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
 import ku_rum.backend.domain.building.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.CategoryDetail;
@@ -34,7 +33,6 @@ public class BuildingSearchService {
   private final CategoryService categoryService;
   private final BuildingCategoryQueryRepository buildingCategoryQueryRepository;
   private final MenuQueryRepository menuQueryRepository;
-  private final BuildingCategoryRepository buildingCategoryRepository;
 
 
   public List<BuildingResponse> findAllBuildings() {
