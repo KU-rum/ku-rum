@@ -11,9 +11,9 @@ public class CategoryCafeteriaDetailResponse extends CategoryDetailResponse {
   private List<MenuSimpleResponse> menus;
 
   @Builder
-  public CategoryCafeteriaDetailResponse(String category, Long categoryId) {
+  public CategoryCafeteriaDetailResponse(String category, Long buildingId) {
     this.category = category;
-    this.categoryId = categoryId;
+    this.buildingId = buildingId;
   }
 
   public void setMenus(List<MenuSimpleResponse> simplemenus){

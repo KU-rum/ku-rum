@@ -4,7 +4,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import ku_rum.backend.domain.building.domain.Building;
-import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class BuildingClassRepository {
+public class BuildingQueryRepository {
   private final JPAQueryFactory queryFactory;
 
   @PersistenceContext
@@ -60,5 +59,12 @@ public class BuildingClassRepository {
     return entityManager.createQuery(query, Building.class)
             .setParameter("buildingIds", buildingIdsFr)
             .getResultList();
+  }
+
+  public Building findBuildingBy(Long buildingId) {
+    String query = "SELECT m FROM Building m WHERE m.id =: buildingId";
+    return entityManager.createQuery(query, Building.class)
+            .setParameter("buildingId" , buildingId)
+            .getSingleResult();
   }
 }

@@ -1,7 +1,7 @@
 package ku_rum.backend.domain.building.controller;
 
 import ku_rum.backend.common.BaseControllerTest;
-import ku_rum.backend.domain.building.repository.BuildingClassRepository;
+import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
 import ku_rum.backend.domain.building.service.BuildingSearchService;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -12,7 +12,7 @@ class BuildingSearchControllerTest extends BaseControllerTest {
   @MockBean
   private BuildingSearchService buildingSearchService;
   @MockBean
-  private BuildingClassRepository buildingClassRepository;
+  private BuildingQueryRepository buildingQueryRepository;
 
 //  private final List<BuildingResponseDto> mockBuildings = Arrays.asList(
 //          new BuildingResponseDto(1, 1, "공학관", 1, "공", 37.83838, 127.04567),

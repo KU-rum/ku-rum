@@ -2,8 +2,10 @@ package ku_rum.backend.domain.menu.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class MenuSimpleResponse {
   private String  name;
   private Long price;

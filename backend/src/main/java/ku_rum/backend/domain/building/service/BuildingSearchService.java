@@ -1,9 +1,11 @@
 package ku_rum.backend.domain.building.service;
 
 import ku_rum.backend.domain.building.domain.Building;
+import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.building.repository.BuildingCategoryQueryRepository;
-import ku_rum.backend.domain.building.repository.BuildingClassRepository;
+import ku_rum.backend.domain.building.repository.BuildingCategoryRepository;
+import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
 import ku_rum.backend.domain.building.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.CategoryDetail;
 import ku_rum.backend.domain.category.response.CategoryCafeteriaDetailResponse;
@@ -16,6 +18,7 @@ import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
 import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,22 +27,24 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BuildingSearchService {
-  private final BuildingClassRepository buildingClassRepository;
+  private final BuildingQueryRepository buildingQueryRepository;
   private final BuildingRepository buildingRepository;
   private final CategoryService categoryService;
   private final BuildingCategoryQueryRepository buildingCategoryQueryRepository;
   private final MenuQueryRepository menuQueryRepository;
+  private final BuildingCategoryRepository buildingCategoryRepository;
 
 
   public List<BuildingResponse> findAllBuildings() {
-    return Optional.ofNullable(buildingClassRepository.findAllBuildings())
+    return Optional.ofNullable(buildingQueryRepository.findAllBuildings())
             .filter(buildings -> !buildings.isEmpty())
             .orElseThrow(() -> new BuildingNotRegisteredException(BaseExceptionResponseStatus.NO_BUILDING_REGISTERED_CURRENTLY));//리스트가 비어있는 경우 예외처리
   }
 
   public BuildingResponse viewBuildingByNumber(int number) {
-    return Optional.ofNullable(buildingClassRepository.findBuildingByNumber(number))
+    return Optional.ofNullable(buildingQueryRepository.findBuildingByNumber(number))
             .filter(c -> (c != null))
             .orElseThrow(() -> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER));
   }
@@ -63,7 +68,7 @@ public class BuildingSearchService {
     }
 
 
-    return buildingClassRepository.findBuildingByName(result.getOriginalName());
+    return buildingQueryRepository.findBuildingByName(result.getOriginalName());
   }
 
   /**
@@ -104,24 +109,30 @@ public class BuildingSearchService {
   public List<BuildingResponse> viewBuildingByCategory(String category) {
     List<Long> buildingIds = categoryService.findByCategoryReturnBuildingIds(category);//해당하는 기본키 리스트로 가져오기
     List<Long> buildingIdsFr = buildingCategoryQueryRepository.findByBuildingIds(buildingIds);
-    List<Building> buildingsFound = buildingClassRepository.findAllByIdIn(buildingIdsFr);
+    List<Building> buildingsFound = buildingQueryRepository.findAllByIdIn(buildingIdsFr);
     return buildingsFound.stream()
             .map(building -> BuildingResponse.of(building))
             .collect(Collectors.toList());
   }
 
-  public CategoryDetailResponse viewBuildingDetailByCategory(String category, Long categoryId) {
+  public CategoryDetailResponse viewBuildingDetailByCategory(String category, Long buildingId) {
     boolean check = validateDetailProvidingCategory(category); //디테일을 제공하는 카테고리인지 판별
     if (!check)
       throw new CategoryNotProvidingDetail(BaseExceptionResponseStatus.CATEGORYNAME_NOT_PROVIDING_DETAIL);
-    CategoryDetailResponse response = (category.equals("학생식당")) ? new CategoryCafeteriaDetailResponse(category, categoryId) : new CategoryKcubeDetailResponse(category, categoryId);
-    if (response.getClass().equals(CategoryCafeteriaDetailResponse.class)){//학생식당 디테일 정보 제공 응답
-      ((CategoryCafeteriaDetailResponse) response).setMenus(menuQueryRepository.findAllByCategoryId(categoryId));
-    }else{//케이큐브 디테일 정보 제공 응답
-
+    CategoryDetailResponse response = (category.equals("학생식당")) ? new CategoryCafeteriaDetailResponse(category, buildingId) : new CategoryKcubeDetailResponse(category, buildingId);
+    if (response.getClass().equals(CategoryCafeteriaDetailResponse.class)) {
+      Optional<Building> building = buildingRepository.findById(buildingId);
+      if (building.isPresent()) {
+        Optional<BuildingCategory> buildingCategory = buildingCategoryQueryRepository.findByBuildingId(building.get().getId());
+        if (buildingCategory.isPresent()) {
+          ((CategoryCafeteriaDetailResponse) response).setMenus(
+                  menuQueryRepository.findAllByCategoryId(buildingCategory.get().getCategory().getId()));
+        }
+      }
+    } else {
+      ((CategoryKcubeDetailResponse) response).setFloor(buildingQueryRepository.findBuildingBy(buildingId));
     }
     return response;
-
   }
 
   private boolean validateDetailProvidingCategory(String category) {
