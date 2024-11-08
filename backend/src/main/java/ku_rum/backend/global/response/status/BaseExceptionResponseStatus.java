@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 public enum BaseExceptionResponseStatus implements ResponseStatus{
 
     /**
+     * 000: 서버 내부 오류
+     */
+    INTERNAL_SERVER_ERROR(000, HttpStatus.INTERNAL_SERVER_ERROR, "서버내부 오류입니다."),
+    /**
      * 100: 요청 성공 (OK)
      */
     SUCCESS(100, HttpStatus.OK, "요청에 성공하였습니다."),
@@ -28,7 +32,14 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
     /**
      * 400: Department 오류
      */
-    NO_SUCH_DEPARTMENT(400, HttpStatus.BAD_REQUEST, "존재하지 않는 학과명입니다.");
+    NO_SUCH_DEPARTMENT(400, HttpStatus.BAD_REQUEST, "존재하지 않는 학과명입니다."),
+
+    /**
+     * 500: Building 오류
+     */
+    BUILDING_DATA_NOT_FOUND_BY_NAME(500, HttpStatus.NOT_FOUND, "유효하지 않은 건물 명칭입니다."),
+    BUILDING_DATA_NOT_FOUND_BY_NUMBER(501, HttpStatus.NOT_FOUND, "유효하지 않은 건물 번호입니다."),
+    NO_BUILDING_REGISTERED_CURRENTLY(502, HttpStatus.NO_CONTENT, "등록된 건물이 없습니다.");
 
     private final int code;
     private final HttpStatus status;
