@@ -27,6 +27,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.*;
 
 @Service
@@ -79,7 +81,7 @@ public class UserService {
             throw new NoSuchDepartmentException(NO_SUCH_DEPARTMENT);
         }
     }
-    public BaseResponse<WeinLoginResponse> loginToWein(@Valid WeinLoginRequest weinLoginRequest) {
+    public BaseResponse<WeinLoginResponse> loginToWein(@Valid final WeinLoginRequest weinLoginRequest) {
         // 리다이렉션 전략과 쿠키 저장소를 설정하여 HttpClient 생성
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setRedirectStrategy(new DefaultRedirectStrategy()) // 기본 리다이렉션 전략
@@ -94,15 +96,11 @@ public class UserService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        // 요청 바디 설정
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("userId", weinLoginRequest.getUserId());
-        requestBody.add("pw", weinLoginRequest.getPassword());
-        requestBody.add("rtnUrl", ""); // 리다이렉트 후 이동할 URL 지정, 필요시 수정
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(createRequestBody(weinLoginRequest), headers);
         log.info("Attempting login with userId: {} and password: {}", weinLoginRequest.getUserId(), weinLoginRequest.getPassword());
 
-        // HttpEntity로 요청 엔티티 생성
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+//        // HttpEntity로 요청 엔티티 생성
+//        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         try {
             // 로그인 요청을 전송
@@ -113,8 +111,9 @@ public class UserService {
                     String.class
             );
 
-            String responseBody = response.getBody();
-            if (responseBody != null) {
+            Optional<String> responseBodyOpt = Optional.ofNullable(response.getBody());
+            if (responseBodyOpt.isPresent()) {
+                String responseBody = responseBodyOpt.get();
                 if (responseBody.contains("index.do")) {
                     log.info("Login successful for userId: {}", weinLoginRequest.getUserId());
                     return BaseResponse.ok(new WeinLoginResponse(true, "Wein login successful"));
@@ -133,4 +132,13 @@ public class UserService {
             return BaseResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, new WeinLoginResponse(false, "Wein login failed due to server error"));
         }
     }
+
+    private MultiValueMap<String, String> createRequestBody(WeinLoginRequest weinLoginRequest) {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("userId", weinLoginRequest.getUserId());
+        requestBody.add("pw", weinLoginRequest.getPassword());
+        requestBody.add("rtnUrl", ""); // 리다이렉트 후 이동할 URL 지정, 필요시 수정
+        return requestBody;
+    }
+
 }
