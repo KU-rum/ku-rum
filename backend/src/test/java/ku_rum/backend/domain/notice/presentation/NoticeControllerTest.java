@@ -5,12 +5,9 @@ import ku_rum.backend.domain.notice.application.NoticeService;
 import ku_rum.backend.domain.notice.domain.Notice;
 import ku_rum.backend.domain.notice.domain.NoticeCategory;
 import ku_rum.backend.domain.notice.domain.NoticeStatus;
-import ku_rum.backend.domain.user.domain.User;
-import ku_rum.backend.global.response.BaseResponse;
+import ku_rum.backend.domain.notice.dto.response.NoticeSimpleResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,10 +36,7 @@ class NoticeControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
-    private User mockUser;
-
-    @DisplayName("학사 카테고리 공지사항 크롤링 및 저장 성공")
+    @DisplayName("공지사항 크롤링 성공")
     @Test
     void crawlNoticesSuccess() throws Exception {
         doNothing().when(noticeService).crawlAndSaveNotices();
@@ -59,15 +53,18 @@ class NoticeControllerTest {
     @DisplayName("카테고리별 공지사항 조회 성공")
     @Test
     void getNoticesByCategorySuccess() throws Exception {
-        Notice notice = Notice.builder()
-                .title("Sample Notice")
-                .url("https://example.com")
-                .noticeCategory(NoticeCategory.AFFAIR)
-                .noticeStatus(NoticeStatus.GENERAL)
-                .build();
+        NoticeSimpleResponse response = new NoticeSimpleResponse(
+                Notice.builder()
+                        .title("Notice Category Test")
+                        .url("https://konkuk.ac.kr")
+                        .date("2024-11-07")
+                        .noticeStatus(NoticeStatus.GENERAL)
+                        .noticeCategory(NoticeCategory.AFFAIR)
+                        .build()
+        );
 
         when(noticeService.findNoticesByCategory(NoticeCategory.AFFAIR))
-                .thenReturn(List.of(notice));
+                .thenReturn(List.of(response));
 
         mockMvc.perform(get("/api/v1/notices")
                         .param("category", "AFFAIR")
@@ -75,6 +72,31 @@ class NoticeControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.data[0].title").value("Sample Notice"));
+                .andExpect(jsonPath("$.data[0].title").value("Notice Category Test"));
+    }
+
+    @DisplayName("검색어를 통한 공지사항 조회 성공")
+    @Test
+    void searchNoticesByTitleSuccess() throws Exception {
+        NoticeSimpleResponse response = new NoticeSimpleResponse(
+                Notice.builder()
+                        .title("Notice Search Test")
+                        .url("https://konkuk.ac.kr")
+                        .date("2024-11-07")
+                        .noticeStatus(NoticeStatus.GENERAL)
+                        .noticeCategory(NoticeCategory.AFFAIR)
+                        .build()
+        );
+
+        when(noticeService.searchNoticesByTitle("Search"))
+                .thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/v1/notices/search")
+                        .param("searchTerm", "Search")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.data[0].title").value("Notice Search Test"));
     }
 }
