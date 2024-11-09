@@ -38,4 +38,13 @@ public class Notice extends BaseEntity {
         this.noticeCategory = noticeCategory;
         this.noticeStatus = noticeStatus;
     }
+
+    public static Notice of(String title, String url) {
+        return Notice.builder()
+                .title(title)
+                .url(url)
+                .noticeCategory(NoticeCategory.AFFAIR)
+                .noticeStatus(NoticeStatus.GENERAL)
+                .build();
+    }
 }
