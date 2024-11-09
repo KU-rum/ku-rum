@@ -34,7 +34,7 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setup() {
-        Building building = Building.of("신공학관", "신공", BigDecimal.valueOf(23.32), BigDecimal.valueOf(23.32));
+        Building building = Building.of("신공학관", "신공",  BigDecimal.valueOf(23.32), BigDecimal.valueOf(23.32));
         buildingRepository.save(building);
 
         Department department = Department.of("컴퓨터공학부" , building);

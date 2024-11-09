@@ -106,8 +106,8 @@ public class BuildingSearchService {
 
   public List<BuildingResponse> viewBuildingByCategory(String category) {
     List<Long> buildingIds = categoryService.findByCategoryReturnBuildingIds(category);//해당하는 기본키 리스트로 가져오기
-    List<Long> buildingIdsFr = buildingCategoryQueryRepository.findByBuildingIds(buildingIds);
-    List<Building> buildingsFound = buildingQueryRepository.findAllByIdIn(buildingIdsFr);
+   // List<Long> buildingIdsFr = buildingCategoryQueryRepository.findByBuildingIds(buildingIds);
+    List<Building> buildingsFound = buildingQueryRepository.findAllByIdIn(buildingIds);
     return buildingsFound.stream()
             .map(building -> BuildingResponse.of(building))
             .collect(Collectors.toList());
@@ -118,17 +118,18 @@ public class BuildingSearchService {
     boolean check = validateDetailProvidingCategory(category); //디테일을 제공하는 카테고리인지 판별
     if (!check)
       throw new CategoryNotProvidingDetail(BaseExceptionResponseStatus.CATEGORYNAME_NOT_PROVIDING_DETAIL);
-    CategoryDetailResponse response = (category.equals("학생식당")) ? new CategoryCafeteriaDetailResponse(category, buildingId) : new CategoryKcubeDetailResponse(category, buildingId);
-    if (response.getClass().equals(CategoryCafeteriaDetailResponse.class)) {
-      Optional<Building> building = buildingRepository.findById(buildingId);
-      if (building.isPresent()) {
-        Optional<BuildingCategory> buildingCategory = buildingCategoryQueryRepository.findByBuildingId(building.get().getId());
-        if (buildingCategory.isPresent()) {
-          ((CategoryCafeteriaDetailResponse) response).setMenus(
-                  menuQueryRepository.findAllByCategoryId(buildingCategory.get().getCategory().getId()));
-        }
-      }
-    } else {
+    CategoryDetailResponse response;
+    if (category.equals("학생식당")) {//학생식당인 경우
+      response = new CategoryCafeteriaDetailResponse(category, buildingId);
+      buildingRepository.findById(buildingId)
+              .flatMap(building -> buildingCategoryQueryRepository.findByBuildingId(building.getId()))
+              .ifPresent(buildingCategory -> {
+                ((CategoryCafeteriaDetailResponse) response).setMenus(
+                        menuQueryRepository.findAllByCategoryId(buildingCategory.getCategory().getId())
+                );
+              });
+    } else {//K-CUBE..인 경우
+      response = new CategoryKcubeDetailResponse(category, buildingId);
       ((CategoryKcubeDetailResponse) response).setFloor(buildingQueryRepository.findBuildingBy(buildingId));
     }
     return response;

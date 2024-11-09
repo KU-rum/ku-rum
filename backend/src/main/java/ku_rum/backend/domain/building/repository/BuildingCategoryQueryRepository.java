@@ -20,34 +20,35 @@ public class BuildingCategoryQueryRepository {
   @PersistenceContext
   EntityManager entityManager;
 
-  public List<Long> findBuildingIds(List<Long> categoryIds) {
+  public List<Long> findBuildingCategoryIds(List<Long> categoryIds) {
     QBuildingCategory qBuildingCategory = QBuildingCategory.buildingCategory;
 
     // categoryIds에 포함된 category_id에 해당하는 building_id를 조회
     return queryFactory
-            .select(qBuildingCategory.building.id)  // building_id를 선택
+            .select(qBuildingCategory.id)  // building_id를 선택
             .from(qBuildingCategory)
             .where(qBuildingCategory.category.id.in(categoryIds))  // category_id가 categoryIds 목록에 포함된 경우
             .fetch();  // 결과를 List<Long>로 반환
   }
 
-  public List<Long> findBuildingsByCategoryIds(List<Long> buildingCategoryIds) {
-    QBuildingCategory qBuildingCategory = QBuildingCategory.buildingCategory;
-
-    return queryFactory
-            .select(qBuildingCategory.building.id)
-            .from(qBuildingCategory)
-            .where(qBuildingCategory.id.in(buildingCategoryIds))
-            .fetch();
+  public List<Long> findBuildingIdsByCategoryIds(List<Long> buildingCategoryIds) {
+    return entityManager.createQuery(
+                    "SELECT bc.building.id " +
+                            "FROM BuildingCategory bc " +
+                            "WHERE bc.id IN :buildingCategoryIds", Long.class)
+            .setParameter("buildingCategoryIds", buildingCategoryIds)
+            .getResultList();
   }
 
   public List<Long> findByBuildingIds(List<Long> buildingIds) {
     QBuildingCategory qBuildingCategory = QBuildingCategory.buildingCategory;
-    return queryFactory
-            .select(qBuildingCategory.building.id)
+    List<Long> result = queryFactory
+            .select(qBuildingCategory.id)
             .from(qBuildingCategory)
-            .where(qBuildingCategory.id.in(buildingIds))
+            .where(qBuildingCategory.building.id.in(buildingIds))
             .fetch();
+    log.info("result size : {}", result.size());
+    return result;
   }
 
   public Optional<BuildingCategory> findByBuildingId(Long id) {

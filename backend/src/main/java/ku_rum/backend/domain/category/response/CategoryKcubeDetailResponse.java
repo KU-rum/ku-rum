@@ -15,6 +15,6 @@ public class CategoryKcubeDetailResponse extends  CategoryDetailResponse{
   }
 
   public void setFloor(Building buildingBy) {
-    //this.floor = buildingBy.getFloor();
+    this.floor = buildingBy.getFloor();
   }
 }

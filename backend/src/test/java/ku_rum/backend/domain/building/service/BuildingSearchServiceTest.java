@@ -4,10 +4,13 @@ import jakarta.persistence.EntityManager;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
+import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
+import ku_rum.backend.domain.building.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.category.response.CategoryCafeteriaDetailResponse;
 import ku_rum.backend.domain.menu.domain.Menu;
 import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,11 +29,15 @@ public class BuildingSearchServiceTest {
   BuildingSearchService buildingSearchService;
   @Autowired
   EntityManager em;
+  @Autowired
+  private BuildingRepository buildingRepository;
+  @Autowired
+  private BuildingQueryRepository buildingQueryRepository;
 
   @BeforeEach
   public void 임시_데이터(){
     Category c1 = Category.builder()
-            .name("학생회관")
+            .name("학생식당")
             .build();
     Category c2 = Category.builder()
             .name("공학관")
@@ -54,7 +61,7 @@ public class BuildingSearchServiceTest {
             .build();
     Building b3 = Building.builder()
             .name("제2학생회관")
-            .abbreviation("2학관")
+            .abbreviation("2학11")
             .longitude(BigDecimal.valueOf(33.333332))
             .latitude(BigDecimal.valueOf(22.222222))
             .number(10L)
@@ -82,8 +89,18 @@ public class BuildingSearchServiceTest {
             .build();
 
     em.persist(m1);em.persist(m2);
+    em.flush();
 
+  }
 
+  @AfterEach
+  public void cleanup() {
+    em.createQuery("DELETE FROM Menu").executeUpdate();
+    em.createQuery("DELETE FROM BuildingCategory").executeUpdate();
+    em.createQuery("DELETE FROM Building").executeUpdate();
+    em.createQuery("DELETE FROM Category").executeUpdate();
+    em.flush();
+    em.clear();
   }
 
   @Test
@@ -98,7 +115,7 @@ public class BuildingSearchServiceTest {
   @Test
   public void 특정카테고리_전체조회_성공() throws Exception {
       // given
-    List<BuildingResponse> responses = buildingSearchService.viewBuildingByCategory("학생회관");
+    List<BuildingResponse> responses = buildingSearchService.viewBuildingByCategory("학생식당");
       // when
     for (BuildingResponse e : responses){
       System.out.println("Response : " + e.getBulidingAbbreviation());
@@ -110,7 +127,7 @@ public class BuildingSearchServiceTest {
   @Test
   public void 특정_학생회관_카테고리_디테일_조회_성공() throws Exception {
       // given
-    CategoryCafeteriaDetailResponse response = (CategoryCafeteriaDetailResponse) buildingSearchService.viewBuildingDetailByCategory("학생회관",1L);
+    CategoryCafeteriaDetailResponse response = (CategoryCafeteriaDetailResponse) buildingSearchService.viewBuildingDetailByCategory("학생식당",buildingQueryRepository.findBuildingByNumber_test(11L));
       // when
       // then
     Assertions.assertEquals(2,response.getMenus().size());

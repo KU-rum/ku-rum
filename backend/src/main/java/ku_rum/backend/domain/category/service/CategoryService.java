@@ -24,7 +24,7 @@ public class CategoryService {
   public List<Long> findByCategoryReturnBuildingIds(String category){
     List<Long> categoryIds = categoryQueryRepository.findAllByName(category)
             .orElseThrow(() -> new CategoryNotExist(BaseExceptionResponseStatus.CATEGROYNAME_NOT_EXIST));
-    List<Long> buildingCategoryIds = buildingCategoryQueryRepository.findBuildingIds(categoryIds);
-    return buildingCategoryQueryRepository.findBuildingsByCategoryIds(buildingCategoryIds);
+    List<Long> buildingCategoryIds = buildingCategoryQueryRepository.findBuildingCategoryIds(categoryIds);
+    return buildingCategoryQueryRepository.findBuildingIdsByCategoryIds(buildingCategoryIds);
   }
 }

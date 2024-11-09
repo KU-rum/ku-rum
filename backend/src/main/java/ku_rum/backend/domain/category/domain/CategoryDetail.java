@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum CategoryDetail {
 
-  학생식당("학생식당"),
+  학생식당("학생식당"), //학생식당 으로 바꾸기
   KCUBE("KCUBE"),
   케이큐브("케이큐브"),
   khub("khub"),

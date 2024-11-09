@@ -67,4 +67,12 @@ public class BuildingQueryRepository {
             .setParameter("buildingId" , buildingId)
             .getSingleResult();
   }
+
+  public Long findBuildingByNumber_test(long number) {
+    String query = "SELECT m.id FROM Building m " +
+            "where m.number =: number";
+    return entityManager.createQuery(query, Long.class)
+            .setParameter("number", number)
+            .getSingleResult();
+  }
 }
