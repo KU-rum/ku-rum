@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static ku_rum.backend.domain.notice.domain.NoticeStatus.*;
+import static ku_rum.backend.domain.notice.domain.QNotice.notice;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,12 +25,12 @@ class NoticeTest {
         User user = User.of("사용자1", "미미미누", "password123", "202112322", department);
 
         //when
-        Notice notice = Notice.of("가나다라", "naver.com/abc123", user);
+        Notice notice = Notice.of("가나다라", "naver.com/abc123");
 
         //then
         assertThat(notice.getTitle()).isEqualTo("가나다라");
         assertThat(notice.getUrl()).isEqualTo("naver.com/abc123");
-        assertThat(notice.getUser()).isEqualTo(user);
+//        assertThat(notice.getUser()).isEqualTo(user);
     }
 
     @DisplayName("공지 생성 시 유저, 공지 상태는 일반이다.")
@@ -41,7 +42,7 @@ class NoticeTest {
         User user = User.of("사용자1", "미미미누", "password123", "202112322", department);
 
         //when
-        Notice notice = Notice.of("가나다라", "naver.com/abc123", user);
+        Notice notice = Notice.of("가나다라", "naver.com/abc123");
 
         //then
         assertThat(notice.getNoticeStatus()).isEqualTo(GENERAL);

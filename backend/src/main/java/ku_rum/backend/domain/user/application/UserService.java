@@ -3,15 +3,22 @@ package ku_rum.backend.domain.user.application;
 import jakarta.validation.Valid;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
+import ku_rum.backend.domain.user.domain.MailSendSetting;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
+import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
+import ku_rum.backend.domain.user.dto.request.MailSendRequest;
+import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
 import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
+import ku_rum.backend.domain.user.dto.response.MailVerificationResponse;
+import ku_rum.backend.global.config.MailConfig;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
+import ku_rum.backend.global.exception.user.MailSendException;
 import ku_rum.backend.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +28,8 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -29,8 +38,16 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.util.Random;
+
+import static ku_rum.backend.domain.user.domain.MailSendSetting.*;
+import static ku_rum.backend.global.config.MailConfig.*;
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.*;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -61,9 +78,14 @@ public class UserService {
                 .department(department)
                 .build();
 
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
         return UserSaveResponse.of(user);
     }
+
+    public void validateEmail(final EmailValidationRequest emailValidationRequest) {
+        validateDuplicateEmail(emailValidationRequest.getEmail());
+    }
+
 
     private void validateDuplicateEmail(final String email) {
         if (userRepository.existsByEmail(email)) {
