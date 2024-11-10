@@ -1,56 +1,49 @@
 package ku_rum.backend.domain.notice.domain;
 
 import jakarta.persistence.*;
-import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.global.type.BaseEntity;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static jakarta.persistence.EnumType.*;
-
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@Table(name = "notice")
 public class Notice extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(length = 1024, nullable = false)
+    private String url; // 공지사항 URL을 Primary Key로 사용
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 1024)
-    private String url;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(nullable = false, length = 500)
-    private String category;
+    @Column(nullable = false)
+    private String date; // 공지사항 작성일
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private NoticeCategory noticeCategory;
 
-    @Enumerated(value = STRING)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private NoticeStatus noticeStatus;
 
     @Builder
-    private Notice(String title, String url, User user, NoticeStatus noticeStatus) {
-        this.title = title;
+    public Notice(String url, String title, String date, NoticeCategory noticeCategory, NoticeStatus noticeStatus) {
         this.url = url;
-        this.user = user;
+        this.title = title;
+        this.date = date;
+        this.noticeCategory = noticeCategory;
         this.noticeStatus = noticeStatus;
     }
 
-    public static Notice of(String title, String url, User user) {
+    public static Notice of(String title, String url) {
         return Notice.builder()
                 .title(title)
                 .url(url)
-                .user(user)
+                .noticeCategory(NoticeCategory.AFFAIR)
                 .noticeStatus(NoticeStatus.GENERAL)
                 .build();
     }
