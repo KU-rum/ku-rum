@@ -19,6 +19,7 @@ public class BaseResponse<T> implements ResponseStatus {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final T data;
 
+
     public BaseResponse(HttpStatus status, String message, T data) {
         this.code = status.value();
         this.message = message;
