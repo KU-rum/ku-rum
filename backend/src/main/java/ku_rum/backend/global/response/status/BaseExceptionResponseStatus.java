@@ -39,7 +39,18 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
      */
     BUILDING_DATA_NOT_FOUND_BY_NAME(500, HttpStatus.NOT_FOUND, "유효하지 않은 건물 명칭입니다."),
     BUILDING_DATA_NOT_FOUND_BY_NUMBER(501, HttpStatus.NOT_FOUND, "유효하지 않은 건물 번호입니다."),
-    NO_BUILDING_REGISTERED_CURRENTLY(502, HttpStatus.NO_CONTENT, "등록된 건물이 없습니다.");
+    NO_BUILDING_REGISTERED_CURRENTLY(502, HttpStatus.NO_CONTENT, "등록된 건물이 없습니다."),
+
+
+
+
+
+
+
+    /**
+     * 700: Notice 오류
+     */
+    NO_SUCH_NOTICE(700, HttpStatus.BAD_REQUEST, "해당 공지사항은 존재하지 않습니다.");
 
     private final int code;
     private final HttpStatus status;
