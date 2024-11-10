@@ -39,15 +39,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
-
-	// Selenium Java
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2'
 	implementation 'org.seleniumhq.selenium:selenium-java:4.12.1'
 
-	// WebDriver Manager (드라이버 자동 관리)
 	implementation 'io.github.bonigarcia:webdrivermanager:5.7.0'
 
-	//Mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 
 }
 
