@@ -29,7 +29,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -55,6 +55,7 @@ import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.
 public class UserService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String WEIN_LOGIN_URL = "https://wein.konkuk.ac.kr/common/user/loginProc.do";
 
@@ -65,8 +66,7 @@ public class UserService {
         validateDuplicateStudentId(userSaveRequest.getStudentId());
         validateDepartmentName(userSaveRequest.getDepartment());
 
-        // TODO Password Encoder 적용
-        String password = userSaveRequest.getPassword();
+        String password = passwordEncoder.encode(userSaveRequest.getPassword());
         Department department = departmentRepository.findByName(userSaveRequest.getDepartment())
                 .orElseThrow(() -> new NoSuchDepartmentException(NO_SUCH_DEPARTMENT));
 
