@@ -24,7 +24,7 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-public class BuildingSearchServiceTest {
+public class BuildingCategoryRelatedServiceTest {
 
   @Autowired
   BuildingSearchService buildingSearchService;

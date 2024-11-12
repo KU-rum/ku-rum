@@ -1,7 +1,6 @@
 package ku_rum.backend.domain.building.service;
 
 import ku_rum.backend.domain.building.domain.Building;
-import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.building.repository.BuildingCategoryQueryRepository;
 import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
@@ -18,6 +17,7 @@ import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,10 +41,13 @@ public class BuildingSearchService {
             .orElseThrow(() -> new BuildingNotRegisteredException(BaseExceptionResponseStatus.NO_BUILDING_REGISTERED_CURRENTLY));//리스트가 비어있는 경우 예외처리
   }
 
-  public BuildingResponse viewBuildingByNumber(int number) {
-    return Optional.ofNullable(buildingQueryRepository.findBuildingByNumber(number))
-            .filter(c -> (c != null))
-            .orElseThrow(() -> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER));
+  public Optional<BuildingResponse> viewBuildingByNumber(int number) {
+    try {
+      return Optional.ofNullable(buildingQueryRepository.findBuildingByNumber(number))
+              .orElseThrow(() -> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER));
+    } catch (EmptyResultDataAccessException e) {
+      throw new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER);
+    }
   }
 
   public BuildingResponse viewBuildingByName(String name) {

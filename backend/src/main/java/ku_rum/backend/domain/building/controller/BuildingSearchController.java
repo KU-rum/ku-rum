@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -25,7 +26,7 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping
-  public BaseResponse<List> viewAll() {
+  public BaseResponse viewAll() {
     List<BuildingResponse> results = buildingSearchService.findAllBuildings();
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(),results);
   }
@@ -37,8 +38,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/searchNumber")
-  public BaseResponse<BuildingResponse> viewBuildingByNumber(@RequestParam("number") int number) {
-    BuildingResponse result = buildingSearchService.viewBuildingByNumber(number);
+  public BaseResponse<Optional<BuildingResponse>> viewBuildingByNumber(@RequestParam("number") int number) {
+    Optional<BuildingResponse> result = buildingSearchService.viewBuildingByNumber(number);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
 

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -30,15 +31,15 @@ public class BuildingQueryRepository {
             .getResultList();
   }
 
-  public BuildingResponse findBuildingByNumber(int number) {
+  public Optional<BuildingResponse> findBuildingByNumber(int number) {
     String query = "SELECT new ku_rum.backend.domain.building.dto.response.BuildingResponse(" +
             "m.id, m.name, m.number, m.abbreviation, m.latitude, m.longitude" +
             ") " +
             "FROM Building m " +
             "where m.number =: number";
-    return entityManager.createQuery(query, BuildingResponse.class)
+    return Optional.ofNullable(entityManager.createQuery(query, BuildingResponse.class)
             .setParameter("number", number)
-            .getSingleResult();
+            .getSingleResult());
   }
 
   public BuildingResponse findBuildingByName(String name) {
