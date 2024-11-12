@@ -8,18 +8,26 @@ import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.global.config.SecurityConfig;
 import org.junit.jupiter.api.BeforeEach;
+import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
+import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
+import ku_rum.backend.global.response.BaseResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -62,6 +70,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("OK"));
     }
 
+
     @DisplayName("이메일 중복을 확인한다.")
     @Test
     void validateEmail() throws Exception {
@@ -79,5 +88,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("OK"));
     }
+
 
 }

@@ -1,5 +1,7 @@
 package ku_rum.backend.global.handler;
 
+import ku_rum.backend.global.exception.building.BuildingNotFoundException;
+import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
@@ -15,6 +17,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ControllerAdvice {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public BaseErrorResponse handleServerException(final Exception e) {
+        log.error(e.getMessage());
+        return new BaseErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DuplicateEmailException.class)
@@ -35,6 +43,18 @@ public class ControllerAdvice {
     public BaseErrorResponse handleNoSuchDepartmentException(final NoSuchDepartmentException e) {
         log.error(e.getMessage());
         return new BaseErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ExceptionHandler(BuildingNotRegisteredException.class)
+    public BaseErrorResponse handleNoBuildingRegisteredException(final BuildingNotRegisteredException e) {
+        return new BaseErrorResponse(HttpStatus.NO_CONTENT, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(BuildingNotFoundException.class)
+    public BaseErrorResponse handleNoBuildingFoundException(final BuildingNotFoundException e){
+        return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getStatus().getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
