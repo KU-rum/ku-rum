@@ -8,6 +8,7 @@ import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
 import ku_rum.backend.domain.building.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.category.response.CategoryCafeteriaDetailResponse;
+import ku_rum.backend.domain.category.response.CategoryKcubeDetailResponse;
 import ku_rum.backend.domain.menu.domain.Menu;
 import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
 import org.junit.jupiter.api.AfterEach;
@@ -42,8 +43,11 @@ public class BuildingSearchServiceTest {
     Category c2 = Category.builder()
             .name("공학관")
             .build();
+    Category c3 = Category.builder()
+            .name("케이큐브")
+            .build();
 
-    em.persist(c1);em.persist(c2);
+    em.persist(c1);em.persist(c2);em.persist(c3);
 
     Building b1 = Building.builder()
             .name("제1학생회관")
@@ -66,14 +70,24 @@ public class BuildingSearchServiceTest {
             .latitude(BigDecimal.valueOf(22.222222))
             .number(10L)
             .build();
+    Building b4 = Building.builder()
+            .name("도서관케이큐브")
+            .abbreviation("케큡")
+            .floor(4L)
+            .longitude(BigDecimal.valueOf(33.333332))
+            .latitude(BigDecimal.valueOf(22.222222))
+            .number(13L)
+            .build();
 
-    em.persist(b1);em.persist(b2);em.persist(b3);
+    em.persist(b1);em.persist(b2);em.persist(b3);em.persist(b4);
 
     BuildingCategory bc1 = BuildingCategory.of(b1, c1);
     BuildingCategory bc3 = BuildingCategory.of(b3, c1);
     BuildingCategory bc2 = BuildingCategory.of(b2, c2);
+    BuildingCategory bc4 = BuildingCategory.of(b4, c3);
 
-    em.persist(bc1);em.persist(bc2);em.persist(bc3);
+
+    em.persist(bc1);em.persist(bc2);em.persist(bc3);em.persist(bc4);
 
     Menu m1 = Menu.builder()
             .name("만두국")
@@ -105,32 +119,39 @@ public class BuildingSearchServiceTest {
 
   @Test
   public void 디테일_제공안하는_카테고리입력시_실패() throws Exception {
-      // given
       Assertions.assertThrows(CategoryNotProvidingDetail.class, () -> {
         buildingSearchService.viewBuildingDetailByCategory("공학관", 1L);
-
       });
   }
 
   @Test
   public void 특정카테고리_전체조회_성공() throws Exception {
-      // given
+    // given
     List<BuildingResponse> responses = buildingSearchService.viewBuildingByCategory("학생식당");
-      // when
+    // when
     for (BuildingResponse e : responses){
       System.out.println("Response : " + e.getBulidingAbbreviation());
     }
-      // then
+    // then
     Assertions.assertEquals(2, responses.size());
   }
   
   @Test
-  public void 특정_학생회관_카테고리_디테일_조회_성공() throws Exception {
-      // given
+  public void 특정_학생식당_카테고리_디테일_조회_성공() throws Exception {
+    // given
     CategoryCafeteriaDetailResponse response = (CategoryCafeteriaDetailResponse) buildingSearchService.viewBuildingDetailByCategory("학생식당",buildingQueryRepository.findBuildingByNumber_test(11L));
-      // when
-      // then
+    // when
+    // then
     Assertions.assertEquals(2,response.getMenus().size());
+  }
+
+  @Test
+  public void 특정_케이큐브_카테고리_디테일_조회_성공() throws Exception {
+    // given
+    CategoryKcubeDetailResponse response = (CategoryKcubeDetailResponse) buildingSearchService.viewBuildingDetailByCategory("케이큐브",buildingQueryRepository.findBuildingByNumber_test(13L));
+    // when
+    // then
+    Assertions.assertEquals(4,response.getFloor());
   }
 
 

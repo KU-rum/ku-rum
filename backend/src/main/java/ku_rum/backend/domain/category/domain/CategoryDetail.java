@@ -5,15 +5,20 @@ import lombok.Getter;
 @Getter
 public enum CategoryDetail {
 
-  학생식당("학생식당"), //학생식당 으로 바꾸기
-  KCUBE("KCUBE"),
-  케이큐브("케이큐브"),
-  khub("khub"),
-  kcube("kcube");
+  STUDENT_CAFETERIA("학생식당"),
+  KCUBE("케이큐브");
 
   private String categoryName;
 
   CategoryDetail(String categoryName) {
     this.categoryName = categoryName;
+  }
+
+  public boolean isEqual(CategoryDetail categoryDetail) {
+    return this == categoryDetail;
+  }
+
+  public boolean isDetailProviding() {
+    return this == STUDENT_CAFETERIA || this == KCUBE;
   }
 }

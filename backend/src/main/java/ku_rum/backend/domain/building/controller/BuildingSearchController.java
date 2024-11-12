@@ -25,7 +25,7 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping
-  public BaseResponse<List<BuildingResponse>> viewAll() {
+  public BaseResponse<List> viewAll() {
     List<BuildingResponse> results = buildingSearchService.findAllBuildings();
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(),results);
   }
@@ -61,7 +61,7 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/{category}")
-  public BaseResponse<Object> viewBuildingByCategory(@PathVariable("category") String category){
+  public BaseResponse<List> viewBuildingByCategory(@PathVariable("category") String category){
     List<BuildingResponse> categoryList = buildingSearchService.viewBuildingByCategory(category.trim());
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), categoryList);
   }
@@ -74,7 +74,7 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/{buildingId}/{category}")
-  public BaseResponse<Object> viewBuildingByCategory(
+  public BaseResponse<CategoryDetailResponse> viewBuildingByCategory(
           @PathVariable("category") String category,
           @PathVariable("buildingId") Long buildingId
           ){

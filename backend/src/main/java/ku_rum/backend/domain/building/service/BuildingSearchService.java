@@ -115,11 +115,10 @@ public class BuildingSearchService {
 
 
   public CategoryDetailResponse viewBuildingDetailByCategory(String category, Long buildingId) {
-    boolean check = validateDetailProvidingCategory(category); //디테일을 제공하는 카테고리인지 판별
-    if (!check)
-      throw new CategoryNotProvidingDetail(BaseExceptionResponseStatus.CATEGORYNAME_NOT_PROVIDING_DETAIL);
+    CategoryDetail categoryDetail = getCategoryDetail(category);
+
     CategoryDetailResponse response;
-    if (category.equals("학생식당")) {//학생식당인 경우
+    if (categoryDetail.isEqual(CategoryDetail.STUDENT_CAFETERIA)) {
       response = new CategoryCafeteriaDetailResponse(category, buildingId);
       buildingRepository.findById(buildingId)
               .flatMap(building -> buildingCategoryQueryRepository.findByBuildingId(building.getId()))
@@ -128,11 +127,20 @@ public class BuildingSearchService {
                         menuQueryRepository.findAllByCategoryId(buildingCategory.getCategory().getId())
                 );
               });
-    } else {//K-CUBE..인 경우
+    } else {
       response = new CategoryKcubeDetailResponse(category, buildingId);
       ((CategoryKcubeDetailResponse) response).setFloor(buildingQueryRepository.findBuildingBy(buildingId));
     }
     return response;
+  }
+
+  private CategoryDetail getCategoryDetail(String category) {
+    for (CategoryDetail detail : CategoryDetail.values()) {
+      if (detail.getCategoryName().equals(category)) {
+        return detail;
+      }
+    }
+    throw new CategoryNotProvidingDetail(BaseExceptionResponseStatus.CATEGORYNAME_NOT_PROVIDING_DETAIL);
   }
 
   private boolean validateDetailProvidingCategory(String category) {
