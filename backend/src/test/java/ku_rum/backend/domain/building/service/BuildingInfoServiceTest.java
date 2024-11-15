@@ -1,15 +1,15 @@
 package ku_rum.backend.domain.building.service;
 
 import jakarta.persistence.EntityManager;
+import ku_rum.backend.domain.building.application.BuildingSearchService;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
-import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
-import ku_rum.backend.domain.building.repository.BuildingRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingQueryRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.menu.domain.Menu;
 import ku_rum.backend.global.exception.building.BuildingNotFoundException;
-import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

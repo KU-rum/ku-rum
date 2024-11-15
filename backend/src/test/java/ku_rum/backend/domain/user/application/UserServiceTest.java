@@ -1,30 +1,25 @@
 package ku_rum.backend.domain.user.application;
 
 import jakarta.transaction.Transactional;
-import ku_rum.backend.domain.building.repository.BuildingRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
 import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
-import ku_rum.backend.domain.user.dto.request.MailSendRequest;
-import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
 
-import static ku_rum.backend.domain.user.domain.MailSendSetting.MAIL_SEND_INFO;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest

@@ -1,8 +1,6 @@
 package ku_rum.backend.domain.category.service;
 
-import ku_rum.backend.domain.building.domain.BuildingCategory;
-import ku_rum.backend.domain.building.repository.BuildingCategoryQueryRepository;
-import ku_rum.backend.domain.building.repository.BuildingCategoryRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingCategoryQueryRepository;
 import ku_rum.backend.domain.category.repository.CategoryQueryRepository;
 import ku_rum.backend.domain.category.repository.CategoryRepository;
 import ku_rum.backend.global.exception.category.CategoryNotExist;
@@ -11,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

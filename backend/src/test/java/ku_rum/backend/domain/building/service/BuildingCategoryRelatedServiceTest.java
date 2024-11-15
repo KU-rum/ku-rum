@@ -1,11 +1,12 @@
 package ku_rum.backend.domain.building.service;
 
 import jakarta.persistence.EntityManager;
+import ku_rum.backend.domain.building.application.BuildingSearchService;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.domain.BuildingCategory;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
-import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
-import ku_rum.backend.domain.building.repository.BuildingRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingQueryRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.category.response.CategoryCafeteriaDetailResponse;
 import ku_rum.backend.domain.category.response.CategoryKcubeDetailResponse;

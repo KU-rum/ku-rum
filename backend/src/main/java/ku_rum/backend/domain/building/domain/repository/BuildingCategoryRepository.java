@@ -1,4 +1,4 @@
-package ku_rum.backend.domain.building.repository;
+package ku_rum.backend.domain.building.domain.repository;
 
 import ku_rum.backend.domain.building.domain.BuildingCategory;
 import org.springframework.data.jpa.repository.JpaRepository;

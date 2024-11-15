@@ -1,8 +1,9 @@
 package ku_rum.backend.domain.building.controller;
 
 import ku_rum.backend.common.BaseControllerTest;
-import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
-import ku_rum.backend.domain.building.service.BuildingSearchService;
+import ku_rum.backend.domain.building.domain.repository.BuildingQueryRepository;
+import ku_rum.backend.domain.building.application.BuildingSearchService;
+import ku_rum.backend.domain.building.presentation.BuildingSearchController;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 

@@ -1,10 +1,11 @@
-package ku_rum.backend.domain.building.service;
+package ku_rum.backend.domain.building.application;
 
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
-import ku_rum.backend.domain.building.repository.BuildingCategoryQueryRepository;
-import ku_rum.backend.domain.building.repository.BuildingQueryRepository;
-import ku_rum.backend.domain.building.repository.BuildingRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingCategoryQueryRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingQueryRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
+import ku_rum.backend.domain.building.domain.BuildingAbbrev;
 import ku_rum.backend.domain.category.domain.CategoryDetail;
 import ku_rum.backend.domain.category.response.CategoryCafeteriaDetailResponse;
 import ku_rum.backend.domain.category.response.CategoryDetailResponse;

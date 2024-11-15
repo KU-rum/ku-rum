@@ -1,4 +1,4 @@
-package ku_rum.backend.domain.building.repository;
+package ku_rum.backend.domain.building.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
