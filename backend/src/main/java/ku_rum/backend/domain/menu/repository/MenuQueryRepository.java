@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,15 +18,15 @@ public class MenuQueryRepository {
   @PersistenceContext
   EntityManager entityManager;
 
-  public List<MenuSimpleResponse> findAllByCategoryId(Long id) {
+  public Optional<List<MenuSimpleResponse>> findAllByCategoryId(Long id) {
     String query = "SELECT new ku_rum.backend.domain.menu.response.MenuSimpleResponse(" +
             "m.name, m.price, m.imageUrl) " +
             "FROM Menu m " +
             "JOIN m.category c " +
             "WHERE c.id = :id";
 
-    return entityManager.createQuery(query, MenuSimpleResponse.class)
+    return Optional.ofNullable(entityManager.createQuery(query, MenuSimpleResponse.class)
             .setParameter("id", id)
-            .getResultList();
+            .getResultList());
   }
 }
