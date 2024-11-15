@@ -1,4 +1,4 @@
-package ku_rum.backend.domain.category.response;
+package ku_rum.backend.domain.category.dto.response;
 
 import ku_rum.backend.domain.building.domain.Building;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package ku_rum.backend.domain.building.presentation;
 
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.building.application.BuildingSearchService;
-import ku_rum.backend.domain.category.response.CategoryDetailResponse;
+import ku_rum.backend.domain.category.dto.response.CategoryDetailResponse;
 import ku_rum.backend.global.response.BaseResponse;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
