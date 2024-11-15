@@ -1,7 +1,7 @@
 package ku_rum.backend.domain.building.service;
 
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
-import ku_rum.backend.domain.building.repository.BuildingClassRepository;
+import ku_rum.backend.domain.building.domain.repository.BuildingClassRepository;
 import ku_rum.backend.global.exception.building.BuildingNotFoundException;
 import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
@@ -84,5 +84,13 @@ public class BuildingSearchService {
    */
   private BuildingAbbrev checkMatchWithOriginalName(String name) {
     return BuildingAbbrev.fromOriginalName(name);
+  }
+
+    public String getAbbrevWithoutNumber(String input) {
+      return null;
+    }
+
+  public boolean isValidBuildingAbbrev(String abbrev) {
+      return false;
   }
 }
