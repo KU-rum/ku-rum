@@ -138,34 +138,27 @@ public class ReservationService {
         }
     }
 
-    private MultiValueMap<String, String> createRequestBody(WeinLoginRequest weinLoginRequest) {
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("userId", weinLoginRequest.getUserId());
-        requestBody.add("pw", weinLoginRequest.getPassword());
-        requestBody.add("rtnUrl", ""); // 리다이렉트 후 이동할 URL 지정, 필요시 수정
-        return requestBody;
-    }
+//    private MultiValueMap<String, String> createRequestBody(WeinLoginRequest weinLoginRequest) {
+//        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+//        requestBody.add("userId", weinLoginRequest.getUserId());
+//        requestBody.add("pw", weinLoginRequest.getPassword());
+//        requestBody.add("rtnUrl", ""); // 리다이렉트 후 이동할 URL 지정, 필요시 수정
+//        return requestBody;
+//    }
 
     private WebDriver setupWebDriver() {
 //        WebDriverManager.chromedriver().browserVersion("130.0.6723.117").setup();
 
         // ChromeOptions 설정
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--start-maximized"); // 브라우저 창 최대화
-        options.addArguments("--disable-notifications"); // 알림 비활성화
-        options.addArguments("--headless"); // (필요 시) 헤드리스 모드
+//        options.addArguments("--start-maximized"); // 브라우저 창 최대화
+//        options.addArguments("--disable-notifications"); // 알림 비활성화
+//        options.addArguments("--headless"); // (필요 시) 헤드리스 모드
 
         // ChromeDriver 생성
         WebDriver driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); // 암묵적 대기 설정
+//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); // 암묵적 대기 설정
         return driver;
-    }
-
-    private boolean isReservationPageLoaded(WebDriver driver) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        // 특정 예약 화면 요소 확인
-        WebElement reservationElement = driver.findElement(By.cssSelector(".time-table__title"));
-        return reservationElement.getText().contains("K-Cube");
     }
 
     private void parseReservationStatus(String html) {
