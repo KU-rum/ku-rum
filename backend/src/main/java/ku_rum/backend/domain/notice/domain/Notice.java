@@ -31,7 +31,7 @@ public class Notice extends BaseEntity {
     private NoticeStatus noticeStatus;
 
     @Builder
-    public Notice(String url, String title, String date, NoticeCategory noticeCategory, NoticeStatus noticeStatus) {
+    private Notice(String url, String title, String date, NoticeCategory noticeCategory, NoticeStatus noticeStatus) {
         this.url = url;
         this.title = title;
         this.date = date;
