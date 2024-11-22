@@ -1,5 +1,6 @@
 package ku_rum.backend.domain.bookmark.presentation;
 
+import jakarta.validation.Valid;
 import ku_rum.backend.domain.bookmark.application.BookmarkService;
 import ku_rum.backend.domain.bookmark.dto.request.BookmarkSaveRequest;
 import ku_rum.backend.domain.notice.dto.response.NoticeSimpleResponse;
@@ -22,7 +23,7 @@ public class BookmarkController {
      * @return
      */
     @PostMapping("/save")
-    public BaseResponse<String> addBookmark(@RequestBody final BookmarkSaveRequest bookmarkRequest) {
+    public BaseResponse<String> addBookmark(@RequestBody @Valid final BookmarkSaveRequest bookmarkRequest) {
         bookmarkService.addBookmark(bookmarkRequest);
         return BaseResponse.ok("북마크가 저장되었습니다.");
     }

@@ -9,6 +9,7 @@ import ku_rum.backend.domain.notice.dto.response.NoticeSimpleResponse;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
 import ku_rum.backend.global.exception.notice.NoSuchNoticeException;
+import ku_rum.backend.global.exception.user.NoSuchUserException;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.NO_SUCH_USER;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,23 +33,28 @@ public class BookmarkService {
     @Transactional
     public void addBookmark(BookmarkSaveRequest bookmarkRequest) {
 
-        Optional<User> user = userRepository.findById(bookmarkRequest.getUserId()); //예외 처리 필요?? (이미 로그인되어서 온 상태니까..)
+        User user = userRepository.findById(bookmarkRequest.getUserId())
+                .orElseThrow(() -> new NoSuchUserException(NO_SUCH_USER));
 
         Notice notice = noticeRepository.findByUrl(bookmarkRequest.getUrl())
                 .orElseThrow(() -> new NoSuchNoticeException(BaseExceptionResponseStatus.NO_SUCH_NOTICE));
 
-        if (bookmarkRepository.findByUserAndNotice(user.get(), notice).isPresent()) {
+        if (bookmarkRepository.findByUserAndNotice(user, notice).isPresent()) {
             throw new IllegalArgumentException("이미 북마크된 공지사항입니다.");
         }
 
-        Bookmark bookmark = Bookmark.of(user.get(), notice);
+        Bookmark bookmark = Bookmark.builder()
+                .user(user)
+                .notice(notice)
+                .build();
         bookmarkRepository.save(bookmark);
     }
 
     public List<NoticeSimpleResponse> getBookmarks(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchUserException(NO_SUCH_USER));
 
-        List<Bookmark> bookmarks = bookmarkRepository.findByUser(user.get());
+        List<Bookmark> bookmarks = bookmarkRepository.findByUser(user);
         return bookmarks.stream()
                 .map(bookmark -> new NoticeSimpleResponse(bookmark.getNotice()))
                 .collect(Collectors.toList());

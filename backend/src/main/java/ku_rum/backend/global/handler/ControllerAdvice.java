@@ -3,9 +3,11 @@ package ku_rum.backend.global.handler;
 import ku_rum.backend.global.exception.building.BuildingNotFoundException;
 import ku_rum.backend.global.exception.building.BuildingNotRegisteredException;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
+import ku_rum.backend.global.exception.notice.NoSuchNoticeException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
 import ku_rum.backend.global.exception.user.MailSendException;
+import ku_rum.backend.global.exception.user.NoSuchUserException;
 import ku_rum.backend.global.response.BaseErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -62,5 +64,19 @@ public class ControllerAdvice {
     public BaseErrorResponse handleMailSendException(final MailSendException e) {
         log.error(e.getMessage());
         return new BaseErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoSuchUserException.class)
+    public BaseErrorResponse handleNoSuchUserException(final NoSuchUserException e) {
+        log.error("NoSuchUserException: {}", e.getMessage());
+        return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoSuchNoticeException.class)
+    public BaseErrorResponse handleNoSuchNoticeException(final NoSuchNoticeException e) {
+        log.error("NoSuchNoticeException: {}", e.getMessage());
+        return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 }
