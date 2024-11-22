@@ -43,10 +43,7 @@ public class BookmarkService {
             throw new IllegalArgumentException("이미 북마크된 공지사항입니다.");
         }
 
-        Bookmark bookmark = Bookmark.builder()
-                .user(user)
-                .notice(notice)
-                .build();
+        Bookmark bookmark = Bookmark.of(user, notice);
         bookmarkRepository.save(bookmark);
     }
 
