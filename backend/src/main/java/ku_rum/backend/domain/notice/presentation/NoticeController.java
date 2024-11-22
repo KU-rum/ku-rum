@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static ku_rum.backend.domain.notice.presentation.CrawlingResponse.*;
+
 @RestController
 @RequestMapping("/api/v1/notices")
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class NoticeController {
     @PostMapping("/crawl/konkuk")
     public BaseResponse<String> crawlKonkukNotices() { //redis에 저장해두고 redis에 없으면 db에 저장을 한 (key에다가 공지사항 url링크 저장)
         noticeService.crawlAndSaveKonkukNotices();
-        return BaseResponse.ok("크롤링 작업이 시작되었습니다.");
+        return BaseResponse.ok(START_CRAWLING.getMessage());
     }
 
 //    @PostMapping("/crawl/saramin")

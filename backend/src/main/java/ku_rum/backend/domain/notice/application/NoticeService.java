@@ -39,9 +39,10 @@ public class NoticeService {
     @Scheduled(fixedRate = 600000) //10분마다 실행
     @Transactional
     public void crawlAndSaveKonkukNotices() {
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = null;
 
         try {
+            driver = new ChromeDriver();
             for (NoticeCategory category : NoticeCategory.values()) {
                 String url = category.getUrl();
                 driver.get(url);
@@ -57,8 +58,7 @@ public class NoticeService {
         }
     }
 
-    @Transactional
-    protected boolean crawlAndSave(NoticeCategory category, WebDriver driver) {
+    private boolean crawlAndSave(NoticeCategory category, WebDriver driver) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         // 페이지가 완전히 로드될 때까지 대기
@@ -91,13 +91,7 @@ public class NoticeService {
                 }
 
                 // 새 공지사항이면 데이터베이스에 저장
-                Notice notice = Notice.builder()
-                        .url(link)
-                        .title(title)
-                        .date(date)
-                        .noticeCategory(category)
-                        .noticeStatus(isImportantNotice(noticeElement) ? NoticeStatus.IMPORTANT : NoticeStatus.GENERAL)
-                        .build();
+                Notice notice = Notice.of(title, link, date, category, isImportantNotice(noticeElement) ? NoticeStatus.IMPORTANT : NoticeStatus.GENERAL);
 
                 log.info("새로운 2024년 공지사항 저장: {}", title);
                 noticeRepository.save(notice);
