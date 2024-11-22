@@ -33,6 +33,7 @@ public class UserController {
     public BaseResponse<WeinLoginResponse> loginToWein(@RequestBody @Valid WeinLoginRequest weinLoginRequest) {
 //        BaseResponse<WeinLoginResponse> weinLoginResponseBaseResponse = userService.loginToWein(weinLoginRequest);
         return userService.loginToWein(weinLoginRequest);
+        }
 
     @PostMapping("/validations/email")
     public BaseResponse<Void> validateEmail(@RequestBody @Valid final EmailValidationRequest emailValidationRequest) {
