@@ -106,7 +106,7 @@ public class NoticeService {
 
 
 
-    private static boolean goToNextButton(NoticeCategory category, WebDriver driver, boolean continueCrawling) {
+    private boolean goToNextButton(NoticeCategory category, WebDriver driver, boolean continueCrawling) {
         try {
             WebElement nextButton = driver.findElements(By.cssSelector(category.getNextButtonSelector()))
                     .stream()

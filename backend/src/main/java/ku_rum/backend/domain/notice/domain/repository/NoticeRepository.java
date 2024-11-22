@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface NoticeRepository extends JpaRepository<Notice, Long> {
+public interface NoticeRepository extends JpaRepository<Notice, String> {
     List<Notice> findByNoticeCategory(NoticeCategory noticeCategory);
 
     Optional<Notice> findByUrl(String link);
