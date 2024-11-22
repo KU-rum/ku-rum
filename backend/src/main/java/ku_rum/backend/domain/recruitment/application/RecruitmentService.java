@@ -9,13 +9,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.util.List;
+
+import static ku_rum.backend.domain.recruitment.domain.RecruitCategory.SARAMIN;
 
 @Service
 @Slf4j
@@ -34,22 +33,14 @@ public class RecruitmentService {
                 String url = category.getUrl();
                 driver.get(url);
                 log.info("크롤링 시작: {}", category.getUrl());
-                switch(category){
-                    case SARAMIN:
-                        crawlAndSaveSaramIn(category, driver);
-                        break;
-                    case WANTED:
-                        crawlAndSaveWanted();
-                        break;
-                }
+                crawlAndSave(category, driver);
             }
-
         } finally {
             driver.quit();
         }
     }
 
-    private void crawlAndSaveSaramIn(RecruitCategory category, WebDriver driver) {
+    private void crawlAndSave(RecruitCategory category, WebDriver driver) {
         List<WebElement> recruitList = driver.findElements(By.cssSelector(category.getSelector()));
 
         if(recruitList.isEmpty()){
@@ -57,24 +48,33 @@ public class RecruitmentService {
             return;
         }
 
-        for(WebElement recruitElement : recruitList){
-            try{
-                String title = recruitElement.findElement(By.cssSelector("div.box_item > div.col.notification_info > div.job_tit > a.str_tit > span")).getText();
-                String url = recruitElement.findElement(By.cssSelector("div.box_item > div.col.notification_info > div.job_tit > a.str_tit")).getAttribute("href");
-                String location = recruitElement.findElement(By.cssSelector("div.box_item > div.col.recruit_info > ul > li:nth-child(1) > p")).getText();
-                String career = recruitElement.findElement(By.cssSelector("div.box_item > div.col.recruit_info > ul > li:nth-child(2) > p")).getText();
+        //사람인의 경우 첫번째요소가 실시간으로 바뀌기 때문에 건너뜁니다.
+        int startIndex = category.isEqual(SARAMIN) ? 1 : 0;
 
-                Recruitment recruitment = Recruitment.of(url, title, location, career, category);
+        for (int i = startIndex; i < recruitList.size(); i++) {
+            WebElement recruitElement = recruitList.get(i);
+            try {
+                String title = recruitElement.findElement(By.cssSelector(category.getTitleSelector())).getText();
+                String url = recruitElement.findElement(By.cssSelector(category.getUrlSelector())).getAttribute("href");
+                String company = recruitElement.findElement(By.cssSelector(category.getCompanySelector())).getText();
+                String location, career;
+
+                if (category.isEqual(SARAMIN)) {
+                    location = recruitElement.findElement(By.cssSelector(category.getLocationSelector())).getText();
+                    career = recruitElement.findElement(By.cssSelector(category.getCareerSelector())).getText();
+                } else {
+                    String[] text = recruitElement.findElement(By.cssSelector(category.getLocationSelector())).getText().split(" · ");
+                    location = text[0];
+                    career = text[1];
+                }
+
+                Recruitment recruitment = Recruitment.of(url, title, location, career, category, company);
                 log.info("새로운 채용공고 저장: {}", title);
                 recruitmentRepository.save(recruitment);
-            } catch (Exception e){
+            } catch (Exception e) {
                 log.error("채용공고 저장 중 오류 발생", e);
             }
         }
     }
-
-    private void crawlAndSaveWanted() {
-    }
-
 
 }
