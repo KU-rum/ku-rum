@@ -5,6 +5,7 @@ import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
+import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.reservation.dto.request.WeinLoginRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
@@ -12,6 +13,7 @@ import ku_rum.backend.domain.reservation.dto.response.WeinLoginResponse;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
+import ku_rum.backend.global.exception.user.MailSendException;
 import ku_rum.backend.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,8 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,7 +32,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
-
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.*;
 
 @Service
@@ -38,6 +41,7 @@ import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.
 public class UserService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String WEIN_LOGIN_URL = "https://wein.konkuk.ac.kr/common/user/loginProc.do";
 
@@ -48,8 +52,7 @@ public class UserService {
         validateDuplicateStudentId(userSaveRequest.getStudentId());
         validateDepartmentName(userSaveRequest.getDepartment());
 
-        // TODO Password Encoder 적용
-        String password = userSaveRequest.getPassword();
+        String password = passwordEncoder.encode(userSaveRequest.getPassword());
         Department department = departmentRepository.findByName(userSaveRequest.getDepartment())
                 .orElseThrow(() -> new NoSuchDepartmentException(NO_SUCH_DEPARTMENT));
 
@@ -61,9 +64,14 @@ public class UserService {
                 .department(department)
                 .build();
 
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
         return UserSaveResponse.of(user);
     }
+
+    public void validateEmail(final EmailValidationRequest emailValidationRequest) {
+        validateDuplicateEmail(emailValidationRequest.getEmail());
+    }
+
 
     private void validateDuplicateEmail(final String email) {
         if (userRepository.existsByEmail(email)) {
@@ -140,7 +148,5 @@ public class UserService {
         requestBody.add("rtnUrl", ""); // 리다이렉트 후 이동할 URL 지정, 필요시 수정
         return requestBody;
     }
-
-
 
 }
