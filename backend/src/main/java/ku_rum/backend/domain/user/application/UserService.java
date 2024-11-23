@@ -47,7 +47,6 @@ import static ku_rum.backend.domain.user.domain.MailSendSetting.*;
 import static ku_rum.backend.global.config.MailConfig.*;
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.*;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor

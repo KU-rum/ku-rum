@@ -9,6 +9,7 @@ import ku_rum.backend.domain.notice.dto.response.NoticeSimpleResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(NoticeController.class)
+@WebMvcTest(controllers = NoticeController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 class NoticeControllerTest {
 
     @Autowired
@@ -39,15 +40,15 @@ class NoticeControllerTest {
     @DisplayName("공지사항 크롤링 성공")
     @Test
     void crawlNoticesSuccess() throws Exception {
-        doNothing().when(noticeService).crawlAndSaveNotices();
+        doNothing().when(noticeService).crawlAndSaveKonkukNotices();
 
-        mockMvc.perform(post("/api/v1/notices/crawl")
+        mockMvc.perform(post("/api/v1/notices/crawl/konkuk")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("OK"))
-                .andExpect(jsonPath("$.data").value("크롤링 및 저장에 성공하였습니다."));
+                .andExpect(jsonPath("$.data").value("크롤링 작업이 시작되었습니다."));
     }
 
     @DisplayName("카테고리별 공지사항 조회 성공")

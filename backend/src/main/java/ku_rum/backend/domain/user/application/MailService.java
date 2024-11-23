@@ -8,6 +8,7 @@ import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.MailSendException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -29,6 +30,8 @@ import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.
 public class MailService {
     private final JavaMailSender emailSender;
     private final UserRepository userRepository;
+
+    @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> redisTemplate;
 
     public void sendEmail(String toEmail,
