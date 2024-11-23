@@ -1,7 +1,6 @@
-package ku_rum.backend.domain.user.dto.response;
+package ku_rum.backend.domain.reservation.dto.response;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class WeinLoginResponse {
