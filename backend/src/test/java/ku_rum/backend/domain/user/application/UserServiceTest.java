@@ -49,7 +49,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-         building = Building.of("신공학관", "신공", BigDecimal.valueOf(64.3423423), BigDecimal.valueOf(64.3423423));
+         building = Building.of("신공학관",3L, "신공", BigDecimal.valueOf(64.3423423), BigDecimal.valueOf(64.3423423));
          buildingRepository.save(building);
 
          department = Department.of("컴퓨터공학부", building);

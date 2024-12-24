@@ -65,9 +65,10 @@ public class Building extends BaseEntity {
                 .build();
     }
 
-    public static Building of(String name, String abbreviation,BigDecimal latitude, BigDecimal longitude) {
+    public static Building of(String name, Long number, String abbreviation,BigDecimal latitude, BigDecimal longitude) {
         return Building.builder()
                 .name(name)
+                .number(number)
                 .abbreviation(abbreviation)
                 .latitude(latitude)
                 .longitude(longitude)

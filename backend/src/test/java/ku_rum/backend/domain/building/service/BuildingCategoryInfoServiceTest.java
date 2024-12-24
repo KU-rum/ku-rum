@@ -11,7 +11,6 @@ import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.category.dto.response.CategoryDetailFloorAndMenusProviding;
 import ku_rum.backend.domain.menu.domain.Menu;
 import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
-public class BuildingCategoryRelatedServiceTest {
+public class BuildingCategoryInfoServiceTest {
 
   @Autowired
   BuildingSearchService buildingSearchService;
@@ -35,64 +34,27 @@ public class BuildingCategoryRelatedServiceTest {
   @Autowired
   private BuildingQueryRepository buildingQueryRepository;
 
+  Category c1, c2, c3, c4;
+  Building b1, b2, b3, b4,b5;
+  Menu m1, m2, m3;
+
   @BeforeEach
   public void 임시_데이터() {
-    Category c1 = Category.builder()
-            .name("학생식당")
-            .build();
-    Category c2 = Category.builder()
-            .name("공학관")
-            .build();
-    Category c3 = Category.builder()
-            .name("케이큐브")
-            .build();
-    Category c4 = Category.builder()
-            .name("레스티오")
-            .build();
+    c1 = Category.of("학생식당");
+    c2 = Category.of("공학관");
+    c3 = Category.of("케이큐브");
+    c4 = Category.of("레스티오");
 
     em.persist(c1);
     em.persist(c2);
     em.persist(c3);
     em.persist(c4);
 
-    Building b1 = Building.builder()
-            .name("제1학생회관")
-            .abbreviation("1학관")
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(11L)
-            .build();
-    Building b2 = Building.builder()
-            .name("공학관")
-            .abbreviation("2학관")
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(12L)
-            .build();
-    Building b3 = Building.builder()
-            .name("제2학생회관")
-            .abbreviation("2학11")
-            .floor(2L)
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(10L)
-            .build();
-    Building b4 = Building.builder()
-            .name("도서관케이큐브")
-            .abbreviation("케큡")
-            .floor(4L)
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(13L)
-            .build();
-    Building b5 = Building.builder()
-            .name("경영관")
-            .abbreviation("경영")
-            .floor(1L)
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(14L)
-            .build();
+    b1 = Building.of("제1학생회관",1L,"1학관",BigDecimal.valueOf(33.333332), BigDecimal.valueOf(22.222222));
+    b2 = Building.of("공학관",2L,"2학관",12L,BigDecimal.valueOf(33.333332), BigDecimal.valueOf(22.222222));
+    b3 = Building.of("제2학생관",10L,"2학관11",2L,BigDecimal.valueOf(33.333332), BigDecimal.valueOf(22.222222));
+    b4 = Building.of("도서관케이큐브",4L,"케큡",13L,BigDecimal.valueOf(33.333332),BigDecimal.valueOf(33.333332));
+    b5 = Building.of("경영관",14L,"경영",1L,BigDecimal.valueOf(33.333332),BigDecimal.valueOf(33.335532));
 
     em.persist(b1);
     em.persist(b2);
@@ -113,25 +75,9 @@ public class BuildingCategoryRelatedServiceTest {
     em.persist(bc5);
 
 
-    Menu m1 = Menu.builder()
-            .name("만두국")
-            .price(1000L)
-            .category(c1)
-            .imageUrl("http://aaaaa")
-            .build();
-    Menu m2 = Menu.builder()
-            .name("짜장면")
-            .price(3000L)
-            .category(c1)
-            .imageUrl("http://bbbbb")
-            .build();
-    Menu m3 = Menu.builder()
-            .name("아이스티")
-            .price(1000L)
-            .category(c4)
-            .imageUrl("http://ddddc")
-            .build();
-
+    m1 = Menu.of("만두국", 1000L, "http://aaaaa",c1);
+    m2 = Menu.of("짜장면", 3000L, "http://bbbbb",c1);
+    m3 = Menu.of("아이스티", 1000L, "http://ddddc",c4);
 
     em.persist(m1);
     em.persist(m2);
@@ -140,20 +86,10 @@ public class BuildingCategoryRelatedServiceTest {
 
   }
 
-  @AfterEach
-  public void cleanup() {
-    em.createQuery("DELETE FROM Menu").executeUpdate();
-    em.createQuery("DELETE FROM BuildingCategory").executeUpdate();
-    em.createQuery("DELETE FROM Building").executeUpdate();
-    em.createQuery("DELETE FROM Category").executeUpdate();
-    em.flush();
-    em.clear();
-  }
-
   @Test
   public void 디테일_제공안하는_카테고리입력시_실패() throws Exception {
     Assertions.assertThrows(CategoryNotProvidingDetail.class, () -> {
-      buildingSearchService.viewBuildingDetailByCategory("공학관", 1L);
+      buildingSearchService.viewBuildingDetailByCategory("공학관", 2L);
     });
   }
 
@@ -172,7 +108,7 @@ public class BuildingCategoryRelatedServiceTest {
   @Test
   public void 특정_학생식당_카테고리_디테일_조회_성공() throws Exception {
     // given
-    CategoryDetailFloorAndMenusProviding response = (CategoryDetailFloorAndMenusProviding) buildingSearchService.viewBuildingDetailByCategory("학생식당", buildingQueryRepository.findBuildingByNumber_test(11L));
+    CategoryDetailFloorAndMenusProviding response = (CategoryDetailFloorAndMenusProviding) buildingSearchService.viewBuildingDetailByCategory("학생식당", buildingQueryRepository.findBuildingByNumber_test(1L));
     // when
     // then
     Assertions.assertEquals(2, response.getMenus().size());
@@ -191,10 +127,11 @@ public class BuildingCategoryRelatedServiceTest {
   @Test
   public void 특정_케이큐브_카테고리_디테일_조회_성공() throws Exception {
     // given
-    CategoryDetailFloorAndMenusProviding response = (CategoryDetailFloorAndMenusProviding) buildingSearchService.viewBuildingDetailByCategory("케이큐브", buildingQueryRepository.findBuildingByNumber_test(13L));
+    CategoryDetailFloorAndMenusProviding response = (CategoryDetailFloorAndMenusProviding) buildingSearchService.viewBuildingDetailByCategory("케이큐브", buildingQueryRepository.findBuildingByNumber_test(14L));
     // when
     // then
-    Assertions.assertEquals(4, response.getFloor());
+    Assertions.assertEquals(1L, response.getFloor());
+    Assertions.assertEquals(1, response.getMenus().size());
   }
 
 }

@@ -35,6 +35,6 @@ class UserTest {
     private Building createBuilding() {
         BigDecimal latitude = BigDecimal.valueOf(64.3423423);
         BigDecimal longitude = BigDecimal.valueOf(342.2343434);
-        return (Building.of("신공학관", "신공", latitude, longitude));
+        return (Building.of("신공학관",3L, "신공", latitude, longitude));
     }
 }
