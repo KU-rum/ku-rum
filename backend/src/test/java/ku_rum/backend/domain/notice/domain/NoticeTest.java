@@ -25,7 +25,7 @@ class NoticeTest {
         User user = User.of("사용자1", "미미미누", "password123", "202112322", department);
 
         //when
-        Notice notice = Notice.of("가나다라", "naver.com/abc123");
+        Notice notice = Notice.of("가나다라", "naver.com/abc123", "2024-11-07", NoticeCategory.AFFAIR, GENERAL);
 
         //then
         assertThat(notice.getTitle()).isEqualTo("가나다라");
@@ -42,7 +42,7 @@ class NoticeTest {
         User user = User.of("사용자1", "미미미누", "password123", "202112322", department);
 
         //when
-        Notice notice = Notice.of("가나다라", "naver.com/abc123");
+        Notice notice = Notice.of("가나다라", "naver.com/abc123", "2024-11-07", NoticeCategory.AFFAIR, GENERAL);
 
         //then
         assertThat(notice.getNoticeStatus()).isEqualTo(GENERAL);

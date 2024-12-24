@@ -3,6 +3,7 @@ package ku_rum.backend.domain.bookmark.domain;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.notice.domain.Notice;
+import ku_rum.backend.domain.notice.domain.NoticeCategory;
 import ku_rum.backend.domain.user.domain.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
+import static ku_rum.backend.domain.notice.domain.NoticeStatus.GENERAL;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +22,7 @@ class BookmarkTest {
     void saveBookmarkWithUserAndNotice() {
         //given
         User user = createUser("사용자1", "202112322");
-        Notice notice = Notice.of("가나다라", "naver.com/abc123");
+        Notice notice = Notice.of("가나다라", "naver.com/abc123", "2024-11-07", NoticeCategory.AFFAIR, GENERAL);
 
         //when
         Bookmark bookmark = Bookmark.of(user, notice);
