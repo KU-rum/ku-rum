@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,25 +54,19 @@ public class BuildingSearchService {
   }
 
   public BuildingResponse viewBuildingByName(String name) {
-    BuildingAbbrev result = null;
+    String inputName = name;
     name = removeNumbersInName(name);
     String finalName = name;
 
-    Optional<BuildingAbbrev> foundBuildingAbbrev1 = Optional.ofNullable(checkMatchWithOriginalName(finalName));
-    Optional<BuildingAbbrev> foundBuildingAbbrev2 = Optional.ofNullable(checkMatchWithAbbreviationName(finalName));
+    List<BuildingAbbrev> potentialMatches = Arrays.asList(BuildingAbbrev.values());
 
-    if (foundBuildingAbbrev1.isEmpty() && foundBuildingAbbrev2.isEmpty())
-      throw new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NAME);
-    else {
-      if (foundBuildingAbbrev1.isEmpty())
-        result = foundBuildingAbbrev2.get();
-      else
-        result = foundBuildingAbbrev1.get();
+    BuildingAbbrev matchedBuilding = potentialMatches.stream()
+            .filter(b -> b.getOriginalName().toLowerCase().equals(finalName) ||
+                    b.name().toLowerCase().equals(finalName))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Building name not found: " + inputName));
 
-    }
-
-
-    return buildingQueryRepository.findBuildingByName(result.getOriginalName());
+    return buildingQueryRepository.findBuildingByName(matchedBuilding.getOriginalName());
   }
 
   /**
@@ -111,7 +106,6 @@ public class BuildingSearchService {
 
   public List<BuildingResponse> viewBuildingByCategory(String category) {
     List<Long> buildingIds = categoryService.findByCategoryReturnBuildingIds(category);//해당하는 기본키 리스트로 가져오기
-   // List<Long> buildingIdsFr = buildingCategoryQueryRepository.findByBuildingIds(buildingIds);
     List<Building> buildingsFound = buildingQueryRepository.findAllByIdIn(buildingIds);
     return buildingsFound.stream()
             .map(building -> BuildingResponse.of(building))

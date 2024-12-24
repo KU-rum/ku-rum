@@ -17,8 +17,8 @@ public class CategoryDetailFloorAndMenusProviding extends CategoryDetailResponse
 
   public void adding(Long floor, Optional<List<MenuSimpleResponse>> menusOpt) {
     // floor가 0보다 큰 경우에만 설정한다.
-    if (floor != null && floor > 0) {
-      this.floor = floor;
+    if (floor != null) {
+      isFloorOverZero(floor);
     }
     // menus가 존재하고 비어있지 않은 경우에만 설정한다.
     menusOpt.ifPresent(menuList -> {
@@ -26,5 +26,9 @@ public class CategoryDetailFloorAndMenusProviding extends CategoryDetailResponse
         this.menus = menuList;
       }
     });
+  }
+
+  private void isFloorOverZero(Long floor) {
+    this.floor = floor;
   }
 }

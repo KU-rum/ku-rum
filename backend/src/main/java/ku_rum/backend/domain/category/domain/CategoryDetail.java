@@ -14,12 +14,4 @@ public enum CategoryDetail {
   CAFE_1894("1894카페");
 
   private final String categoryName;
-
-  public boolean isEqual(CategoryDetail categoryDetail) {
-    return this == categoryDetail;
-  }
-
-  public boolean isDetailProviding() {
-    return this == STUDENT_CAFETERIA || this == KCUBE || this == CU || this == RESTIO || this == CAFE_1894;
-  }
 }

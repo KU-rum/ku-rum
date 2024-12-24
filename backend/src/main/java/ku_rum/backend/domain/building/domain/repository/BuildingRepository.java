@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface BuildingRepository extends JpaRepository<Building, Long> {
   Optional<Building> findById(Long id);
 
-  Long findBuildingByNumber(long l);
+  Long findBuildingByNumber(long number);
 }

@@ -1,5 +1,7 @@
 package ku_rum.backend.domain.building.presentation;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.building.application.BuildingSearchService;
 import ku_rum.backend.domain.category.dto.response.CategoryDetailResponse;
@@ -7,6 +9,7 @@ import ku_rum.backend.global.response.BaseResponse;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/v1/buildings/view")
 public class BuildingSearchController {
 
@@ -38,7 +42,7 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/searchNumber")
-  public BaseResponse<Optional<BuildingResponse>> viewBuildingByNumber(@RequestParam("number") int number) {
+  public BaseResponse<Optional<BuildingResponse>> viewBuildingByNumber(@RequestParam("number")@NotNull @Min(1)  int number) {
     Optional<BuildingResponse> result = buildingSearchService.viewBuildingByNumber(number);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
@@ -50,7 +54,7 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/searchName")
-  public BaseResponse<BuildingResponse> viewBuildingByName(@RequestParam("name") String name){
+  public BaseResponse<BuildingResponse> viewBuildingByName(@RequestParam("name")@NotNull String name){
     BuildingResponse result = buildingSearchService.viewBuildingByName(name.trim());
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }

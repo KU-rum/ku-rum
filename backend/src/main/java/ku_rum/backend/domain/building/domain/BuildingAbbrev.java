@@ -27,7 +27,7 @@ public enum BuildingAbbrev {
   public String getOriginalName(){
     return originalName;
   }
-  private BuildingAbbrev(String originalName){
+  BuildingAbbrev(String originalName){
     this.originalName = originalName;
   }
 
