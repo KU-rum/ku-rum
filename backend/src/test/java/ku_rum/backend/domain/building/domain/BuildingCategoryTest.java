@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 
 import static ku_rum.backend.domain.category.domain.CategoryType.STUDENT_CAFETERIA;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class BuildingCategoryTest {
 

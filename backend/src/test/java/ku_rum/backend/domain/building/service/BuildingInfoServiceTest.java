@@ -10,10 +10,7 @@ import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.menu.domain.Menu;
 import ku_rum.backend.global.exception.building.BuildingNotFoundException;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,93 +33,46 @@ public class BuildingInfoServiceTest {
   private BuildingQueryRepository buildingQueryRepository;
 
   private Building b1, b2, b3, b4;
+  private BuildingCategory bc1, bc2, bc3, bc4;
+  private Menu m1, m2;
+  private Category c1,c2,c3;
 
   @BeforeEach
   public void 임시_데이터() {
 
-    Category c1 = Category.builder()
-            .name("학생식당")
-            .build();
-    Category c2 = Category.builder()
-            .name("공학관")
-            .build();
-    Category c3 = Category.builder()
-            .name("케이큐브")
-            .build();
+    c1 = Category.of("학생식당");
+    c2 = Category.of("공학관");
+    c3 = Category.of("케이큐브");
 
     em.persist(c1);
     em.persist(c2);
     em.persist(c3);
 
-    b1 = Building.builder()
-            .name("제1학생회관")
-            .abbreviation("1학관")
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(11L)
-            .build();
-    b2 = Building.builder()
-            .name("경영관")
-            .abbreviation("경영")
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(12L)
-            .build();
-    b3 = Building.builder()
-            .name("제2학생회관")
-            .abbreviation("2학11")
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(10L)
-            .build();
-    b4 = Building.builder()
-            .name("도서관케이큐브")
-            .abbreviation("케큡")
-            .floor(4L)
-            .longitude(BigDecimal.valueOf(33.333332))
-            .latitude(BigDecimal.valueOf(22.222222))
-            .number(13L)
-            .build();
+    b1 = Building.of("제1학생회관", 1L,"1학관", 1L, BigDecimal.valueOf(33.333332), BigDecimal.valueOf(22.222222));
+    b2 = Building.of("경영관", 2L,"경영", 12L, BigDecimal.valueOf(44.733332), BigDecimal.valueOf(22.222222));
+    b3 = Building.of("제2학생회관",3L, "2학11", 10L, BigDecimal.valueOf(33.333332), BigDecimal.valueOf(22.222222));
+    b4 = Building.of("도서관케이큐브", 4L,"케큡", 13L, BigDecimal.valueOf(33.333332), BigDecimal.valueOf(22.222222));
 
     em.persist(b1);
     em.persist(b2);
     em.persist(b3);
     em.persist(b4);
 
-    BuildingCategory bc1 = BuildingCategory.of(b1, c1);
-    BuildingCategory bc3 = BuildingCategory.of(b3, c1);
-    BuildingCategory bc2 = BuildingCategory.of(b2, c2);
-    BuildingCategory bc4 = BuildingCategory.of(b4, c3);
+    bc1 = BuildingCategory.of(b1, c1);
+    bc3 = BuildingCategory.of(b3, c1);
+    bc2 = BuildingCategory.of(b2, c2);
+    bc4 = BuildingCategory.of(b4, c3);
 
     em.persist(bc1);
     em.persist(bc2);
     em.persist(bc3);
     em.persist(bc4);
 
-    Menu m1 = Menu.builder()
-            .name("만두국")
-            .price(1000L)
-            .category(c1)
-            .imageUrl("http://aaaaa")
-            .build();
-    Menu m2 = Menu.builder()
-            .name("짜장면")
-            .price(3000L)
-            .category(c1)
-            .imageUrl("http://bbbbb")
-            .build();
+    m1 = Menu.of("만두국", 1000L, "http://aaaaa",c1);
+    m2 = Menu.of("짜장면", 3000L, "http://bbbbb",c1);
 
     em.persist(m1);
     em.persist(m2);
-    em.flush();
-  }
-
-  @AfterEach
-  public void cleanup() {
-    em.createQuery("DELETE FROM Menu").executeUpdate();
-    em.createQuery("DELETE FROM BuildingCategory").executeUpdate();
-    em.createQuery("DELETE FROM Building").executeUpdate();
-    em.createQuery("DELETE FROM Category").executeUpdate();
     em.flush();
     em.clear();
   }
@@ -138,29 +88,28 @@ public class BuildingInfoServiceTest {
 
   @Test
   public void 등록된_건물정보_이름으로_조회_성공() throws Exception {
+    System.out.println(b2.getNumber());
     // given
-    BuildingResponse buildingResponse = buildingSearchService.viewBuildingByName("경영관");
+    BuildingResponse buildingResponse = buildingSearchService.viewBuildingByName("경영102");
 
     // then
-    Assertions.assertEquals(12L, buildingResponse.getBuildingNumber());
+    Assertions.assertEquals(2L, buildingResponse.getBuildingNumber());
   }
 
   @Test
   public void 등록된_건물정보_건물번호로_조회_성공() throws Exception {
     // given
-    Long x = 10L;
-    int number = x.intValue();
-    Optional<BuildingResponse> buildingResponse = buildingSearchService.viewBuildingByNumber(number);
+    Long number = 3L;
+    BuildingResponse buildingResponse = buildingSearchService.viewBuildingByNumber(number);
 
     // then
-    Assertions.assertEquals("제2학생회관", buildingResponse.get().getBuildingName());
+    Assertions.assertEquals("제2학생회관", buildingResponse.getBuildingName());
   }
 
   @Test
   public void 등록된_건물정보_건물번호로_조회_실패() throws Exception {
     // given
-    Long x = 20L;
-    int number = x.intValue();
+    Long number = 202L;
     Assertions.assertThrows(BuildingNotFoundException.class, () -> {
       buildingSearchService.viewBuildingByNumber(number);
     });

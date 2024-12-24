@@ -37,7 +37,7 @@ class BuildingTest {
             BigDecimal longitude = BigDecimal.valueOf(342.2343434);
 
             //when
-            Building building = Building.of("신공학관", "신공", (long)3, latitude, longitude);
+            Building building = Building.of("신공학관", 11L,"신공", (long)3, latitude, longitude);
 
             //then
             assertThat(building.getLatitude()).isEqualTo(latitude);

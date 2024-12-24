@@ -31,16 +31,20 @@ public class BuildingQueryRepository {
             .getResultList();
   }
 
-  public Optional<BuildingResponse> findBuildingByNumber(int number) {
+  public Optional<BuildingResponse> findBuildingByNumber(Long number) {
     String query = "SELECT new ku_rum.backend.domain.building.dto.response.BuildingResponse(" +
             "m.id, m.name, m.number, m.abbreviation, m.latitude, m.longitude" +
             ") " +
             "FROM Building m " +
-            "where m.number =: number";
-    return Optional.ofNullable(entityManager.createQuery(query, BuildingResponse.class)
+            "WHERE m.number = :number";
+
+    List<BuildingResponse> result = entityManager.createQuery(query, BuildingResponse.class)
             .setParameter("number", number)
-            .getSingleResult());
+            .getResultList();
+
+    return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
   }
+
 
   public BuildingResponse findBuildingByName(String name) {
     String query = "SELECT new ku_rum.backend.domain.building.dto.response.BuildingResponse(" +

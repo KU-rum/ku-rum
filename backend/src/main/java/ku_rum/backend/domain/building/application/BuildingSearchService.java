@@ -44,14 +44,14 @@ public class BuildingSearchService {
             .orElseThrow(() -> new BuildingNotRegisteredException(BaseExceptionResponseStatus.NO_BUILDING_REGISTERED_CURRENTLY));//리스트가 비어있는 경우 예외처리
   }
 
-  public Optional<BuildingResponse> viewBuildingByNumber(int number) {
-    try {
-      return Optional.ofNullable(buildingQueryRepository.findBuildingByNumber(number))
-              .orElseThrow(() -> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER));
-    } catch (EmptyResultDataAccessException e) {
-      throw new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER);
-    }
+  public BuildingResponse viewBuildingByNumber(Long number) {
+    return buildingQueryRepository.findBuildingByNumber(number)
+            .orElseThrow(() -> new BuildingNotFoundException(BaseExceptionResponseStatus.BUILDING_DATA_NOT_FOUND_BY_NUMBER));
   }
+
+
+
+
 
   public BuildingResponse viewBuildingByName(String name) {
     String inputName = name;

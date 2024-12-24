@@ -19,7 +19,7 @@ public class BuildingResponse {
   private BigDecimal longtitude;
 
   @Builder
-  public BuildingResponse(Long buildingId, String buildingName, Long buildingNumber, String bulidingAbbreviation, BigDecimal latitude, BigDecimal longtitude) {
+  private BuildingResponse(Long buildingId, String buildingName, Long buildingNumber, String bulidingAbbreviation, BigDecimal latitude, BigDecimal longtitude) {
     this.buildingId = buildingId;
     this.buildingName = buildingName;
     this.buildingNumber = buildingNumber;

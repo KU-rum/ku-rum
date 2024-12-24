@@ -42,8 +42,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/searchNumber")
-  public BaseResponse<Optional<BuildingResponse>> viewBuildingByNumber(@RequestParam("number")@NotNull @Min(1)  int number) {
-    Optional<BuildingResponse> result = buildingSearchService.viewBuildingByNumber(number);
+  public BaseResponse<BuildingResponse> viewBuildingByNumber(@RequestParam("number")@NotNull @Min(1)  Long number) {
+    BuildingResponse result = buildingSearchService.viewBuildingByNumber(number);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
 

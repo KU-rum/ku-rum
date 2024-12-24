@@ -22,6 +22,7 @@ public class Building extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private Long number;
 
     private String abbreviation;
@@ -53,9 +54,10 @@ public class Building extends BaseEntity {
         this.longitude = longitude;
     }
 
-    public static Building of(String name, String abbreviation, Long floor, BigDecimal latitude, BigDecimal longitude) {
+    public static Building of(String name, Long number, String abbreviation, Long floor, BigDecimal latitude, BigDecimal longitude) {
         return Building.builder()
                 .name(name)
+                .number(number)
                 .abbreviation(abbreviation)
                 .floor(floor)
                 .latitude(latitude)
