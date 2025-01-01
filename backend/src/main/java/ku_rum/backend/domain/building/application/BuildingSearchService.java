@@ -1,16 +1,15 @@
 package ku_rum.backend.domain.building.application;
 
-import jakarta.persistence.EntityNotFoundException;
 import ku_rum.backend.domain.building.domain.Building;
-import ku_rum.backend.domain.building.dto.response.BuildingResponse;
+import ku_rum.backend.domain.building.domain.BuildingAbbrev;
 import ku_rum.backend.domain.building.domain.repository.BuildingCategoryQueryRepository;
 import ku_rum.backend.domain.building.domain.repository.BuildingQueryRepository;
 import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
-import ku_rum.backend.domain.building.domain.BuildingAbbrev;
-import ku_rum.backend.domain.category.dto.response.CategoryDetailFloorAndMenusProviding;
-import ku_rum.backend.domain.category.domain.CategoryDetail;
-import ku_rum.backend.domain.category.dto.response.CategoryDetailResponse;
+import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.category.application.CategoryService;
+import ku_rum.backend.domain.category.domain.CategoryDetail;
+import ku_rum.backend.domain.category.dto.response.CategoryDetailFloorAndMenusProviding;
+import ku_rum.backend.domain.category.dto.response.CategoryDetailResponse;
 import ku_rum.backend.domain.menu.repository.MenuQueryRepository;
 import ku_rum.backend.domain.menu.response.MenuSimpleResponse;
 import ku_rum.backend.global.exception.building.BuildingNotFoundException;
@@ -19,7 +18,6 @@ import ku_rum.backend.global.exception.category.CategoryNotProvidingDetail;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;

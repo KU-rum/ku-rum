@@ -1,24 +1,20 @@
 package ku_rum.backend.domain.user.application;
 
 import jakarta.validation.Valid;
+import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.MailSendSetting;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
 import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
-import ku_rum.backend.domain.user.dto.request.MailSendRequest;
-import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
 import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
-import ku_rum.backend.domain.user.dto.response.MailVerificationResponse;
-import ku_rum.backend.global.config.MailConfig;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
-import ku_rum.backend.global.exception.user.MailSendException;
 import ku_rum.backend.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +24,6 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,15 +31,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.time.Duration;
-import java.util.Random;
-
-import static ku_rum.backend.domain.user.domain.MailSendSetting.*;
-import static ku_rum.backend.global.config.MailConfig.*;
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.*;
 
 @Service
@@ -67,7 +56,7 @@ public class UserService {
 
         String password = passwordEncoder.encode(userSaveRequest.getPassword());
         Department department = departmentRepository.findByName(userSaveRequest.getDepartment())
-                .orElseThrow(() -> new NoSuchDepartmentException(NO_SUCH_DEPARTMENT));
+               .orElseThrow(() -> new NoSuchDepartmentException(NO_SUCH_DEPARTMENT));
 
         User user = User.builder()
                 .nickname(userSaveRequest.getNickname())
@@ -97,11 +86,13 @@ public class UserService {
             throw new DuplicateStudentIdException(DUPLICATE_STUDENT_ID);
         }
     }
+
     private void validateDepartmentName(final String department) {
         if (!departmentRepository.existsByName(department)) {
             throw new NoSuchDepartmentException(NO_SUCH_DEPARTMENT);
         }
     }
+
     public BaseResponse<WeinLoginResponse> loginToWein(@Valid final WeinLoginRequest weinLoginRequest) {
         // 리다이렉션 전략과 쿠키 저장소를 설정하여 HttpClient 생성
         CloseableHttpClient httpClient = HttpClients.custom()
