@@ -1,19 +1,15 @@
-package ku_rum.backend.domain.user.presentation;
+package ku_rum.backend.domain.friend.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ku_rum.backend.domain.friend.application.FriendService;
+import ku_rum.backend.domain.friend.dto.request.FriendFindRequest;
+import ku_rum.backend.domain.friend.dto.request.FriendListRequest;
 import ku_rum.backend.domain.user.application.UserService;
-import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
-import ku_rum.backend.domain.user.dto.request.MailSendRequest;
-import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
+import ku_rum.backend.domain.user.presentation.UserController;
 import ku_rum.backend.global.config.SecurityConfig;
-import org.junit.jupiter.api.BeforeEach;
-import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
-import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
-import ku_rum.backend.global.response.BaseResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,15 +17,15 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(FriendController.class)
 @Import(SecurityConfig.class)
-class UserControllerTest {
+class FriendControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,22 +34,16 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private UserService userService;
+    private FriendService friendService;
 
-    @DisplayName("신규 유저를 생성한다.")
+    @DisplayName("유저의 친구 목록을 성공적으로 불러온다.")
     @Test
-    void createUser() throws Exception {
+    void getFriendLists() throws Exception {
         //given
-        UserSaveRequest request = UserSaveRequest.builder()
-                .email("kmw106933")
-                .password("password123")
-                .department("컴퓨터공학부")
-                .nickname("미미미누")
-                .studentId("202112322")
-                .build();
+        FriendListRequest request = FriendListRequest.from(1L);
 
         // when then
-        mockMvc.perform(post("/api/v1/users")
+        mockMvc.perform(get("/api/v1/friends")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -64,16 +54,15 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("OK"));
     }
 
-
-    @DisplayName("이메일 중복을 확인한다.")
+    @DisplayName("기존 친구 목록에서 닉네임으로 친구를 검색한다.")
     @Test
-    void validateEmail() throws Exception {
+    void findByNameInFriendLists() throws Exception {
         //given
-        EmailValidationRequest emailValidationRequest = new EmailValidationRequest("kmw106933@naver.com");
+        FriendFindRequest request = FriendFindRequest.of(1L, "nickname");
 
-        //when then
-        mockMvc.perform(post("/api/v1/users/validations/email")
-                        .content(objectMapper.writeValueAsString(emailValidationRequest))
+        // when then
+        mockMvc.perform(get("/api/v1/friends/find")
+                        .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -82,6 +71,5 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("OK"));
     }
-
 
 }
