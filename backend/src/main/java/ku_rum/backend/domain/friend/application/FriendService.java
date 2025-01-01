@@ -1,9 +1,10 @@
 package ku_rum.backend.domain.friend.application;
 
+import ku_rum.backend.domain.friend.domain.Friend;
 import ku_rum.backend.domain.friend.domain.repository.FriendRepository;
 import ku_rum.backend.domain.friend.dto.request.FriendFindRequest;
 import ku_rum.backend.domain.friend.dto.request.FriendListRequest;
-import ku_rum.backend.domain.friend.dto.response.FriendFIndResponse;
+import ku_rum.backend.domain.friend.dto.response.FriendFindResponse;
 import ku_rum.backend.domain.friend.dto.response.FriendListResponse;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
@@ -29,17 +30,18 @@ public class FriendService {
         User user = userRepository.findUserById(friendListRequest.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
-        if (friendRepository.findAllByFromUser(user).isEmpty()) {
+        List<Friend> friends = friendRepository.findAllByFromUser(user);
+
+        if (friends.isEmpty()){
             throw new NoFriendsException(NO_FRIENDS_FOUND);
         }
 
-        return friendRepository.findAllByFromUser(user)
-                .stream()
-                .map(FriendListResponse::of)
+        return friends.stream()
+                .map(FriendListResponse::from)
                 .toList();
     }
 
-    public FriendFIndResponse findByNameInLists(final FriendFindRequest friendFindRequest) {
+    public FriendFindResponse findByNameInLists(final FriendFindRequest friendFindRequest) {
         User fromUser = userRepository.findUserById(friendFindRequest.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
@@ -49,7 +51,7 @@ public class FriendService {
         if (!friendRepository.existsByFromUserAndToUser(fromUser, toUser))
             throw new NoFriendsException(NO_FRIENDS_FOUND);
 
-        return FriendFIndResponse.from(toUser);
+        return FriendFindResponse.from(toUser);
     }
 
 }

@@ -1,6 +1,5 @@
 package ku_rum.backend.domain.friend.application;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.building.repository.BuildingRepository;
@@ -10,7 +9,7 @@ import ku_rum.backend.domain.friend.domain.Friend;
 import ku_rum.backend.domain.friend.domain.repository.FriendRepository;
 import ku_rum.backend.domain.friend.dto.request.FriendFindRequest;
 import ku_rum.backend.domain.friend.dto.request.FriendListRequest;
-import ku_rum.backend.domain.friend.dto.response.FriendFIndResponse;
+import ku_rum.backend.domain.friend.dto.response.FriendFindResponse;
 import ku_rum.backend.domain.friend.dto.response.FriendListResponse;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
@@ -26,7 +25,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -113,7 +111,7 @@ class FriendServiceTest {
         FriendFindRequest friendFindRequest = FriendFindRequest.of(1L, "미미미누1");
 
         //when
-        FriendFIndResponse friendFIndResponse = friendService.findByNameInLists(friendFindRequest);
+        FriendFindResponse friendFIndResponse = friendService.findByNameInLists(friendFindRequest);
 
         //then
         Assertions.assertThat(friendFIndResponse.getId()).isEqualTo(2L);
