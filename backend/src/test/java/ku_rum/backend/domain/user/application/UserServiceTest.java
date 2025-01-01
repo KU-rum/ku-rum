@@ -1,8 +1,8 @@
 package ku_rum.backend.domain.user.application;
 
 import jakarta.transaction.Transactional;
-import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.building.domain.Building;
+import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.User;

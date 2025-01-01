@@ -85,4 +85,12 @@ public class BuildingSearchService {
   private BuildingAbbrev checkMatchWithOriginalName(String name) {
     return BuildingAbbrev.fromOriginalName(name);
   }
+
+    public String getAbbrevWithoutNumber(String input) {
+      return null;
+    }
+
+  public boolean isValidBuildingAbbrev(String abbrev) {
+      return false;
+  }
 }

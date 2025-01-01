@@ -36,7 +36,6 @@ import java.util.Optional;
 
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.*;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
