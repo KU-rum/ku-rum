@@ -54,9 +54,7 @@ public class BuildingSearchService {
 
 
   public BuildingResponse viewBuildingByName(String name) {
-    String inputName = name;
-    name = removeNumbersInName(name);
-    String finalName = name;
+    String finalName = removeNumbersInName(name);
 
     List<BuildingAbbrev> potentialMatches = Arrays.asList(BuildingAbbrev.values());
 
@@ -64,7 +62,7 @@ public class BuildingSearchService {
             .filter(b -> b.getOriginalName().toLowerCase().equals(finalName) ||
                     b.name().toLowerCase().equals(finalName))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Building name not found: " + inputName));
+            .orElseThrow(() -> new IllegalArgumentException("Building name not found: " + name));
 
     return buildingQueryRepository.findBuildingByName(matchedBuilding.getOriginalName());
   }
@@ -76,14 +74,11 @@ public class BuildingSearchService {
    * @return
    */
   private String removeNumbersInName(String name) {
-    char[] array = name.toCharArray();
-    StringBuilder sb = new StringBuilder();
-    for (char a : array) {
-      if (!Character.isDigit(a)) {  // 숫자가 아닐 경우 추가
-        sb.append(a);
-      }
-    }
-    return sb.toString();
+
+    return name.chars()
+            .filter(ch -> !Character.isDigit(ch)) //문자만 남김
+            .mapToObj(ch -> String.valueOf((char) ch)) //각 문자를 String으로
+            .collect(Collectors.joining()); // 문자들을 하나의 문자열로 결합
   }
 
   /**
@@ -142,13 +137,15 @@ public class BuildingSearchService {
   }
 
   private CategoryDetail getCategoryDetail(String category) {
-    for (CategoryDetail detail : CategoryDetail.values()) {
-      if (detail.getCategoryName().equals(category)) {
-        return detail;
-      }
+    if (category == null || category.isEmpty()) { // 입력값 검증
+      return null;
     }
-    throw new CategoryNotProvidingDetail(BaseExceptionResponseStatus.CATEGORYNAME_NOT_PROVIDING_DETAIL);
+    return Arrays.stream(CategoryDetail.values())
+            .filter(detail -> detail.getCategoryName().equals(category))
+            .findFirst()
+            .orElseThrow(() -> new CategoryNotProvidingDetail(BaseExceptionResponseStatus.CATEGORYNAME_NOT_PROVIDING_DETAIL));
   }
+
 
   private boolean validateDetailProvidingCategory(String category) {
     for (CategoryDetail c : CategoryDetail.values()){

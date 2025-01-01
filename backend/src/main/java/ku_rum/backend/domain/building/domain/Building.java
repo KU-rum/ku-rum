@@ -1,12 +1,8 @@
 package ku_rum.backend.domain.building.domain;
 
 import jakarta.persistence.*;
-import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.global.type.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
