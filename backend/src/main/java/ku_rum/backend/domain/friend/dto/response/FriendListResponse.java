@@ -16,7 +16,7 @@ public class FriendListResponse {
         this.name = name;
     }
 
-    public static FriendListResponse of(Friend friend) {
+    public static FriendListResponse from(Friend friend) {
         return FriendListResponse.builder()
                 .id(friend.getToUser().getId())
                 .name(friend.getToUser().getNickname())
