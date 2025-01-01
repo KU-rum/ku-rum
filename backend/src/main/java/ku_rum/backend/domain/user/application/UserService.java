@@ -1,6 +1,7 @@
 package ku_rum.backend.domain.user.application;
 
 import jakarta.validation.Valid;
+import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.MailSendSetting;
@@ -30,6 +31,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.*;
@@ -54,7 +56,7 @@ public class UserService {
 
         String password = passwordEncoder.encode(userSaveRequest.getPassword());
         Department department = departmentRepository.findByName(userSaveRequest.getDepartment())
-                .orElseThrow(() -> new NoSuchDepartmentException(NO_SUCH_DEPARTMENT));
+               .orElseThrow(() -> new NoSuchDepartmentException(NO_SUCH_DEPARTMENT));
 
         User user = User.builder()
                 .nickname(userSaveRequest.getNickname())
