@@ -12,7 +12,7 @@ public class BuildingCategoryInitializer {
     ArrayList<BuildingCategory> buildingCategories = new ArrayList<>();
 
     buildingCategories.add(
-            BuildingCategory.of(buildings.get(0), categories.get(1))
+            BuildingCategory.of(buildings.get(0), categories.get(1)) //Category, Building을 매핑시키는 더 나은방법..?
     );
     buildingCategories.add(
             BuildingCategory.of(buildings.get(0), categories.get(2))

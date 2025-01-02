@@ -6,6 +6,8 @@ import ku_rum.backend.domain.building.domain.repository.BuildingCategoryReposito
 import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.category.domain.repository.CategoryRepository;
+import ku_rum.backend.domain.menu.domain.Menu;
+import ku_rum.backend.domain.menu.domain.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -19,6 +21,7 @@ public class DataLoader implements ApplicationRunner {
   private final BuildingRepository buildingRepository;
   private final CategoryRepository categoryRepository;
   private final BuildingCategoryRepository buildingCategoryRepository;
+  private final MenuRepository menuRepository;
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
@@ -45,15 +48,11 @@ public class DataLoader implements ApplicationRunner {
     }
     
     //Menu 테이블에 데이터 넣기
-    
+    ArrayList<Menu> menus = MenuInitializer.initializer(categories);
 
-    //데이터 저장
-
-  }
-
-  private void initializeCategories(ArrayList<Category> categories) {
+    for (Menu menu : menus){
+      menuRepository.save(menu);
+    }
 
   }
-
-
 }
