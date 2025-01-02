@@ -39,6 +39,7 @@ import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;

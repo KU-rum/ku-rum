@@ -49,7 +49,7 @@ class FriendServiceTest {
 
     @BeforeAll
     void init() {
-        Building building = Building.of("신공학관", "신공", BigDecimal.valueOf(64.3423423), BigDecimal.valueOf(64.3423423));
+        Building building = Building.of("신공학관",11L, "신공", BigDecimal.valueOf(64.3423423), BigDecimal.valueOf(64.3423423));
         buildingRepository.save(building);
 
         Department department = Department.of("컴퓨터공학부", building);

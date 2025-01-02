@@ -42,9 +42,14 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
     BUILDING_DATA_NOT_FOUND_BY_NAME(500, HttpStatus.NOT_FOUND, "유효하지 않은 건물 명칭입니다."),
     BUILDING_DATA_NOT_FOUND_BY_NUMBER(501, HttpStatus.NOT_FOUND, "유효하지 않은 건물 번호입니다."),
     NO_BUILDING_REGISTERED_CURRENTLY(502, HttpStatus.NO_CONTENT, "등록된 건물이 없습니다."),
+    /**
+     * 600: Category 오류
+     */
+    CATEGORY_NAME_NOT_EXIST(600, HttpStatus.NOT_FOUND, "존재하지 않는 카테고리명 입니다."),
+    CATEGORYNAME_NOT_PROVIDING_DETAIL(601, HttpStatus.NO_CONTENT, "디테일을 제공하는 카테고리명이 아닙니다."),
 
     /**
-     * 600: Friends 오류
+     * 700: Friends 오류
      */
     NO_FRIENDS_FOUND(600, HttpStatus.NO_CONTENT, "친구 목록에 친구가 존재하지 않습니다.");
 
