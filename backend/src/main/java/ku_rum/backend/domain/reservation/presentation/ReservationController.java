@@ -17,6 +17,11 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    @GetMapping("/login")
+    public BaseResponse<String> getLoginUrl() {
+        return reservationService.getLoginUrl();
+    }
+
     @PostMapping("/crawl")
     public BaseResponse<String> crawlReservationPage(@RequestBody @Valid WeinLoginRequest weinLoginRequest) {
         return reservationService.crawlReservationPage(weinLoginRequest);

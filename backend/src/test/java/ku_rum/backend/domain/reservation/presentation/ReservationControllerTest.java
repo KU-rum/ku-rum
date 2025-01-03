@@ -56,7 +56,7 @@ class ReservationControllerTest {
     @Test
     void selectDateSuccess() throws Exception {
         // Mock 데이터 설정
-        SelectDateRequest selectDateRequest = new SelectDateRequest("2024-11-25");
+        SelectDateRequest selectDateRequest = new SelectDateRequest("2024-12-11");
 
         when(reservationService.selectDateAndFetchTable(anyString()))
                 .thenReturn(BaseResponse.of(HttpStatus.OK, "타임 테이블 데이터"));
@@ -70,6 +70,4 @@ class ReservationControllerTest {
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("OK"));
     }
-
-
 }

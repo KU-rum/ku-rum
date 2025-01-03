@@ -33,6 +33,12 @@ public class ReservationService {
     private WebDriver driver; // WebDriver를 전역 변수로 선언
     private boolean isLoggedIn = false; // 로그인 상태를 추적
 
+
+    public BaseResponse<String> getLoginUrl() {
+        String loginUrl = ReservationCategory.RESERVATION_LOGIN.getValue();
+        return BaseResponse.of(HttpStatus.OK, "위인전 로그인 URL", loginUrl);
+    }
+
     public BaseResponse<String> crawlReservationPage(WeinLoginRequest weinLoginRequest) {
 
         if (driver == null) {
