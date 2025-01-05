@@ -24,7 +24,7 @@ public enum NoticeCategory {
     GENERAL("일반", "https://www.konkuk.ac.kr/konkuk/2244/subview.do",
             "#menu2244_obj1191 > div._fnctWrap > form:nth-child(2) > div > table > tbody > tr", "#menu2244_obj1191 > div._fnctWrap > form:nth-child(3) > div > div > a._listNext"),
 
-    INDUSTRY_ACADEMIC("산학", "https://www.konkuk.ac.kr/konkuk/2244/subview.do",
+    INDUSTRY_ACADEMIC("산학", "https://www.konkuk.ac.kr/konkuk/19329/subview.do",
             "#_combBbs > table > tbody > tr", "#_combBbs > form:nth-child(3) > div > div > a._listNext"),
 
     EMPLOYMENT("채용", "https://www.konkuk.ac.kr/konkuk/19564/subview.do",
