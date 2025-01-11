@@ -29,7 +29,7 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
     DUPLICATE_STUDENT_ID(301, HttpStatus.BAD_REQUEST, "이미 존재하는 학번입니다."),
     MAIL_SEND_EXCEPTION(302, HttpStatus.INTERNAL_SERVER_ERROR, "인증 메일 전송에 오류가 발생했습니다."),
     INVALID_AUTH_CODE_GENERATION(303, HttpStatus.INTERNAL_SERVER_ERROR, "인증 번호 4자리 수 생성에 오류가 발생했습니다."),
-    USER_NOT_FOUND(304, HttpStatus.NOT_FOUND, "해당 사용자가 존재하지 않습니다"),
+    NO_SUCH_USER(304, HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."),
 
     /**
      * 400: Department 오류
@@ -42,6 +42,7 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
     BUILDING_DATA_NOT_FOUND_BY_NAME(500, HttpStatus.NOT_FOUND, "유효하지 않은 건물 명칭입니다."),
     BUILDING_DATA_NOT_FOUND_BY_NUMBER(501, HttpStatus.NOT_FOUND, "유효하지 않은 건물 번호입니다."),
     NO_BUILDING_REGISTERED_CURRENTLY(502, HttpStatus.NO_CONTENT, "등록된 건물이 없습니다."),
+
     /**
      * 600: Category 오류
      */
@@ -51,7 +52,14 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
     /**
      * 700: Friends 오류
      */
-    NO_FRIENDS_FOUND(600, HttpStatus.NO_CONTENT, "친구 목록에 친구가 존재하지 않습니다.");
+    NO_FRIENDS_FOUND(700, HttpStatus.NO_CONTENT, "친구 목록에 친구가 존재하지 않습니다.");
+  
+  
+    /**
+     * 800: Notice 오류
+     */
+    NO_SUCH_NOTICE(800, HttpStatus.BAD_REQUEST, "해당 공지사항은 존재하지 않습니다.");
+
 
 
     private final int code;
