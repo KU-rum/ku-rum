@@ -80,7 +80,7 @@ public class ControllerAdvice {
     public BaseErrorResponse handleNoSuchNoticeException(final NoSuchNoticeException e) {
         log.error("NoSuchNoticeException: {}", e.getMessage());
         return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
-
+    }
     @ExceptionHandler(CategoryNotExist.class)
     public BaseErrorResponse handleCategoryNotExistException(final CategoryNotExist e){
         return new BaseErrorResponse(HttpStatus.NOT_FOUND, e.getStatus().getMessage());

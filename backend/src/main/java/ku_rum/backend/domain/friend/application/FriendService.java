@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.NO_FRIENDS_FOUND;
-import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.USER_NOT_FOUND;
+import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.NO_SUCH_USER;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,7 +28,7 @@ public class FriendService {
 
     public List<FriendListResponse> getMyLists(final FriendListRequest friendListRequest) {
         User user = userRepository.findUserById(friendListRequest.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserNotFoundException(NO_SUCH_USER));
 
         List<Friend> friends = friendRepository.findAllByFromUser(user);
 
@@ -43,10 +43,10 @@ public class FriendService {
 
     public FriendFindResponse findByNameInLists(final FriendFindRequest friendFindRequest) {
         User fromUser = userRepository.findUserById(friendFindRequest.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserNotFoundException(NO_SUCH_USER));
 
         User toUser = userRepository.findUserByNickname(friendFindRequest.getNickname())
-                        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+                        .orElseThrow(() -> new UserNotFoundException(NO_SUCH_USER));
 
         if (!friendRepository.existsByFromUserAndToUser(fromUser, toUser))
             throw new NoFriendsException(NO_FRIENDS_FOUND);
