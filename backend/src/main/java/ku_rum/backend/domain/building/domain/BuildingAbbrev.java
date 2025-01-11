@@ -1,8 +1,4 @@
-package ku_rum.backend.domain.building.service;
-
-import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
-
-import java.util.Optional;
+package ku_rum.backend.domain.building.domain;
 
 public enum BuildingAbbrev {
 
@@ -31,7 +27,7 @@ public enum BuildingAbbrev {
   public String getOriginalName(){
     return originalName;
   }
-  private BuildingAbbrev(String originalName){
+  BuildingAbbrev(String originalName){
     this.originalName = originalName;
   }
 

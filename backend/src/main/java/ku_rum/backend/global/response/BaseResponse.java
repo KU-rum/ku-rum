@@ -2,9 +2,14 @@ package ku_rum.backend.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import ku_rum.backend.domain.building.dto.response.BuildingResponse;
+import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
+import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
 import ku_rum.backend.global.response.status.ResponseStatus;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import java.util.Optional;
 
 @Getter
 @JsonPropertyOrder({"code", "status", "message", "result"})

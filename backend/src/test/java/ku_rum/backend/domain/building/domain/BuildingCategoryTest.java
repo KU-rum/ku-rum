@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 
 import static ku_rum.backend.domain.category.domain.CategoryType.STUDENT_CAFETERIA;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class BuildingCategoryTest {
 
@@ -35,7 +34,7 @@ class BuildingCategoryTest {
     private Building createBuilding() {
         BigDecimal latitude = BigDecimal.valueOf(64.3423423);
         BigDecimal longitude = BigDecimal.valueOf(342.2343434);
-        return Building.of("신공학관", "신공", latitude, longitude);
+        return Building.of("신공학관", 3L,"신공", latitude, longitude);
     }
 
 }

@@ -1,8 +1,8 @@
 package ku_rum.backend.domain.user.application;
 
 import jakarta.transaction.Transactional;
-import ku_rum.backend.domain.building.repository.BuildingRepository;
 import ku_rum.backend.domain.building.domain.Building;
+import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.User;
@@ -21,11 +21,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
 class UserServiceTest {
+
     @Autowired
     private UserService userService;
 
@@ -47,7 +49,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-         building = Building.of("신공학관", "신공", BigDecimal.valueOf(64.3423423), BigDecimal.valueOf(64.3423423));
+         building = Building.of("신공학관",3L, "신공", BigDecimal.valueOf(64.3423423), BigDecimal.valueOf(64.3423423));
          buildingRepository.save(building);
 
          department = Department.of("컴퓨터공학부", building);

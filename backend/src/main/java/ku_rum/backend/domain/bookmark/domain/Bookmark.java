@@ -22,7 +22,7 @@ public class Bookmark extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "notice_id", nullable = false)
+    @JoinColumn(name = "notice_url", nullable = false)
     private Notice notice;
 
     @Builder

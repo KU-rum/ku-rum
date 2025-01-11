@@ -31,7 +31,7 @@ public class Notice extends BaseEntity {
     private NoticeStatus noticeStatus;
 
     @Builder
-    public Notice(String url, String title, String date, NoticeCategory noticeCategory, NoticeStatus noticeStatus) {
+    private Notice(String url, String title, String date, NoticeCategory noticeCategory, NoticeStatus noticeStatus) {
         this.url = url;
         this.title = title;
         this.date = date;
@@ -39,12 +39,14 @@ public class Notice extends BaseEntity {
         this.noticeStatus = noticeStatus;
     }
 
-    public static Notice of(String title, String url) {
+
+    public static Notice of(String title, String url, String date, NoticeCategory noticeCategory, NoticeStatus noticeStatus) {
         return Notice.builder()
                 .title(title)
                 .url(url)
-                .noticeCategory(NoticeCategory.AFFAIR)
-                .noticeStatus(NoticeStatus.GENERAL)
+                .date(date)
+                .noticeCategory(noticeCategory)
+                .noticeStatus(noticeStatus)
                 .build();
     }
 }

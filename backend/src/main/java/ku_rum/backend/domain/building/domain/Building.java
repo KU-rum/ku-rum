@@ -1,12 +1,8 @@
 package ku_rum.backend.domain.building.domain;
 
 import jakarta.persistence.*;
-import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.global.type.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -22,9 +18,12 @@ public class Building extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private Long number;
 
     private String abbreviation;
+
+    private Long floor = 0L;
 
     @Column(nullable = false, precision = 16, scale = 13)
     private BigDecimal latitude;
@@ -33,7 +32,17 @@ public class Building extends BaseEntity {
     private BigDecimal longitude;
 
     @Builder
-    public Building(String name, Long number, String abbreviation, BigDecimal latitude, BigDecimal longitude) {
+    private Building(String name, Long number, String abbreviation, Long floor, BigDecimal latitude, BigDecimal longitude) {
+        this.name = name;
+        this.number = number;
+        this.abbreviation = abbreviation;
+        this.floor = floor;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    @Builder
+    private Building(String name, Long number, String abbreviation, BigDecimal latitude, BigDecimal longitude) {
         this.name = name;
         this.number = number;
         this.abbreviation = abbreviation;
@@ -41,9 +50,21 @@ public class Building extends BaseEntity {
         this.longitude = longitude;
     }
 
-    public static Building of(String name, String abbreviation, BigDecimal latitude, BigDecimal longitude) {
+    public static Building of(String name, Long number, String abbreviation, Long floor, BigDecimal latitude, BigDecimal longitude) {
         return Building.builder()
                 .name(name)
+                .number(number)
+                .abbreviation(abbreviation)
+                .floor(floor)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+    }
+
+    public static Building of(String name, Long number, String abbreviation,BigDecimal latitude, BigDecimal longitude) {
+        return Building.builder()
+                .name(name)
+                .number(number)
                 .abbreviation(abbreviation)
                 .latitude(latitude)
                 .longitude(longitude)
