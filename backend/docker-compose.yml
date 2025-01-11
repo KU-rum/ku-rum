@@ -1,0 +1,30 @@
+services:
+  my-server:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      my-db:
+        condition: service_healthy
+      my-cache-server:
+        condition: service_healthy
+  my-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: mydb
+    ports:
+      - 3307:3306
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ]
+      interval: 5s
+      retries: 10
+
+  my-cache-server:
+    image: redis
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      retries: 10
