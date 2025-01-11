@@ -6,6 +6,7 @@ import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
+import ku_rum.backend.domain.user.dto.request.AuthRequest;
 import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.reservation.dto.request.WeinLoginRequest;
@@ -15,6 +16,7 @@ import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
 import ku_rum.backend.global.response.BaseResponse;
+import ku_rum.backend.global.security.jwt.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
@@ -44,7 +46,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private static final String WEIN_LOGIN_URL = "https://wein.konkuk.ac.kr/common/user/loginProc.do";
-
 
     @Transactional
     public UserSaveResponse saveUser(final UserSaveRequest userSaveRequest) {
