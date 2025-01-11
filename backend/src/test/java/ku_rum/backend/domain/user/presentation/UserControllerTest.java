@@ -3,14 +3,8 @@ package ku_rum.backend.domain.user.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ku_rum.backend.domain.user.application.UserService;
 import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
-import ku_rum.backend.domain.user.dto.request.MailSendRequest;
-import ku_rum.backend.domain.user.dto.request.MailVerificationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.global.config.SecurityConfig;
-import org.junit.jupiter.api.BeforeEach;
-import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
-import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
-import ku_rum.backend.global.response.BaseResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

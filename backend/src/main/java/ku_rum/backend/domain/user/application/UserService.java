@@ -4,12 +4,11 @@ import jakarta.validation.Valid;
 import ku_rum.backend.domain.building.domain.Building;
 import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
-import ku_rum.backend.domain.user.domain.MailSendSetting;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
 import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
-import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
+import ku_rum.backend.domain.reservation.dto.request.WeinLoginRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
 import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
@@ -33,7 +32,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-
 import static ku_rum.backend.global.response.status.BaseExceptionResponseStatus.*;
 
 @Service
