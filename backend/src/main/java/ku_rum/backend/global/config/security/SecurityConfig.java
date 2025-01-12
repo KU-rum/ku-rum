@@ -36,7 +36,7 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/api/v1/auth/login", "/api/v1/users").permitAll()
+                .requestMatchers("/api/v1/auth/login", "/api/v1/users", "/docs/**").permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(new JwtTokenAuthenticationFilter(jwtTokenProvider, redisUtil), UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement((session) -> session
