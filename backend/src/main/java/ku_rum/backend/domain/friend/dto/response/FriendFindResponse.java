@@ -2,9 +2,7 @@ package ku_rum.backend.domain.friend.dto.response;
 
 import ku_rum.backend.domain.user.domain.User;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 public record FriendFindResponse(Long id, String nickname) {
 
     @Builder
