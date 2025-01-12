@@ -52,15 +52,13 @@ public enum BaseExceptionResponseStatus implements ResponseStatus{
     /**
      * 700: Friends 오류
      */
-    NO_FRIENDS_FOUND(700, HttpStatus.NO_CONTENT, "친구 목록에 친구가 존재하지 않습니다.");
+    NO_FRIENDS_FOUND(700, HttpStatus.NO_CONTENT, "친구 목록에 친구가 존재하지 않습니다."),
   
   
     /**
      * 800: Notice 오류
      */
     NO_SUCH_NOTICE(800, HttpStatus.BAD_REQUEST, "해당 공지사항은 존재하지 않습니다.");
-
-
 
     private final int code;
     private final HttpStatus status;

@@ -2,9 +2,6 @@ package ku_rum.backend.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import ku_rum.backend.domain.building.dto.response.BuildingResponse;
-import ku_rum.backend.domain.user.dto.request.WeinLoginRequest;
-import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
 import ku_rum.backend.global.response.status.ResponseStatus;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -41,7 +38,6 @@ public class BaseResponse<T> implements ResponseStatus {
     public static <T> BaseResponse<T> ok(T data) {
         return of(HttpStatus.OK, data);
     }
-
 
     @Override
     public int getCode() {
