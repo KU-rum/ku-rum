@@ -2,12 +2,11 @@ package ku_rum.backend.domain.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ku_rum.backend.domain.user.application.UserService;
-import ku_rum.backend.domain.user.dto.request.EmailValidationRequest;
+import ku_rum.backend.domain.user.dto.request.mail.EmailValidationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
-import ku_rum.backend.global.config.SecurityConfig;
+import ku_rum.backend.global.config.security.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
