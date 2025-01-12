@@ -25,34 +25,22 @@ public class DataLoader implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
-    //데이터 작성
-    //Building 테이블에 데이터 넣기
-    ArrayList<Building> buildings = BuildingInitializer.initialize();
 
-    for (Building building : buildings){
-      buildingRepository.save(building);
-    }
+    //Building 데이터 저장
+    buildingRepository.saveAll(BuildingInitializer.initialize());
 
-    //Category 테이블에 데이터 넣기
-    ArrayList<Category> categories = CategoryInitializer.initialize();
-
-    for (Category category : categories){
-      categoryRepository.save(category);
-    }
+    //Category 데이터 저장
+    categoryRepository.saveAll(CategoryInitializer.initialize());
     
-    //BuildingCategory 테이블에 데이터 넣기
-    ArrayList<BuildingCategory> buildingCategories = BuildingCategoryInitializer.initialize(buildings,categories);
-
-    for (BuildingCategory buildingCategory : buildingCategories){
-      buildingCategoryRepository.save(buildingCategory);
-    }
-    
-    //Menu 테이블에 데이터 넣기
-    ArrayList<Menu> menus = MenuInitializer.initializer(categories);
-
-    for (Menu menu : menus){
-      menuRepository.save(menu);
-    }
+    //BuildingCategory 데이터 저장
+    buildingCategoryRepository.saveAll(
+            BuildingCategoryInitializer.initialize(
+                    BuildingInitializer.initialize(),
+                    CategoryInitializer.initialize()
+            )
+    );
+    // Menu 데이터 저장
+    menuRepository.saveAll(MenuInitializer.initializer(CategoryInitializer.initialize()));
 
   }
 }
