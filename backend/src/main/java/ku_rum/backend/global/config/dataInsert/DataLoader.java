@@ -14,6 +14,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,20 +28,19 @@ public class DataLoader implements ApplicationRunner {
   public void run(ApplicationArguments args) throws Exception {
 
     //Building 데이터 저장
-    buildingRepository.saveAll(BuildingInitializer.initialize());
-
+    List<Building> savedBuildings = buildingRepository.saveAll(BuildingInitializer.initialize());
     //Category 데이터 저장
-    categoryRepository.saveAll(CategoryInitializer.initialize());
-    
+    List<Category> savedCategories = categoryRepository.saveAll(CategoryInitializer.initialize());
+
     //BuildingCategory 데이터 저장
     buildingCategoryRepository.saveAll(
             BuildingCategoryInitializer.initialize(
-                    BuildingInitializer.initialize(),
-                    CategoryInitializer.initialize()
+                    new ArrayList<>(savedBuildings),
+                    new ArrayList<>(savedCategories)
             )
     );
     // Menu 데이터 저장
-    menuRepository.saveAll(MenuInitializer.initializer(CategoryInitializer.initialize()));
+    menuRepository.saveAll(MenuInitializer.initializer(new ArrayList<>(savedCategories)));
 
   }
 }

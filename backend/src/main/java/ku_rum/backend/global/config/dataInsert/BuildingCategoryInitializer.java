@@ -11,14 +11,18 @@ public class BuildingCategoryInitializer {
   public static ArrayList<BuildingCategory> initialize(ArrayList<Building> buildings, ArrayList<Category> categories) {
     ArrayList<BuildingCategory> buildingCategories = new ArrayList<>();
 
+    Building building0 = buildings.get(0);
+    Category category1 = categories.get(1);
+    Category category2 = categories.get(2);
+
     buildingCategories.add(
-            BuildingCategory.of(buildings.get(0), categories.get(1)) //Category, Building을 매핑시키는 더 나은방법..?
+            BuildingCategory.of(building0, category1)
     );
     buildingCategories.add(
-            BuildingCategory.of(buildings.get(0), categories.get(2))
+            BuildingCategory.of(building0, category2)
     );
     buildingCategories.add(
-            BuildingCategory.of(buildings.get(0), categories.get(2))
+            BuildingCategory.of(building0, category2)
     );
 
     //더 추가 예정

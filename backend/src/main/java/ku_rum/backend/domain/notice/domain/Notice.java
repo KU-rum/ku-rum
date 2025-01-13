@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Notice extends BaseEntity {
 
     @Id
-    @Column(length = 1024, nullable = false)
+    @Column(length = 255, nullable = false)
     private String url; // 공지사항 URL을 Primary Key로 사용
 
     @Column(nullable = false)
