@@ -41,9 +41,9 @@ public class UserController {
      * @return userSaveResponse userId
      */
     @PostMapping("/validations/email")
-    public BaseResponse<Void> validateEmail(@RequestBody @Valid final EmailValidationRequest emailValidationRequest) {
+    public BaseResponse<String> validateEmail(@RequestBody @Valid final EmailValidationRequest emailValidationRequest) {
         userService.validateEmail(emailValidationRequest);
-        return BaseResponse.ok(null);
+        return BaseResponse.ok("올바른 이메일 입니다.");
     }
 
 }

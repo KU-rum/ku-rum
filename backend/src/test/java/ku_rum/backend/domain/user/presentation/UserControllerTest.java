@@ -14,7 +14,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import static javax.management.openmbean.SimpleType.STRING;
 import static javax.swing.text.html.parser.DTDConstants.NUMBER;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,7 +39,7 @@ class UserControllerTest extends RestDocsTestSupport {
                 .build();
 
         // when then
-        mockMvc.perform(post("/api/v1/users").with(csrf())
+        mockMvc.perform(post("/api/v1/users")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -70,20 +69,19 @@ class UserControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("department")
                                         .type(STRING)
                                         .description("멤버 학과")
-                                        .optional()
                                         .attributes(constraints("ex) 컴퓨터공학부"))
                         ),
                         responseFields(
                                 fieldWithPath("code")
                                         .type(NUMBER)
-                                        .description("성공시 반환 값"),
+                                        .description("성공시 반환 코드 (200)"),
                                 fieldWithPath("status")
                                         .type(STRING)
-                                        .description("상태 값"),
-                                 fieldWithPath("message")
-                                .type(STRING)
-                                .description("상태 값")
-                )));
+                                        .description("성공시 상태 값 (OK)"),
+                                fieldWithPath("message")
+                                        .type(STRING)
+                                        .description("성공 시 메시지 (OK)")
+                        )));
     }
 
 
@@ -102,7 +100,29 @@ class UserControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.status").value("OK"))
-                .andExpect(jsonPath("$.message").value("OK"));
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.data").value("올바른 이메일 입니다."))
+                .andDo(restDocs.document(
+                        requestFields(
+                                fieldWithPath("email")
+                                        .type(STRING)
+                                        .description("멤버 아이디")
+                                        .attributes(constraints("아이디 입력은 필수입니다. 최소 6자 이상입니다."))
+                        ),
+                        responseFields(
+                                fieldWithPath("code")
+                                        .type(NUMBER)
+                                        .description("성공시 반환 코드 (200)"),
+                                fieldWithPath("status")
+                                        .type(STRING)
+                                        .description("성공시 상태 값 (OK)"),
+                                fieldWithPath("message")
+                                        .type(STRING)
+                                        .description("성공 시 메시지 값 (OK)"),
+                                fieldWithPath("data")
+                                        .type(STRING)
+                                        .description("성공 시 '올바른 이메일 입니다.' 반환")
+                        )));
     }
 
 

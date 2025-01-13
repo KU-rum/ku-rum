@@ -1,4 +1,4 @@
-= Coonect API Document
+= KU:rum API Document
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -7,7 +7,7 @@
 
 == Member 관련 API
 
-=== 회원 가입
+=== [회원 가입]
 
 ==== 요청
 
@@ -24,3 +24,57 @@ include::{snippets}/user-controller-test/create-user/http-response.adoc[]
 ==== 응답 필드
 
 include::{snippets}/user-controller-test/create-user/response-fields.adoc[]
+
+=== [아이디 중복 확인]
+
+==== 요청
+
+include::{snippets}/user-controller-test/validate-email/http-request.adoc[]
+
+==== 요청 필드
+
+include::{snippets}/user-controller-test/validate-email/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/user-controller-test/validate-email/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/user-controller-test/validate-email/response-fields.adoc[]
+
+=== [이메일 인증 요청]
+
+==== 요청
+
+include::{snippets}/mail-controller-test/send-mail/http-request.adoc[]
+
+==== 요청 필드
+
+include::{snippets}/mail-controller-test/send-mail/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/mail-controller-test/send-mail/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/mail-controller-test/send-mail/response-fields.adoc[]
+
+=== [인증 코드 성공 확인]
+
+==== 요청
+
+include::{snippets}/mail-controller-test/verification-email/http-request.adoc[]
+
+==== 요청 필드
+
+include::{snippets}/mail-controller-test/verification-email/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/mail-controller-test/verification-email/http-response.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/mail-controller-test/verification-email/response-fields.adoc[]
