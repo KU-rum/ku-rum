@@ -18,7 +18,7 @@ public class BuildingCategory extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buliding_id", nullable = false)
+    @JoinColumn(name = "building_id", nullable = false)
     private Building building;
 
     @ManyToOne(fetch = FetchType.LAZY)
