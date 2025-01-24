@@ -34,11 +34,16 @@ public class User extends BaseEntity {
     private String studentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+
     @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+    private Department department = null;
 
     @ElementCollection
     private List<String> roles = new ArrayList<>();
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Builder
     private User(String email, String nickname, String password, String studentId, Department department) {
@@ -57,6 +62,13 @@ public class User extends BaseEntity {
                 .password(password)
                 .studentId(studentId)
                 .department(department)
+                .build();
+    }
+
+    public static User of(String email, String nickname) {
+        return User.builder()
+                .email(email)
+                .nickname(nickname)
                 .build();
     }
 }
