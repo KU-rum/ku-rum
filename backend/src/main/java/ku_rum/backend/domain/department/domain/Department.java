@@ -28,10 +28,22 @@ public class Department extends BaseEntity {
         this.building = building;
     }
 
+    @Builder
+    private Department(String name) {
+        this.name = name;
+        this.building = null;
+    }
+
     public static Department of(String name, Building building) {
         return Department.builder()
                 .name(name)
                 .building(building)
+                .build();
+    }
+
+    public static Department of(String name) {
+        return Department.builder()
+                .name(name)
                 .build();
     }
 }

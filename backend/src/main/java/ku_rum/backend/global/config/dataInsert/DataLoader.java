@@ -6,6 +6,8 @@ import ku_rum.backend.domain.building.domain.repository.BuildingCategoryReposito
 import ku_rum.backend.domain.building.domain.repository.BuildingRepository;
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.category.domain.repository.CategoryRepository;
+import ku_rum.backend.domain.department.domain.Department;
+import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.menu.domain.Menu;
 import ku_rum.backend.domain.menu.domain.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class DataLoader implements ApplicationRunner {
   private final CategoryRepository categoryRepository;
   private final BuildingCategoryRepository buildingCategoryRepository;
   private final MenuRepository menuRepository;
+  private final DepartmentRepository departmentRepository;
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
@@ -31,6 +34,8 @@ public class DataLoader implements ApplicationRunner {
     List<Building> savedBuildings = buildingRepository.saveAll(BuildingInitializer.initialize());
     //Category 데이터 저장
     List<Category> savedCategories = categoryRepository.saveAll(CategoryInitializer.initialize());
+    // Department 데이터 저장
+    List<Department> departments = departmentRepository.saveAll(DepartmentInitializer.initializer(savedBuildings));
 
     //BuildingCategory 데이터 저장
     buildingCategoryRepository.saveAll(
@@ -41,6 +46,7 @@ public class DataLoader implements ApplicationRunner {
     );
     // Menu 데이터 저장
     menuRepository.saveAll(MenuInitializer.initializer(new ArrayList<>(savedCategories)));
+
 
   }
 }
