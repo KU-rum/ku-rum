@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import ku_rum.backend.global.config.redis.RedisUtil;
 import ku_rum.backend.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtTokenAuthenticationFilter extends GenericFilter {
@@ -29,10 +31,12 @@ public class JwtTokenAuthenticationFilter extends GenericFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
             String token = resolveToken((HttpServletRequest) request);
+            log.info("[JwtTokenAuthenticationFilter 진입] token {}", token);
 
             if (token != null && jwtTokenProvider.validateToken(token) && isNotLogout(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("[SecurityContextHolder 진입]");
             }
             chain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException e) {

@@ -30,7 +30,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisUtil redisUtil;
-    private final UserRepository userRepository;
 
     @Bean
     public JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter() {

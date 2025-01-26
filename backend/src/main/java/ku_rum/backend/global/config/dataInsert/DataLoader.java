@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Component
 @RequiredArgsConstructor
@@ -29,24 +30,30 @@ public class DataLoader implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
+    // 각 리포지토리에서 데이터 존재 여부 확인
+    if (buildingRepository.count() == 0) {
+      List<Building> savedBuildings = buildingRepository.saveAll(BuildingInitializer.initialize());
 
-    //Building 데이터 저장
-    List<Building> savedBuildings = buildingRepository.saveAll(BuildingInitializer.initialize());
-    //Category 데이터 저장
-    List<Category> savedCategories = categoryRepository.saveAll(CategoryInitializer.initialize());
-    // Department 데이터 저장
-    List<Department> departments = departmentRepository.saveAll(DepartmentInitializer.initializer(savedBuildings));
+      if (categoryRepository.count() == 0) {
+        List<Category> savedCategories = categoryRepository.saveAll(CategoryInitializer.initialize());
 
-    //BuildingCategory 데이터 저장
-    buildingCategoryRepository.saveAll(
-            BuildingCategoryInitializer.initialize(
-                    new ArrayList<>(savedBuildings),
-                    new ArrayList<>(savedCategories)
-            )
-    );
-    // Menu 데이터 저장
-    menuRepository.saveAll(MenuInitializer.initializer(new ArrayList<>(savedCategories)));
+        if (departmentRepository.count() == 0) {
+          List<Department> departments = departmentRepository.saveAll(DepartmentInitializer.initializer(savedBuildings));
 
+          if (buildingCategoryRepository.count() == 0) {
+            buildingCategoryRepository.saveAll(
+                    BuildingCategoryInitializer.initialize(
+                            new ArrayList<>(savedBuildings),
+                            new ArrayList<>(savedCategories)
+                    )
+            );
+          }
 
+          if (menuRepository.count() == 0) {
+            menuRepository.saveAll(MenuInitializer.initializer(new ArrayList<>(savedCategories)));
+          }
+        }
+      }
+    }
   }
 }
