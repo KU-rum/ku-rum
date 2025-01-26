@@ -19,7 +19,6 @@ public record UserSaveRequest(@NotBlank(message = "아이디 입력은 필수입
                 .nickname(userSaveRequest.nickname())
                 .password(password)
                 .email(userSaveRequest.email())
-                .password(userSaveRequest.password())
                 .studentId(userSaveRequest.studentId())
                 .department(department)
                 .build();

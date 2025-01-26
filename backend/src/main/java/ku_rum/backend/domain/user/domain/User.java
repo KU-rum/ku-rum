@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20, unique = true)
+    @Column(nullable = false, length = 50, unique = true)
     private String email;
 
     @Column(nullable = false, length = 50, unique = true)
@@ -59,4 +60,9 @@ public class User extends BaseEntity {
                 .department(department)
                 .build();
     }
+
+    public void passwordEncode(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(this.password);
+    }
+
 }

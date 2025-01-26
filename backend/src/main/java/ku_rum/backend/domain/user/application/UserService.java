@@ -13,7 +13,9 @@ import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
+import ku_rum.backend.global.exception.user.NoSuchUserException;
 import ku_rum.backend.global.response.BaseResponse;
+import ku_rum.backend.global.security.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
@@ -134,6 +136,12 @@ public class UserService {
         requestBody.add("pw", weinLoginRequest.getPassword());
         requestBody.add("rtnUrl", ""); // 리다이렉트 후 이동할 URL 지정, 필요시 수정
         return requestBody;
+    }
+
+    public void validateUserDetails(CustomUserDetails userDetails){
+        if (!userRepository.existsById(userDetails.getUserId())){
+            throw new NoSuchUserException(NO_SUCH_USER);
+        }
     }
 
 }

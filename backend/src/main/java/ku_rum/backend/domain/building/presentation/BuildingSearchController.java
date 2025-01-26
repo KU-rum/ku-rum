@@ -5,10 +5,15 @@ import jakarta.validation.constraints.NotNull;
 import ku_rum.backend.domain.building.dto.response.BuildingResponse;
 import ku_rum.backend.domain.building.application.BuildingSearchService;
 import ku_rum.backend.domain.category.dto.response.CategoryDetailResponse;
+import ku_rum.backend.domain.user.application.UserService;
+import ku_rum.backend.domain.user.domain.repository.UserRepository;
 import ku_rum.backend.global.response.BaseResponse;
 import ku_rum.backend.global.response.status.BaseExceptionResponseStatus;
+import ku_rum.backend.global.security.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.Token;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +28,7 @@ import java.util.Optional;
 public class BuildingSearchController {
 
   private final BuildingSearchService buildingSearchService;
+  private final UserService userService;
 
   /**
    * 전체 강의실의 핀포인트 조회
@@ -30,7 +36,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping
-  public BaseResponse viewAll() {
+  public BaseResponse viewAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    userService.validateUserDetails(userDetails);
     List<BuildingResponse> results = buildingSearchService.findAllBuildings();
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(),results);
   }

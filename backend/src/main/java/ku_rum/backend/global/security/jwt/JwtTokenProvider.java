@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import ku_rum.backend.global.config.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -50,6 +51,8 @@ public class JwtTokenProvider {
         String refreshToken = createToken(claims, now, refreshValidity);
 
         redisUtil.setRedisData(String.valueOf(claims.get("userPK")), refreshToken);
+
+        log.info("created Accesstoken: {}", accessToken);
 
         return TokenResponse.of(
                 accessToken,

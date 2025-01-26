@@ -55,8 +55,8 @@ public class JwtTokenAuthenticationFilter extends GenericFilter {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+        String bearerToken = request.getHeader(JWTPrefix.AUTHORIZATION.name());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(JWTPrefix.BEARER.name())) {
             return bearerToken.substring(7);
         }
         return null;
