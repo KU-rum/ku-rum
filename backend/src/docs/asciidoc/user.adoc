@@ -59,7 +59,7 @@ include::{snippets}/mail-controller-test/send-mail/http-response.adoc[]
 
 ==== 응답 필드
 
-include::{snippets}/mail-controller-test/send-mail/response-fields.adoc[]
+include::{snippets}/mail-controller-test/send:-mail/response-fields.adoc[]
 
 === [인증 코드 성공 확인]
 
