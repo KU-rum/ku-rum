@@ -56,14 +56,23 @@ public class BuildingSearchService {
 
     List<BuildingAbbrev> potentialMatches = Arrays.asList(BuildingAbbrev.values());
 
-    BuildingAbbrev matchedBuilding = potentialMatches.stream()
-            .filter(b -> b.getOriginalName().toLowerCase().equals(finalName) ||
-                    b.name().toLowerCase().equals(finalName))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Building name not found: " + name));
+    BuildingAbbrev matchedBuilding = null;
+    for (BuildingAbbrev b : potentialMatches) {
+      if (b.getOriginalName().equals(finalName) || b.name().equals(finalName)) {
+        matchedBuilding = b;
+        break;
+      }
+    }
+
+    if (matchedBuilding == null) {
+      throw new IllegalArgumentException("Building name not found: " + name);
+    }
 
     return buildingQueryRepository.findBuildingByName(matchedBuilding.getOriginalName());
   }
+
+
+
 
   /**
    * 줄임말 이름인 경우, 숫자 제거 (ex. 공A101 -> 공A)

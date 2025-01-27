@@ -31,12 +31,10 @@ public class JwtTokenAuthenticationFilter extends GenericFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
             String token = resolveToken((HttpServletRequest) request);
-            log.info("[JwtTokenAuthenticationFilter 진입] token {}", token);
 
             if (token != null && jwtTokenProvider.validateToken(token) && isNotLogout(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("[SecurityContextHolder 진입]");
             }
             chain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException e) {
@@ -59,8 +57,8 @@ public class JwtTokenAuthenticationFilter extends GenericFilter {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(JWTPrefix.AUTHORIZATION.name());
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(JWTPrefix.BEARER.name())) {
+        String bearerToken = request.getHeader(JWTPrefix.AUTHORIZATION.getPrefix());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(JWTPrefix.BEARER.getPrefix())) {
             return bearerToken.substring(7);
         }
         return null;

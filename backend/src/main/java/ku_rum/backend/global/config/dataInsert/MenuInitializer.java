@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class MenuInitializer {
   public static ArrayList<Menu> initializer(ArrayList<Category> categories) {
     ArrayList<Menu> menus = new ArrayList<>();;
-    Category studentCafeteriaCategory = categories.get(4);
+    Category studentCafeteriaCategory = categories.get(3);
     String defaultDescription = "NONE";
 
     //학생식당 메뉴

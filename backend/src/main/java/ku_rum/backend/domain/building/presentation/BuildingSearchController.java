@@ -49,7 +49,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/searchNumber")
-  public BaseResponse<BuildingResponse> viewBuildingByNumber(@RequestParam("number")@NotNull @Min(1)  Long number) {
+  public BaseResponse<BuildingResponse> viewBuildingByNumber(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam("number")@NotNull @Min(1)  Long number) {
+    userService.validateUserDetails(userDetails);
     BuildingResponse result = buildingSearchService.viewBuildingByNumber(number);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
@@ -61,7 +62,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/searchName")
-  public BaseResponse<BuildingResponse> viewBuildingByName(@RequestParam("name")@NotNull String name){
+  public BaseResponse<BuildingResponse> viewBuildingByName(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam("name")@NotNull String name){
+    userService.validateUserDetails(userDetails);
     BuildingResponse result = buildingSearchService.viewBuildingByName(name.trim());
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), result);
   }
@@ -73,7 +75,8 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/{category}")
-  public BaseResponse<List> viewBuildingByCategory(@PathVariable("category") String category){
+  public BaseResponse<List> viewBuildingByCategory(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("category") String category){
+    userService.validateUserDetails(userDetails);
     List<BuildingResponse> categoryList = buildingSearchService.viewBuildingByCategory(category.trim());
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), categoryList);
   }
@@ -86,10 +89,12 @@ public class BuildingSearchController {
    * @return
    */
   @GetMapping("/{buildingId}/{category}")
-  public BaseResponse<CategoryDetailResponse> viewBuildingByCategory(
+  public BaseResponse<CategoryDetailResponse> viewBuildingByCategoryInBuilding(
+          @AuthenticationPrincipal CustomUserDetails userDetails,
           @PathVariable("category") String category,
           @PathVariable("buildingId") Long buildingId
           ){
+    userService.validateUserDetails(userDetails);
     CategoryDetailResponse categoryDetailResponse = buildingSearchService.viewBuildingDetailByCategory(category,buildingId);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), categoryDetailResponse);
   }
