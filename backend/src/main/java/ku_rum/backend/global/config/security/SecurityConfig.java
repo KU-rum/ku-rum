@@ -51,11 +51,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/api/v1/auth/login", "/api/v1/users", "/docs/**", "/api/v1/users/validations/email").permitAll()
                 .anyRequest().authenticated());
-
-        // 필터: 실행순서 jwtTokenAuthenticationFilter -> UsernamePasswordAuthenticationFilter
-        http
-                .addFilterBefore(jwtTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

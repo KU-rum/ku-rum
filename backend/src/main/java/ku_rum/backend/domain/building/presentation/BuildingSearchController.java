@@ -83,7 +83,7 @@ public class BuildingSearchController {
 
   /**
    * 카테고리에 해당하는 특정 핀포인트 디테일 정보 확인 (학생식당, K-CUBE/K-HUB)
-   * 
+   *
    * @param category
    * @param buildingId
    * @return
@@ -93,7 +93,7 @@ public class BuildingSearchController {
           @AuthenticationPrincipal CustomUserDetails userDetails,
           @PathVariable("category") String category,
           @PathVariable("buildingId") Long buildingId
-          ){
+  ){
     userService.validateUserDetails(userDetails);
     CategoryDetailResponse categoryDetailResponse = buildingSearchService.viewBuildingDetailByCategory(category,buildingId);
     return BaseResponse.of(BaseExceptionResponseStatus.SUCCESS.getStatus(), categoryDetailResponse);

@@ -18,51 +18,51 @@ import java.util.List;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false, length = 50, unique = true)
-    private String email;
+  @Column(nullable = false, length = 50, unique = true)
+  private String email;
 
-    @Column(nullable = false, length = 50, unique = true)
-    private String nickname;
+  @Column(nullable = false, length = 50, unique = true)
+  private String nickname;
 
-    @Column(length = 128)
-    private String password;
+  @Column(length = 128)
+  private String password;
 
-    @Column(nullable = false, length = 15)
-    private String studentId;
+  @Column(nullable = false, length = 15)
+  private String studentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "department_id", nullable = false)
+  private Department department;
 
-    @ElementCollection
-    private List<String> roles = new ArrayList<>();
+  @ElementCollection
+  private List<String> roles = new ArrayList<>();
 
-    @Builder
-    private User(String email, String nickname, String password, String studentId, Department department) {
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
-        this.studentId = studentId;
-        this.department = department;
-        this.roles.add("ROLE_USER");
-    }
+  @Builder
+  private User(String email, String nickname, String password, String studentId, Department department) {
+    this.email = email;
+    this.nickname = nickname;
+    this.password = password;
+    this.studentId = studentId;
+    this.department = department;
+    this.roles.add("ROLE_USER");
+  }
 
-    public static User of(String email, String nickname, String password, String studentId, Department department) {
-        return User.builder()
-                .email(email)
-                .nickname(nickname)
-                .password(password)
-                .studentId(studentId)
-                .department(department)
-                .build();
-    }
+  public static User of(String email, String nickname, String password, String studentId, Department department) {
+    return User.builder()
+            .email(email)
+            .nickname(nickname)
+            .password(password)
+            .studentId(studentId)
+            .department(department)
+            .build();
+  }
 
-    public void passwordEncode(PasswordEncoder passwordEncoder){
-        this.password = passwordEncoder.encode(this.password);
-    }
+  public void passwordEncode(PasswordEncoder passwordEncoder){
+    this.password = passwordEncoder.encode(this.password);
+  }
 
 }

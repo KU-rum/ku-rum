@@ -51,9 +51,6 @@ public class JwtTokenProvider {
         String refreshToken = createToken(claims, now, refreshValidity);
 
         redisUtil.setRedisData(String.valueOf(claims.get("userPK")), refreshToken);
-
-        log.info("created Accesstoken: {}", accessToken);
-
         return TokenResponse.of(
                 accessToken,
                 refreshToken,

@@ -1,0 +1,48 @@
+spring:
+  profiles:
+    default: local
+  jpa:
+    hibernate:
+      # dialect: org.hibernate.dialect.MySQLDialect
+      dialect: org.hibernate.dialect.H2Dialect  # H2 전용 Dialect
+    show-sql: true
+  datasource:
+#    url: ${dbUrl}
+#    username: ${dbUsername}
+#    password: ${dbPassword}
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:testdb  # 메모리 기반 H2 DB 사용
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    h2:
+      console:
+        enabled: true  # H2 콘솔 활성화
+        path: /h2-console  # H2 콘솔 접근 경로 설정
+  data:
+    redis:
+      host: localhost  # Redis 서버 호스트
+      port: 6379       # Redis 서버 포트 (기본값: 6379)
+#      host: my-cache-server #redis #localhost #${EC2_public_IPv4_address}
+#      port: 6379
+
+
+server:
+  port: 8088
+
+
+logging:
+  level:
+    org.springframework.cache : trace
+
+openai:
+  model: gpt-3.5-turbo
+  api:
+    key: ${api_key}
+    url: ${api_endpoint}
+
+---
+spring:
+  config:
+    activate:
+      on-profile : dev

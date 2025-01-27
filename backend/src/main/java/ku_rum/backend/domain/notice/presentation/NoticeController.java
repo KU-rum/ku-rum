@@ -24,7 +24,7 @@ public class NoticeController {
      */
     @PostMapping("/crawl/konkuk")
     public BaseResponse<String> crawlKonkukNotices() { //redis에 저장해두고 redis에 없으면 db에 저장을 한 (key에다가 공지사항 url링크 저장)
-        //noticeService.crawlAndSaveKonkukNotices();
+        noticeService.crawlAndSaveKonkukNotices();
         return BaseResponse.ok(START_CRAWLING.getMessage());
     }
 
@@ -39,10 +39,10 @@ public class NoticeController {
      * @param category
      * @return
      */
-//    @GetMapping
-//    public BaseResponse<List<NoticeSimpleResponse>> getNoticesByCategory(@RequestParam(name = "category") NoticeCategory category) {
-//        return BaseResponse.ok(noticeService.findNoticesByCategory(category));
-//    }
+    @GetMapping
+    public BaseResponse<List<NoticeSimpleResponse>> getNoticesByCategory(@RequestParam(name = "category") NoticeCategory category) {
+        return BaseResponse.ok(noticeService.findNoticesByCategory(category));
+    }
 
     /**
      * 공지사항 제목을 통한 검색
