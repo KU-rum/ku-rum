@@ -41,6 +41,7 @@ class UserRepositoryTest {
         departmentRepository.save(department);
 
         user = User.builder()
+                .loginId("kmw106933")
                 .email("kmw106933@naver.com")
                 .nickname("미미미누")
                 .password("password123")

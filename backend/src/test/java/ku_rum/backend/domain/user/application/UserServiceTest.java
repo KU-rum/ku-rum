@@ -7,7 +7,7 @@ import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
-import ku_rum.backend.domain.mail.dto.request.EmailValidationRequest;
+import ku_rum.backend.domain.mail.dto.request.LoginIdValidationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
@@ -56,7 +56,8 @@ class UserServiceTest {
     void saveMember() {
         //given
         UserSaveRequest request = UserSaveRequest.builder()
-                .email("kmw106933")
+                .loginId("kmw106933")
+                .email("kmw10693@konkuk.ac.kr")
                 .password("password123")
                 .nickname("미미미누")
                 .studentId("202112322")
@@ -74,7 +75,8 @@ class UserServiceTest {
     void validateEmail() {
         //given
         User user = User.builder()
-                .email("kmw106933")
+                .loginId("kmw106933")
+                .email("kmw10693@konkuk.ac.kr")
                 .nickname("미미미누")
                 .password("password123")
                 .studentId("202112322")
@@ -83,12 +85,12 @@ class UserServiceTest {
 
         userRepository.save(user);
 
-        EmailValidationRequest emailValidationRequest = new EmailValidationRequest("kmw106933");
+        LoginIdValidationRequest loginIdValidationRequest = new LoginIdValidationRequest("kmw106933");
 
         //when then
-        assertThatThrownBy(() -> userService.validateEmail(emailValidationRequest))
+        assertThatThrownBy(() -> userService.validateEmail(loginIdValidationRequest))
                 .isInstanceOf(DuplicateEmailException.class)
-                .hasMessage("이미 존재하는 이메일입니다.");
+                .hasMessage("이미 존재하는 아이디입니다.");
     }
 
 }

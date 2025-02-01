@@ -1,9 +1,10 @@
 package ku_rum.backend.domain.user.presentation;
 
 import jakarta.validation.Valid;
+import ku_rum.backend.domain.user.dto.request.ResetAccountRequest;
 import ku_rum.backend.domain.reservation.dto.request.WeinLoginRequest;
 import ku_rum.backend.domain.user.application.UserService;
-import ku_rum.backend.domain.mail.dto.request.EmailValidationRequest;
+import ku_rum.backend.domain.mail.dto.request.LoginIdValidationRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
 import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
@@ -21,7 +22,7 @@ public class UserController {
 
     /**
      * 유저 회원가입 API
-     * @param userSaveRequest email, nickname, password, studentId, department
+     * @param userSaveRequest loginId, nickname, password, studentId, department
      * @return userSaveResponse userId
      */
     @PostMapping
@@ -42,13 +43,24 @@ public class UserController {
 
     /**
      * 아이디 중복인증 확인 API
-     * @param emailValidationRequest
+     * @param loginIdValidationRequest
      * @return userSaveResponse userId
      */
     @PostMapping("/validations/email")
-    public BaseResponse<String> validateEmail(@RequestBody @Valid final EmailValidationRequest emailValidationRequest) {
-        userService.validateEmail(emailValidationRequest);
+    public BaseResponse<String> validateEmail(@RequestBody @Valid final LoginIdValidationRequest loginIdValidationRequest) {
+        userService.validateEmail(loginIdValidationRequest);
         return BaseResponse.ok("올바른 이메일 입니다.");
+    }
+
+    /**
+     * 아이디/비밀번호 재설정 API
+     * @param resetAccountRequest
+     * @return userSaveResponse userId
+     */
+    @PostMapping("/reset-account")
+    public BaseResponse<String> resetAccount(@RequestBody @Valid final ResetAccountRequest resetAccountRequest) {
+        userService.resetAccount(resetAccountRequest);
+        return BaseResponse.ok("아이디/비밀번호가 변경되었습니다.");
     }
 
 }

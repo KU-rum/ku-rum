@@ -3,7 +3,8 @@ package ku_rum.backend.domain.user.presentation;
 import ku_rum.backend.config.RestDocsTestSupport;
 import ku_rum.backend.domain.reservation.dto.request.WeinLoginRequest;
 import ku_rum.backend.domain.user.application.UserService;
-import ku_rum.backend.domain.mail.dto.request.EmailValidationRequest;
+import ku_rum.backend.domain.mail.dto.request.LoginIdValidationRequest;
+import ku_rum.backend.domain.user.dto.request.ResetAccountRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,11 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.transaction.annotation.Transactional;
 
-import static javax.management.openmbean.SimpleType.STRING;
-import static javax.swing.text.html.parser.DTDConstants.NUMBER;
-import static org.awaitility.Awaitility.given;
-import static org.openqa.selenium.json.JsonType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Transactional
 class UserControllerTest extends RestDocsTestSupport {
 
     @MockBean
@@ -35,7 +34,8 @@ class UserControllerTest extends RestDocsTestSupport {
     void createUser() throws Exception {
         //given
         UserSaveRequest request = UserSaveRequest.builder()
-                .email("kmw106933")
+                .email("kmw106933@konkuk.ac.kr")
+                .loginId("kmw106933")
                 .password("password123")
                 .department("컴퓨터공학부")
                 .nickname("미미미누")
@@ -54,10 +54,14 @@ class UserControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.message").value("OK"))
                 .andDo(restDocs.document(
                         requestFields(
-                                fieldWithPath("email")
+                                fieldWithPath("loginId")
                                         .type(JsonType.STRING)
                                         .description("멤버 아이디")
                                         .attributes(constraints("아이디 입력은 필수입니다. 최소 6자 이상입니다.")),
+                                fieldWithPath("email")
+                                        .type(JsonType.STRING)
+                                        .description("멤버 이메일")
+                                        .attributes(constraints("@konkuk.ac.kr로 끝나야 합니다.")),
                                 fieldWithPath("nickname")
                                         .type(JsonType.STRING)
                                         .description("멤버 닉네임")
@@ -93,10 +97,10 @@ class UserControllerTest extends RestDocsTestSupport {
     @Test
     void validateEmail() throws Exception {
         //given
-        EmailValidationRequest emailValidationRequest = new EmailValidationRequest("kmw106933@naver.com");
+        LoginIdValidationRequest loginIdValidationRequest = new LoginIdValidationRequest("kmw106933@naver.com");
         //when then
         mockMvc.perform(post("/api/v1/users/validations/email")
-                        .content(objectMapper.writeValueAsString(emailValidationRequest))
+                        .content(objectMapper.writeValueAsString(loginIdValidationRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -107,7 +111,7 @@ class UserControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.data").value("올바른 이메일 입니다."))
                 .andDo(restDocs.document(
                         requestFields(
-                                fieldWithPath("email")
+                                fieldWithPath("loginId")
                                         .type(JsonType.STRING)
                                         .description("멤버 아이디")
                                         .attributes(constraints("아이디 입력은 필수입니다. 최소 6자 이상입니다."))
@@ -156,4 +160,49 @@ class UserControllerTest extends RestDocsTestSupport {
                         )));
     }
 
+    @Test
+    @DisplayName("아이디/비밀번호를 변경한다.")
+    @WithMockUser
+    void resetAccount() throws Exception {
+        // given
+        ResetAccountRequest resetAccountRequest = new ResetAccountRequest("test1234@konkuk.ac.kr", "test123456", "testte123");
+
+        // when then
+        mockMvc.perform(post("/api/v1/users/reset-account")
+                        .content(objectMapper.writeValueAsString(resetAccountRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestFields(
+                                fieldWithPath("email")
+                                        .type(JsonType.STRING)
+                                        .description("기존 이메일")
+                                        .attributes(constraints("기존 이메일입니다.")),
+                                fieldWithPath("loginId")
+                                        .type(JsonType.STRING)
+                                        .description("새로 변경할 아이디")
+                                        .attributes(constraints("새로 변경할 아이디입니다.")),
+                                fieldWithPath("password")
+                                        .type(JsonType.STRING)
+                                        .description("새로 변경할 비밀번호")
+                                        .attributes(constraints("새로 변경할 비밀번호입니다."))
+
+                        ),
+                        responseFields(
+                                fieldWithPath("code")
+                                        .type(JsonType.NUMBER)
+                                        .description("성공시 반환 코드 (200)"),
+                                fieldWithPath("status")
+                                        .type(JsonType.STRING)
+                                        .description("성공시 상태 값 (OK)"),
+                                fieldWithPath("message")
+                                        .type(JsonType.STRING)
+                                        .description("성공 시 메시지 값 (OK)"),
+                                fieldWithPath("data")
+                                        .type(JsonType.STRING)
+                                        .description("성공 시 '아이디/비밀번호가 변경되었습니다.' 반환")
+                        )));
+    }
 }

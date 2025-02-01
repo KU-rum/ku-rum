@@ -5,7 +5,8 @@ import ku_rum.backend.domain.department.domain.Department;
 import ku_rum.backend.domain.department.domain.repository.DepartmentRepository;
 import ku_rum.backend.domain.user.domain.User;
 import ku_rum.backend.domain.user.domain.repository.UserRepository;
-import ku_rum.backend.domain.mail.dto.request.EmailValidationRequest;
+import ku_rum.backend.domain.mail.dto.request.LoginIdValidationRequest;
+import ku_rum.backend.domain.user.dto.request.ResetAccountRequest;
 import ku_rum.backend.domain.user.dto.request.UserSaveRequest;
 import ku_rum.backend.domain.reservation.dto.request.WeinLoginRequest;
 import ku_rum.backend.domain.user.dto.response.UserSaveResponse;
@@ -13,6 +14,7 @@ import ku_rum.backend.domain.user.dto.response.WeinLoginResponse;
 import ku_rum.backend.global.exception.department.NoSuchDepartmentException;
 import ku_rum.backend.global.exception.user.DuplicateEmailException;
 import ku_rum.backend.global.exception.user.DuplicateStudentIdException;
+import ku_rum.backend.global.exception.user.NoSuchUserException;
 import ku_rum.backend.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,19 +55,30 @@ public class UserService {
         return UserSaveResponse.from(userRepository.save(user));
     }
 
+    @Transactional
+    public void resetAccount(final ResetAccountRequest resetAccountRequest) {
+        User user = findUserByEmail(resetAccountRequest.email());
+        changeLoginIdAndPassword(resetAccountRequest, user);
+    }
+
+    private void changeLoginIdAndPassword(ResetAccountRequest resetAccountRequest, User user) {
+        user.setPassword(passwordEncoder.encode(resetAccountRequest.password()));
+        user.setLoginId(resetAccountRequest.loginId());
+    }
+
     private void validateUser(UserSaveRequest userSaveRequest) {
-        validateDuplicateEmail(userSaveRequest.email());
+        validateDuplicateLoginid(userSaveRequest.loginId());
         validateDuplicateStudentId(userSaveRequest.studentId());
         validateDepartmentName(userSaveRequest.department());
     }
 
-    public void validateEmail(final EmailValidationRequest emailValidationRequest) {
-        validateDuplicateEmail(emailValidationRequest.email());
+    public void validateEmail(final LoginIdValidationRequest loginIdValidationRequest) {
+        validateDuplicateLoginid(loginIdValidationRequest.loginId());
     }
 
-    private void validateDuplicateEmail(final String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new DuplicateEmailException(DUPLICATE_EMAIL);
+    private void validateDuplicateLoginid(final String loginId) {
+        if (userRepository.existsByLoginId(loginId)) {
+            throw new DuplicateEmailException(DUPLICATE_LOGINID);
         }
     }
 
@@ -79,6 +92,11 @@ public class UserService {
         if (!departmentRepository.existsByName(department)) {
             throw new NoSuchDepartmentException(NO_SUCH_DEPARTMENT);
         }
+    }
+
+    private User findUserByEmail(final String email) {
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new NoSuchUserException(NO_SUCH_USER));
     }
 
     public BaseResponse<WeinLoginResponse> loginToWein(@Valid final WeinLoginRequest weinLoginRequest) {

@@ -23,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static ku_rum.backend.global.config.security.AuthorizationList.*;
+
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
@@ -35,29 +37,19 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/api/v1/auth/login", "/api/v1/users", "/docs/**", "/api/v1/users/validations/email"
-                        , "/api/v1/users/weinlogin").permitAll()
-                .anyRequest().authenticated());
+        http.authorizeHttpRequests((auth) -> auth.requestMatchers(LIST.toString()).permitAll().anyRequest().authenticated());
         http.addFilterBefore(new JwtTokenAuthenticationFilter(jwtTokenProvider, redisUtil), UsernamePasswordAuthenticationFilter.class);
-        http.sessionManagement((session) -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return email -> userRepository.findUserByEmail(email)
-                .map(u -> CustomUserDetails.of(u.getId(),
-                        u.getEmail(),
-                        AuthorityUtils.createAuthorityList(u.getRoles().toArray(new String[0])),
-                        u.getPassword()))
-                .orElseThrow(() -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다!"));
+        return email -> userRepository.findUserByLoginId(email).map(u -> CustomUserDetails.of(u.getId(), u.getLoginId(), AuthorityUtils.createAuthorityList(u.getRoles().toArray(new String[0])), u.getPassword())).orElseThrow(() -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다!"));
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
-                                                       PasswordEncoder passwordEncoder) {
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);

@@ -18,7 +18,7 @@ public class AuthController {
 
     /**
      * 유저 로그인 API
-     * @param authRequest email, password
+     * @param authRequest loginId, password
      * @return TokenResponse AccessToken, RefreshToken, accessTokenTime, refreshTokenTime
      */
     @PostMapping("/login")

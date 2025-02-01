@@ -30,8 +30,14 @@ public class MailController {
         return BaseResponse.ok(MAIL_SEND_INFO.getSUCCESS_MESSAGE());
     }
 
+    /**
+     * 유저 회원가입 시, 적절한 인증코드인지 확인
+     * @param mailVerificationRequest
+     * @return OK
+     */
     @GetMapping("/mail_verifications")
     public BaseResponse<MailVerificationResponse> verificationEmail(@RequestBody @Valid final MailVerificationRequest mailVerificationRequest) {
         return BaseResponse.ok(mailService.verifiedCode(mailVerificationRequest));
     }
+
 }

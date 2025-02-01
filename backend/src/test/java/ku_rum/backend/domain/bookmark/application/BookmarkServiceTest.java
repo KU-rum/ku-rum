@@ -46,7 +46,7 @@ class BookmarkServiceTest {
         MockitoAnnotations.openMocks(this);
 
         // Mock 데이터 생성
-        user = User.of("123@naver.com", "홍길동", "password", "20202020", null);
+        user = User.of("123@naver.com", "kmw106933@konkuk.ac.kr","홍길동", "password", "20202020", null);
         notice = Notice.builder()
                 .title("Notice")
                 .url("https://konkuk.ac.kr")

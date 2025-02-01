@@ -12,7 +12,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile : local
+      on-profile: local
 
   # H2 데이터 베이스
   datasource:
@@ -21,10 +21,10 @@ spring:
     username: sa
     password:
 
-  # ddl 전략 pdate
+  # ddl 전략 update
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -40,45 +40,44 @@ spring:
       host: localhost
 ---
 # 배포 환경
-  spring:
-    config:
-      activate:
-        on-profile: prod
+spring:
+  config:
+    activate:
+      on-profile: prod
 
-    # ddl 전략 none
-    jpa:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        ddl-auto: none
-      show-sql: true
+  # ddl 전략 none
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+      ddl-auto: none
+    show-sql: true
 
-    # 외부 데이터 베이스
-    datasource:
-      url: ${DB.URL}
-      username: ${DB.USERNAME}
-      password: ${DB.PASSWORD}
-      driver-class-name: com.mysql.cj.jdbc.Driver
+  # 외부 데이터 베이스
+  datasource:
+    url: ${DB.URL}
+    username: ${DB.USERNAME}
+    password: ${DB.PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
-    # 레디스
-    data:
-      redis:
-        host: localhost
-        port: 6379
+  # 레디스
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
-  # 로깅 전략
-  logging:
-    level:
-      org.springframework.cache: trace
-
+# 로깅 전략
+logging:
+  level:
+    org.springframework.cache: trace
 ---
 #로컬 포트
-  spring:
-    config:
-      activate:
-        on-profile: port-local
+spring:
+  config:
+    activate:
+      on-profile: port-local
 
-  server:
-    port: 8080
+server:
+  port: 8080
 ---
 # 배포용 포트
 spring:
