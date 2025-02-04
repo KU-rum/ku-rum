@@ -1,20 +1,35 @@
 package ku_rum.backend.domain.category.dto.response;
 
 import ku_rum.backend.domain.building.domain.Building;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-public class CategoryKcubeDetailResponse extends  CategoryDetailResponse{
-  private Long floor;
+public record CategoryKcubeDetailResponse(
+        String category,
+        Long buildingId,
+        Long floor
+) implements CategoryDetailResponse {
 
   public CategoryKcubeDetailResponse(String category, Long buildingId) {
-    this.category = category;
-    this.buildingId = buildingId;
+    this(category, buildingId, null);
   }
 
-  public void setFloor(Building buildingBy) {
-    this.floor = buildingBy.getFloor();
+  public static CategoryKcubeDetailResponse withFloor(
+          CategoryKcubeDetailResponse response,
+          Building building
+  ) {
+    return new CategoryKcubeDetailResponse(
+            response.category(),
+            response.buildingId(),
+            building.getFloor()
+    );
+  }
+
+  @Override
+  public String getCategory() {
+    return this.category;
+  }
+
+  @Override
+  public Long getBuildingId() {
+    return this.buildingId;
   }
 }

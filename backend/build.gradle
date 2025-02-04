@@ -76,6 +76,9 @@ dependencies {
 	// RestDocs
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	//jsoup
+	implementation 'org.jsoup:jsoup:1.17.2'
 }
 tasks.named('testClasses') { // (1)
 	doFirst {

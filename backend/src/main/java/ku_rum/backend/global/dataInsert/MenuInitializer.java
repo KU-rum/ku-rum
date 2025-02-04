@@ -1,4 +1,4 @@
-package ku_rum.backend.global.config.dataInsert;
+package ku_rum.backend.global.dataInsert;
 
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.menu.domain.Menu;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class MenuInitializer {
   public static ArrayList<Menu> initializer(ArrayList<Category> categories) {
     ArrayList<Menu> menus = new ArrayList<>();;
-    Category studentCafeteriaCategory = categories.get(4);
+    Category studentCafeteriaCategory = categories.get(3);
     String defaultDescription = "NONE";
 
     //학생식당 메뉴

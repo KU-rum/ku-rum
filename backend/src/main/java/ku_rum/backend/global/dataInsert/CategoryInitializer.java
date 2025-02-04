@@ -1,4 +1,4 @@
-package ku_rum.backend.global.config.dataInsert;
+package ku_rum.backend.global.dataInsert;
 
 import ku_rum.backend.domain.category.domain.Category;
 import ku_rum.backend.domain.category.domain.CategoryType;
